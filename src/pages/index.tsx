@@ -52,7 +52,7 @@ export default function Home() {
             <Image
               src="/thirteen.svg"
               alt="13"
-              width={90}
+              width={40}
               height={31}
               priority
             />
