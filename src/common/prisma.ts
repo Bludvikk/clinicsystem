@@ -9,3 +9,17 @@ export const prisma =
   new PrismaClient()
 
 if (process.env.NODE_ENV !== 'production') global.prisma = prisma
+
+async function connectDB() {
+  try {
+    await prisma.$connect();
+    console.log('? DATABASE CONNECTED SUCCESSFULLY')
+  } catch (error) {
+    console.log(error);
+    process.exit(1);
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+export default connectDB;
