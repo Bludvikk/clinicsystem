@@ -39,7 +39,7 @@ const Home: NextPage = () => {
   const onSubmit = useCallback(
     async (data: ILogin) => {
       try {
-        await signIn("credentials", { ...data, callbackUrl: "/" });
+        await signIn("credentials", { ...data, callbackUrl: "/dashboard" });
         reset();
       } catch (err) {
         console.error(err);

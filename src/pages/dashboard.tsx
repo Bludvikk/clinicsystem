@@ -38,6 +38,15 @@ const Dashboard: NextPage = () => {
               Logout
             </Button>
           </Box>
+          <Box sx={{ textAlign: "center", mt: 4 }}>
+            <Button
+              variant="contained"
+              color="secondary"
+              href="/patientform"
+            >
+              Add Patient
+            </Button>
+          </Box>
         </Box>
       </Box>
     </Box>

@@ -46,7 +46,7 @@ export const nextAuthOptions: NextAuthOptions = {
         token.email = user.email;
         token.username = user.username;
       }
-      console.log('jwt', { token, user});
+      console.log("jwt", { token, user });
       return token;
     },
     session: async ({ session, token }) => {
