@@ -1,13 +1,18 @@
-import { initTRPC, TRPCError } from "@trpc/server";
+import {router, publicProcedure } from "../trpc";
 import { hash } from "argon2";
+import { TRPCError } from "@trpc/server";
 
-import { Context } from "../context";
-import { signUpSchema } from "../../common/validation/auth";
 
-const t = initTRPC.context<Context>().create();
+import { z } from "zod";
 
-export const ServerRouter = t.router({
-  signup: t.procedure.input(signUpSchema).mutation(async ({ input, ctx }) => {
+
+export const ServerRouter = router({
+  signup: publicProcedure.input(
+    z.object({
+      username: z.string(),
+      email: z.string().email(),
+      password: z.string()
+    })).mutation(async ({ input, ctx }) => {
     const { username, email, password } = input;
 
     const exists = await ctx.prisma.user.findFirst({
@@ -33,6 +38,13 @@ export const ServerRouter = t.router({
       result: result.email,
     };
   }),
+  viewAll: publicProcedure.query(async ({ ctx }) => {
+    const res = await ctx.prisma.patient.findMany();
+    return res;
+  }),
+  // ADDPATIENT
+  // Delete
+  // Update
 });
 
 export type ServerRouter = typeof ServerRouter;
