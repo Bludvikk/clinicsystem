@@ -4,8 +4,9 @@ import Link from "next/link";
 import { useCallback } from "react";
 import { signIn } from "next-auth/react";
 import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Button,
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Button,
   Card,
   CardActions,
   Grid,
@@ -16,16 +17,16 @@ import { Button,
   CardHeader,
 } from "@mui/material";
 
-import { styled } from '@mui/material/styles';
+import { styled } from "@mui/material/styles";
 
 import { loginSchema, ILogin } from "../common/validation/auth";
 
-const Form = styled('form')(({ theme }) => ({
+const Form = styled("form")(({ theme }) => ({
   maxWidth: 600,
   padding: theme.spacing(12),
   borderRadius: theme.shape.borderRadius,
-  border: `1px solid ${theme.palette.divider}`
-}))
+  border: `1px solid ${theme.palette.divider}`,
+}));
 const Home: NextPage = () => {
   const { handleSubmit, control, reset } = useForm<ILogin>({
     defaultValues: {
@@ -38,7 +39,7 @@ const Home: NextPage = () => {
   const onSubmit = useCallback(
     async (data: ILogin) => {
       try {
-        await signIn("credentials", { ...data, callbackUrl: "/dashboard" });
+        await signIn("credentials", { ...data, callbackUrl: "/" });
         reset();
       } catch (err) {
         console.error(err);
@@ -48,64 +49,64 @@ const Home: NextPage = () => {
   );
 
   return (
-    <Grid container alignItems="center" justifyContent="center" sx={{ height: "100vh" }}>
-    <Card>
-      <CardHeader title='Sign In' />
-      <CardContent>
-        <Form onSubmit={handleSubmit(onSubmit)}>
-          <Grid container spacing={5}>
-            <Grid item xs={12}>
-              <Controller
-              name="email"
-              control={control}
-              render={({ field}) => (
-                <TextField
-                fullWidth label='Email'
-                {...field}
+    <Grid
+      container
+      alignItems="center"
+      justifyContent="center"
+      sx={{ height: "100vh" }}
+    >
+      <Card>
+        <CardHeader title="Sign In" />
+        <CardContent>
+          <Form onSubmit={handleSubmit(onSubmit)}>
+            <Grid container spacing={5}>
+              <Grid item xs={12}>
+                <Controller
+                  name="email"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField fullWidth label="Email" {...field} />
+                  )}
                 />
-              )}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Controller
-              name="password"
-              control={control}
-              render={({ field}) => (
-                <TextField
-                fullWidth label='Password'
-                {...field}
+              </Grid>
+              <Grid item xs={12}>
+                <Controller
+                  name="password"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField fullWidth label="Password" {...field} />
+                  )}
                 />
-              )}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Box
-              sx={{
-                gap: 5,
-                display: 'flex',
-                flexWrap: 'wrap',
-                alignItems: 'center',
-                justifyContent: 'space-between'
-              }}
-              >
-              <Button type='submit' variant='contained'>
-                  Login
-                </Button>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Typography sx={{ mr: 2 }}>Dont Have an Account Yet?</Typography>
-                  <Link href='/sign-up' passHref>
-                    Sign Up!
-                  </Link>
+              </Grid>
+              <Grid item xs={12}>
+                <Box
+                  sx={{
+                    gap: 5,
+                    display: "flex",
+                    flexWrap: "wrap",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Button type="submit" variant="contained">
+                    Login
+                  </Button>
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <Typography sx={{ mr: 2 }}>
+                      Dont Have an Account Yet?
+                    </Typography>
+                    <Link href="/sign-up" passHref>
+                      Sign Up!
+                    </Link>
+                  </Box>
                 </Box>
-
-              </Box>
+              </Grid>
             </Grid>
-          </Grid>
-        </Form>
-      </CardContent>
-    </Card>
+          </Form>
+        </CardContent>
+      </Card>
     </Grid>
   );
-                    }
+};
 
 export default Home;

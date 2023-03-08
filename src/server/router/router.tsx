@@ -18,16 +18,13 @@ export const ServerRouter = router({
     const exists = await ctx.prisma.user.findFirst({
       where: { email },
     });
-
     if (exists) {
       throw new TRPCError({
         code: "CONFLICT",
         message: "User already exists.",
       });
     }
-
     const hashedPassword = await hash(password);
-
     const result = await ctx.prisma.user.create({
       data: { username, email, password: hashedPassword },
     });
