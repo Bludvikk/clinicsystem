@@ -1,0 +1,81 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Patient {
+  id                 String              @id @default(uuid())
+  firstName          String
+  lastName           String
+  middleInitial      String?             @default("N/A")
+  address            String
+  dateOfBirth        DateTime
+  civilStatus        String
+  age                Int
+  occupation         String              @default("N/A")
+  gender             String
+  contactNumber      String              @default("N/A")
+  familyHistory      FamilyHistory?
+  personalHistory    PersonalHistory?
+  pastMedicalHistory PastMedicalHistory?
+  obGyne             ObGyne?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+}
+
+model FamilyHistory {
+  id                      String  @id @default(uuid())
+  isBronchialAsthma       Boolean @default(false)
+  isPulmonaryTubersulosis Boolean @default(false)
+  isHypertension          Boolean @default(false)
+  isDiabetesMellitus      Boolean @default(false)
+  isHearthDisease         Boolean @default(false)
+  isCancer                Boolean @default(false)
+  others                  String?
+  Patient                 Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  patientId               String  @unique
+}
+
+model PersonalHistory {
+  id                     String   @id @default(uuid())
+  isSmoking              String[]
+  isAlchohol             String[]
+  currentHealthCondition String
+  medications            Json?
+  Patient                Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  patientId              String   @unique
+}
+
+model PastMedicalHistory {
+  id             String   @id @default(uuid())
+  isHospitalized String[]
+  isInjuries     String[]
+  isSurgeries    String[]
+  isAllergies    String[]
+  isMeasles      String[]
+  isChickenPox   String[]
+  others         String?
+  Patient        Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  patientId      String   @unique
+}
+
+model ObGyne {
+  id             String    @id @default(uuid())
+  menstrualCycle DateTime?
+  days           Int?
+  Patient        Patient   @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  patientId      String    @unique
+}
