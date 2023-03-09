@@ -12,14 +12,22 @@ import {
   Grid,
   Box,
   TextField,
-  Typography,
   CardContent,
   CardHeader,
 } from "@mui/material";
 
+import Typography, { TypographyProps } from "@mui/material/Typography";
+
 import { styled } from "@mui/material/styles";
 
 import { loginSchema, ILogin } from "../common/validation/auth";
+
+const TypographyStyled = styled(Typography)<TypographyProps>(({ theme }) => ({
+  fontWeight: 600,
+  letterSpacing: "0.18px",
+  marginBottom: theme.spacing(1.5),
+  [theme.breakpoints.down("md")]: { marginTop: theme.spacing(8) },
+}));
 
 const Form = styled("form")(({ theme }) => ({
   maxWidth: 600,
@@ -36,17 +44,26 @@ const Home: NextPage = () => {
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = useCallback(
-    async (data: ILogin) => {
-      try {
-        await signIn("credentials", { ...data, callbackUrl: "/dashboard" });
-        reset();
-      } catch (err) {
-        console.error(err);
-      }
-    },
-    [reset]
-  );
+  // const onSubmit = useCallback(
+  //   async (data: ILogin) => {
+  //     try {
+  //       await signIn("credentials", { ...data, callbackUrl: "/dashboard" });
+  //       console.log('succesfully signed in')
+  //       reset();
+  //     } catch (err) {
+  //       console.error(err);
+  //     }
+  //   },
+  //   [reset]
+  // );
+
+  const loginHandler = async (data: ILogin) => {
+    const result = await signIn("credentials", {
+      ...data,
+      callbackUrl: "/dashboard",
+    });
+    console.log({ result });
+  };
 
   return (
     <Grid
@@ -58,7 +75,7 @@ const Home: NextPage = () => {
       <Card>
         <CardHeader title="Sign In" />
         <CardContent>
-          <Form onSubmit={handleSubmit(onSubmit)}>
+          <Form onSubmit={handleSubmit(loginHandler)}>
             <Grid container spacing={5}>
               <Grid item xs={12}>
                 <Controller
@@ -78,27 +95,22 @@ const Home: NextPage = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={6}>
                 <Box
-                  sx={{
-                    gap: 5,
-                    display: "flex",
-                    flexWrap: "wrap",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
+                  
                 >
                   <Button type="submit" variant="contained">
                     Login
                   </Button>
-                  <Box sx={{ display: "flex", alignItems: "center" }}>
-                    <Typography sx={{ mr: 2 }}>
-                      Dont Have an Account Yet?
-                    </Typography>
-                    <Link href="/sign-up" passHref>
-                      Sign Up!
-                    </Link>
-                  </Box>
+                </Box>
+              </Grid>
+              <Grid item xs={6}>
+                <Box
+                  
+                >
+                  <Button variant="contained" color="secondary" href="/sign-up">
+                    Sign Up
+                  </Button>
                 </Box>
               </Grid>
             </Grid>
