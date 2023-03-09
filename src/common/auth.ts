@@ -1,14 +1,13 @@
 import { NextAuthOptions } from "next-auth";
-import Credentials from "next-auth/providers/credentials";
+import CredentialsProvider from "next-auth/providers/credentials";
 import { verify } from "argon2";
 
 import { prisma } from "./prisma";
 import { loginSchema } from "./validation/auth";
-import { tokenToString } from "typescript";
 
 export const nextAuthOptions: NextAuthOptions = {
   providers: [
-    Credentials({
+    CredentialsProvider({
       name: "credentials",
       credentials: {
         email: {
@@ -25,7 +24,6 @@ export const nextAuthOptions: NextAuthOptions = {
           const result = await prisma.user.findFirst({
             where: { email },
           });
-
           if (!result) return null;
 
           const isValidPassword = await verify(result.password, password);
@@ -33,6 +31,7 @@ export const nextAuthOptions: NextAuthOptions = {
           if (!isValidPassword) return null;
 
           return { id: result.id, email, username: result.username };
+
         } catch {
           return null;
         }
