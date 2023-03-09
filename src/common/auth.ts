@@ -4,6 +4,7 @@ import { verify } from "argon2";
 
 import { prisma } from "./prisma";
 import { loginSchema } from "./validation/auth";
+import { tokenToString } from "typescript";
 
 export const nextAuthOptions: NextAuthOptions = {
   providers: [
@@ -45,6 +46,7 @@ export const nextAuthOptions: NextAuthOptions = {
         token.email = user.email;
         token.username = user.username;
       }
+      console.log("jwt", { token, user });
       return token;
     },
     session: async ({ session, token }) => {
@@ -62,6 +64,9 @@ export const nextAuthOptions: NextAuthOptions = {
   pages: {
     signIn: "/",
     newUser: "/sign-up",
+  },
+  session: {
+    strategy: "jwt",
   },
   secret: process.env.JWT_SECRET,
 };
