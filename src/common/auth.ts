@@ -5,6 +5,7 @@ import { verify } from "argon2";
 import { prisma } from "./prisma";
 import { loginSchema } from "./validation/auth";
 
+
 export const nextAuthOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
@@ -17,6 +18,7 @@ export const nextAuthOptions: NextAuthOptions = {
         },
         password: { label: "Password", type: "password" },
       },
+      //@ts-ignore
       authorize: async (credentials) => {
         try {
           const { email, password } = await loginSchema.parseAsync(credentials);

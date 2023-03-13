@@ -1,13 +1,12 @@
-import * as trpc from '@trpc/server';
-import * as trpcNext from '@trpc/server/adapters/next';
-import { getServerSession } from 'next-auth';
+import * as trpc from "@trpc/server";
+import * as trpcNext from "@trpc/server/adapters/next";
+import { getServerSession } from "next-auth";
 
-
-import { prisma } from '../common/prisma';
-import { nextAuthOptions } from '@/common/auth';
+import { prisma } from "../common/prisma";
+import { nextAuthOptions } from "@/common/auth";
 
 export async function createContext(ctx: trpcNext.CreateNextContextOptions) {
-  const {req, res} = ctx;
+  const { req, res } = ctx;
   const session = await getServerSession(req, res, nextAuthOptions);
 
   return {

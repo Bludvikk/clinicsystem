@@ -72,14 +72,14 @@ export const patientRouter = router({
           gender,
           contactNumber,
           isBronchialAsthma,
-          isPulmonaryTubersulosis,
+          isPulmonaryTuberculosis,
           isHypertension,
           isDiabetesMellitus,
           isHearthDisease,
           isCancer,
           familyHistoryOthers,
           isSmoking,
-          isAlchohol,
+          isAlcohol,
           currentHealthCondition,
           medications,
           isHospitalized,
@@ -108,7 +108,7 @@ export const patientRouter = router({
             familyHistory: {
               create: {
                 isBronchialAsthma,
-                isPulmonaryTubersulosis,
+                isPulmonaryTuberculosis,
                 isHypertension,
                 isDiabetesMellitus,
                 isHearthDisease,
@@ -119,7 +119,7 @@ export const patientRouter = router({
             personalHistory: {
               create: {
                 isSmoking,
-                isAlchohol,
+                isAlcohol,
                 currentHealthCondition,
                 medications,
               },
@@ -160,7 +160,7 @@ export const patientRouter = router({
           if (httpCode === 500) {
             throw new TRPCError({
               code: "INTERNAL_SERVER_ERROR",
-              message: "Internal server error occured, please try again later",
+              message: "Internal server error occurred, please try again later",
               cause: err,
             });
           } else {
@@ -187,14 +187,14 @@ export const patientRouter = router({
           gender,
           contactNumber,
           isBronchialAsthma,
-          isPulmonaryTubersulosis,
+          isPulmonaryTuberculosis,
           isHypertension,
           isDiabetesMellitus,
           isHearthDisease,
           isCancer,
           familyHistoryOthers,
           isSmoking,
-          isAlchohol,
+          isAlcohol,
           currentHealthCondition,
           medications,
           isHospitalized,
@@ -226,7 +226,7 @@ export const patientRouter = router({
             familyHistory: {
               update: {
                 isBronchialAsthma,
-                isPulmonaryTubersulosis,
+                isPulmonaryTuberculosis,
                 isHypertension,
                 isDiabetesMellitus,
                 isHearthDisease,
@@ -237,7 +237,7 @@ export const patientRouter = router({
             personalHistory: {
               update: {
                 isSmoking,
-                isAlchohol,
+                isAlcohol,
                 currentHealthCondition,
                 medications,
               },
@@ -302,7 +302,7 @@ export const patientRouter = router({
           if (httpCode === 500) {
             throw new TRPCError({
               code: "INTERNAL_SERVER_ERROR",
-              message: "Internal server error occured, please try again later",
+              message: "Internal server error occurred, please try again later",
               cause: err,
             });
           } else {
