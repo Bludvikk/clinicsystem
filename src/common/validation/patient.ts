@@ -58,8 +58,8 @@ export const addPatientSchema = z.object({
       invalid_type_error: "isBronchialAsthma must be a boolean",
     })
     .default(false),
-  isPulmonaryTubersulosis: z.boolean({
-    invalid_type_error: "isPulmonaryTubersulosis must be a boolean",
+  isPulmonaryTuberculosis: z.boolean({
+    invalid_type_error: "isPulmonaryTuberculosis must be a boolean",
   }),
   isHypertension: z.boolean({
     invalid_type_error: "isHypertension must be a boolean",
@@ -82,7 +82,7 @@ export const addPatientSchema = z.object({
     z.string({ invalid_type_error: "Element must be a string" }).default("no"),
     z.string({ invalid_type_error: "Element must be a string" }).default("N/A"),
   ]),
-  isAlchohol: z.tuple([
+  isAlcohol: z.tuple([
     z.string({ invalid_type_error: "Element must be a string" }).default("no"),
     z.string({ invalid_type_error: "Element must be a number" }).default("N/A"),
   ]),
