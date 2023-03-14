@@ -1,7 +1,7 @@
 import { useState, ReactNode, MouseEvent } from "react";
 
 import Link from "next/link";
-import { NextPage } from 'next'
+import { NextPage } from "next";
 
 import {
   Alert,
@@ -16,95 +16,34 @@ import {
   OutlinedInput,
   FormHelperText,
   InputAdornment,
+  Grid,
+  CssBaseline,
+  Paper,
+  FormControlLabel,
+  Avatar,
+  Box,
 } from "@mui/material";
 
-import Box, { BoxProps } from "@mui/material/Box";
-import { styled, useTheme } from "@mui/material/styles";
-import Typography, { TypographyProps } from "@mui/material/Typography";
-import MuiFormControlLabel, {
-  FormControlLabelProps,
-} from "@mui/material/FormControlLabel";
 
+
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import Typography, { TypographyProps } from "@mui/material/Typography";
 
 import { signIn } from "next-auth/react";
 
-import { useSettings } from "src/@core/hooks/useSettings";
-
-import themeConfig from "src/configs/themeConfig";
-
-import BlankLayout from "src/@core/layouts/BlankLayout";
-
-import FooterIllustrationsV2 from "@/views/pages/auth/FooterIllustrationsV2";
-
-import Icon from "src/@core/components/icon";
+import Icon from "@/components/icon";
 
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { loginSchema, ILogin } from "@/common/validation/auth";
-import useBgColor from "../../@core/hooks/useBgColor";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
-const LoginIllustrationWrapper = styled(Box)<BoxProps>(({ theme }) => ({
-  padding: theme.spacing(20),
-  paddingRight: "0 !important",
-  [theme.breakpoints.down("lg")]: {
-    padding: theme.spacing(10),
-  },
-}));
-
-const LoginIllustration = styled("img")(({ theme }) => ({
-  maxWidth: "48rem",
-  [theme.breakpoints.down("xl")]: {
-    maxWidth: "38rem",
-  },
-  [theme.breakpoints.down("lg")]: {
-    maxWidth: "30rem",
-  },
-}));
-
-const RightWrapper = styled(Box)<BoxProps>(({ theme }) => ({
-  width: "100%",
-  [theme.breakpoints.up("md")]: {
-    maxWidth: 400,
-  },
-  [theme.breakpoints.up("lg")]: {
-    maxWidth: 450,
-  },
-}));
-
-const BoxWrapper = styled(Box)<BoxProps>(({ theme }) => ({
-  width: "100%",
-  [theme.breakpoints.down("md")]: {
-    maxWidth: 200,
-  },
-}));
-
-const TypographyStyled = styled(Typography)<TypographyProps>(({ theme }) => ({
-  fontWeight: 600,
-  letterSpacing: "0.18px",
-  marginBottom: theme.spacing(1.5),
-  [theme.breakpoints.down("md")]: { marginTop: theme.spacing(8) },
-}));
-
-const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(
-  ({ theme }) => ({
-    "& .MuiFormControlLabel-label": {
-      fontSize: "0.875rem",
-      color: theme.palette.text.secondary,
-    },
-  })
-);
+const theme = createTheme();
 
 const LoginPage: NextPage = (props) => {
   const [rememberMe, setRememberMe] = useState<boolean>(true);
   const [showPassword, setShowPassword] = useState<boolean>(false);
-
-  const theme = useTheme();
-  const bgColors = useBgColor();
-  const { settings } = useSettings();
-  const hidden = useMediaQuery(theme.breakpoints.down("md"));
-
-  const { skin } = settings;
 
   const {
     handleSubmit,
@@ -128,175 +67,109 @@ const LoginPage: NextPage = (props) => {
     console.log({ result });
   };
 
-  const imageSource = skin === 'bordered' ? 'auth-v2-login-illustration-bordered' : 'auth-v2-login-illustration'
-
-
   return (
-    <Box className='content-right'>
-      {!hidden ? (
-        <Box sx={{ flex: 1, display: 'flex', position: 'relative', alignItems: 'center', justifyContent: 'center' }}>
-          <LoginIllustrationWrapper>
-            <LoginIllustration
-              alt='login-illustration'
-              src={`/images/pages/${imageSource}-${theme.palette.mode}.png`}
-            />
-          </LoginIllustrationWrapper>
-          <FooterIllustrationsV2 />
-        </Box>
-      ) : null}
-      <RightWrapper sx={skin === 'bordered' && !hidden ? { borderLeft: `1px solid ${theme.palette.divider}` } : {}}>
-        <Box
+    <ThemeProvider theme={theme}>
+      <Grid container component="main" sx={{ height: "100vh " }}>
+        <CssBaseline />
+        <Grid
+          item
+          xs={false}
+          sm={4}
+          md={7}
           sx={{
-            p: 7,
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: 'background.paper'
+            backgroundImage:
+              "url(https://source.unsplash.com/random/?hospital/)",
+            backgroundRepeat: "no-repeat",
+            backgroundColor: (t) =>
+              t.palette.mode === "light"
+                ? t.palette.grey[50]
+                : t.palette.grey[900],
+            backgroundSize: "cover",
+            backgroundPosition: "center",
           }}
-        >
-          <BoxWrapper>
-            <Box
-              sx={{
-                top: 30,
-                left: 40,
-                display: 'flex',
-                position: 'absolute',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
-            >
-              <svg width={47} fill='none' height={26} viewBox='0 0 268 150' xmlns='http://www.w3.org/2000/svg'>
-                <rect
-                  rx='25.1443'
-                  width='50.2886'
-                  height='143.953'
-                  fill={theme.palette.primary.main}
-                  transform='matrix(-0.865206 0.501417 0.498585 0.866841 195.571 0)'
-                />
-                <rect
-                  rx='25.1443'
-                  width='50.2886'
-                  height='143.953'
-                  fillOpacity='0.4'
-                  fill='url(#paint0_linear_7821_79167)'
-                  transform='matrix(-0.865206 0.501417 0.498585 0.866841 196.084 0)'
-                />
-                <rect
-                  rx='25.1443'
-                  width='50.2886'
-                  height='143.953'
-                  fill={theme.palette.primary.main}
-                  transform='matrix(0.865206 0.501417 -0.498585 0.866841 173.147 0)'
-                />
-                <rect
-                  rx='25.1443'
-                  width='50.2886'
-                  height='143.953'
-                  fill={theme.palette.primary.main}
-                  transform='matrix(-0.865206 0.501417 0.498585 0.866841 94.1973 0)'
-                />
-                <rect
-                  rx='25.1443'
-                  width='50.2886'
-                  height='143.953'
-                  fillOpacity='0.4'
-                  fill='url(#paint1_linear_7821_79167)'
-                  transform='matrix(-0.865206 0.501417 0.498585 0.866841 94.1973 0)'
-                />
-                <rect
-                  rx='25.1443'
-                  width='50.2886'
-                  height='143.953'
-                  fill={theme.palette.primary.main}
-                  transform='matrix(0.865206 0.501417 -0.498585 0.866841 71.7728 0)'
-                />
-                <defs>
-                  <linearGradient
-                    y1='0'
-                    x1='25.1443'
-                    x2='25.1443'
-                    y2='143.953'
-                    id='paint0_linear_7821_79167'
-                    gradientUnits='userSpaceOnUse'
-                  >
-                    <stop />
-                    <stop offset='1' stopOpacity='0' />
-                  </linearGradient>
-                  <linearGradient
-                    y1='0'
-                    x1='25.1443'
-                    x2='25.1443'
-                    y2='143.953'
-                    id='paint1_linear_7821_79167'
-                    gradientUnits='userSpaceOnUse'
-                  >
-                    <stop />
-                    <stop offset='1' stopOpacity='0' />
-                  </linearGradient>
-                </defs>
-              </svg>
-              <Typography variant='h6' sx={{ ml: 2, lineHeight: 1, fontWeight: 700, fontSize: '1.5rem !important' }}>
-                {themeConfig.templateName}
-              </Typography>
-            </Box>
+        />
+        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+          <Box
+            sx={{
+              my: 8,
+              mx: 4,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+              <LockOutlinedIcon />
+            </Avatar>
             <Box sx={{ mb: 6 }}>
-              <TypographyStyled variant='h5'>{`Welcome to ${themeConfig.templateName}! 👋🏻`}</TypographyStyled>
-              <Typography variant='body2'>Please sign-in to your account and start the adventure</Typography>
+              <Typography variant="body2">
+                Please sign-in to your account
+              </Typography>
             </Box>
-            <Alert icon={false} sx={{ py: 3, mb: 6, ...bgColors.primaryLight, '& .MuiAlert-message': { p: 0 } }}>
-              <Typography variant='caption' sx={{ mb: 2, display: 'block', color: 'primary.main' }}>
-                Admin: <strong>admin@materialize.com</strong> / Pass: <strong>admin</strong>
-              </Typography>
-              <Typography variant='caption' sx={{ display: 'block', color: 'primary.main' }}>
-                Client: <strong>client@materialize.com</strong> / Pass: <strong>client</strong>
-              </Typography>
-            </Alert>
-            <form noValidate autoComplete='off' onSubmit={handleSubmit(loginHandler)}>
+            <form
+              noValidate
+              autoComplete="off"
+              onSubmit={handleSubmit(loginHandler)}
+            >
               <FormControl fullWidth sx={{ mb: 4 }}>
                 <Controller
-                  name='email'
+                  name="email"
                   control={control}
                   rules={{ required: true }}
                   render={({ field: { value, onChange, onBlur } }) => (
                     <TextField
                       autoFocus
-                      label='Email'
+                      label="Email"
                       value={value}
                       onBlur={onBlur}
                       onChange={onChange}
                       error={Boolean(errors.email)}
-                      placeholder='admin@materialize.com'
+                      placeholder="glennpower@gmail.com"
                     />
                   )}
                 />
-                {errors.email && <FormHelperText sx={{ color: 'error.main' }}>{errors.email.message}</FormHelperText>}
+                {errors.email && (
+                  <FormHelperText sx={{ color: "error.main" }}>
+                    {errors.email.message}
+                  </FormHelperText>
+                )}
               </FormControl>
-              <FormControl fullWidth>
-                <InputLabel htmlFor='auth-login-v2-password' error={Boolean(errors.password)}>
+
+              <FormControl fullWidth sx={{ mb: 4 }}>
+                <InputLabel
+                  htmlFor="auth-login-v2-password"
+                  error={Boolean(errors.password)}
+                >
                   Password
                 </InputLabel>
                 <Controller
-                  name='password'
+                  name="password"
                   control={control}
                   rules={{ required: true }}
                   render={({ field: { value, onChange, onBlur } }) => (
                     <OutlinedInput
                       value={value}
                       onBlur={onBlur}
-                      label='Password'
+                      label="Password"
                       onChange={onChange}
-                      id='auth-login-v2-password'
+                      id="auth-login-v2-password"
                       error={Boolean(errors.password)}
-                      type={showPassword ? 'text' : 'password'}
+                      type={showPassword ? "text" : "password"}
                       endAdornment={
-                        <InputAdornment position='end'>
+                        <InputAdornment position="end">
                           <IconButton
-                            edge='end'
-                            onMouseDown={e => e.preventDefault()}
+                            edge="end"
+                            onMouseDown={(e) => e.preventDefault()}
                             onClick={() => setShowPassword(!showPassword)}
                           >
-                            <Icon icon={showPassword ? 'mdi:eye-outline' : 'mdi:eye-off-outline'} fontSize={20} />
+                            <Icon
+                              icon={
+                                showPassword
+                                  ? "mdi:eye-outline"
+                                  : "mdi:eye-off-outline"
+                              }
+                              fontSize={20}
+                            />
                           </IconButton>
                         </InputAdornment>
                       }
@@ -304,86 +177,127 @@ const LoginPage: NextPage = (props) => {
                   )}
                 />
                 {errors.password && (
-                  <FormHelperText sx={{ color: 'error.main' }} id=''>
+                  <FormHelperText sx={{ color: "error.main" }} id="">
                     {errors.password.message}
                   </FormHelperText>
                 )}
               </FormControl>
+
               <Box
-                sx={{ mb: 4, display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'space-between' }}
+                sx={{
+                  mb: 4,
+                  display: "flex",
+                  alignItems: "center",
+                  flexWrap: "wrap",
+                  justifyContent: "space-between",
+                }}
               >
                 <FormControlLabel
-                  label='Remember Me'
-                  control={<Checkbox checked={rememberMe} onChange={e => setRememberMe(e.target.checked)} />}
+                  label="Remember Me"
+                  control={
+                    <Checkbox
+                      checked={rememberMe}
+                      onChange={(e) => setRememberMe(e.target.checked)}
+                    />
+                  }
                 />
                 <Typography
-                  variant='body2'
+                  variant="body2"
                   component={Link}
-                  href='/forgot-password'
-                  sx={{ color: 'primary.main', textDecoration: 'none' }}
+                  href="/forgot-password"
+                  sx={{ color: "primary.main", textDecoration: "none" }}
                 >
                   Forgot Password?
                 </Typography>
               </Box>
-              <Button fullWidth size='large' type='submit' variant='contained' sx={{ mb: 7 }}>
+              <Button
+                fullWidth
+                size="large"
+                type="submit"
+                variant="contained"
+                sx={{ mb: 7 }}
+              >
                 Login
               </Button>
-              <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
-                <Typography sx={{ mr: 2, color: 'text.secondary' }}>New on our platform?</Typography>
-                <Typography href='./register/' component={Link} sx={{ color: 'primary.main', textDecoration: 'none' }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  flexWrap: "wrap",
+                  justifyContent: "center",
+                }}
+              >
+                <Typography sx={{ mr: 2, color: "text.secondary" }}>
+                  New on our platform?
+                </Typography>
+                <Typography
+                  href="/register"
+                  component={Link}
+                  sx={{ color: "primary.main", textDecoration: "none" }}
+                >
                   Create an account
                 </Typography>
               </Box>
               <Divider
                 sx={{
-                  '& .MuiDivider-wrapper': { px: 4 },
-                  mt: theme => `${theme.spacing(5)} !important`,
-                  mb: theme => `${theme.spacing(7.5)} !important`
+                  "& .MuiDivider-wrapper": { px: 4 },
+                  mt: (theme) => `${theme.spacing(5)} !important`,
+                  mb: (theme) => `${theme.spacing(7.5)} !important`,
                 }}
               >
+                {" "}
                 or
               </Divider>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
                 <IconButton
-                  href='/'
+                  href="/"
                   component={Link}
-                  sx={{ color: '#497ce2' }}
+                  sx={{ color: "#497ce2" }}
                   onClick={(e: MouseEvent<HTMLElement>) => e.preventDefault()}
                 >
-                  <Icon icon='mdi:facebook' />
+                  <Icon icon="mdi:facebook" />
                 </IconButton>
                 <IconButton
-                  href='/'
+                  href="/"
                   component={Link}
-                  sx={{ color: '#1da1f2' }}
+                  sx={{ color: "#1da1f2" }}
                   onClick={(e: MouseEvent<HTMLElement>) => e.preventDefault()}
                 >
-                  <Icon icon='mdi:twitter' />
+                  <Icon icon="mdi:twitter" />
                 </IconButton>
                 <IconButton
-                  href='/'
+                  href="/"
                   component={Link}
                   onClick={(e: MouseEvent<HTMLElement>) => e.preventDefault()}
-                  sx={{ color: theme => (theme.palette.mode === 'light' ? '#272727' : 'grey.300') }}
+                  sx={{
+                    color: (theme) =>
+                      theme.palette.mode === "light" ? "#272727" : "grey.300",
+                  }}
                 >
-                  <Icon icon='mdi:github' />
+                  <Icon icon="mdi:github" />
                 </IconButton>
                 <IconButton
-                  href='/'
+                  href="/"
                   component={Link}
-                  sx={{ color: '#db4437' }}
+                  sx={{ color: "#db4437" }}
                   onClick={(e: MouseEvent<HTMLElement>) => e.preventDefault()}
                 >
-                  <Icon icon='mdi:google' />
+                  <Icon icon="mdi:google" />
                 </IconButton>
               </Box>
+              {/* <Copyright sx={{ mt: 5 }} /> */}
             </form>
-          </BoxWrapper>
-        </Box>
-      </RightWrapper>
-    </Box>
-  )
+          </Box>
+        </Grid>
+      </Grid>
+    </ThemeProvider>
+  );
+};
 
-}
-
-export default LoginPage
+export default LoginPage;

@@ -1,10 +1,10 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-}
-
-generator client {
-  provider = "prisma-client-js"
 }
 
 model User {
@@ -28,35 +28,35 @@ model Patient {
   occupation         String              @default("N/A")
   gender             String
   contactNumber      String              @default("N/A")
-  familyHistory      FamilyHistory?
-  personalHistory    PersonalHistory?
-  pastMedicalHistory PastMedicalHistory?
-  obGyne             ObGyne?
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
+  familyHistory      FamilyHistory?
+  obGyne             ObGyne?
+  pastMedicalHistory PastMedicalHistory?
+  personalHistory    PersonalHistory?
 }
 
 model FamilyHistory {
   id                      String  @id @default(uuid())
   isBronchialAsthma       Boolean @default(false)
-  isPulmonaryTubersulosis Boolean @default(false)
+  isPulmonaryTuberculosis Boolean @default(false)
   isHypertension          Boolean @default(false)
   isDiabetesMellitus      Boolean @default(false)
   isHearthDisease         Boolean @default(false)
   isCancer                Boolean @default(false)
   others                  String?
-  Patient                 Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
   patientId               String  @unique
+  Patient                 Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
 }
 
 model PersonalHistory {
   id                     String   @id @default(uuid())
   isSmoking              String[]
-  isAlchohol             String[]
+  isAlcohol             String[]
   currentHealthCondition String
   medications            Json?
-  Patient                Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
   patientId              String   @unique
+  Patient                Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
 }
 
 model PastMedicalHistory {
@@ -68,14 +68,14 @@ model PastMedicalHistory {
   isMeasles      String[]
   isChickenPox   String[]
   others         String?
-  Patient        Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
   patientId      String   @unique
+  Patient        Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
 }
 
 model ObGyne {
   id             String    @id @default(uuid())
   menstrualCycle DateTime?
   days           Int?
-  Patient        Patient   @relation(fields: [patientId], references: [id], onDelete: Cascade)
   patientId      String    @unique
+  Patient        Patient   @relation(fields: [patientId], references: [id], onDelete: Cascade)
 }

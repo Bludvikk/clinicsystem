@@ -1,269 +1,131 @@
-import {ReactNode, useState, Fragment, MouseEvent } from 'react'
-import { NextPage } from 'next'
-import Link from 'next/link'
+import { ReactNode, useState, Fragment, MouseEvent } from "react";
+import { NextPage } from "next";
+import Link from "next/link";
 import { useCallback } from "react";
 import { useRouter } from "next/router";
 import {
-    Button,
-    Divider,
-    Checkbox,
-    TextField,
-    InputLabel,
-    FormControl,
-    useMediaQuery,
-    OutlinedInput,
-    FormHelperText,
-    InputAdornment,
-    IconButton,
-} from '@mui/material'
+  Button,
+  Divider,
+  Checkbox,
+  TextField,
+  InputLabel,
+  FormControl,
+  useMediaQuery,
+  OutlinedInput,
+  FormHelperText,
+  InputAdornment,
+  IconButton,
+  CssBaseline,
+  Paper,
+  Grid,
+  Avatar,
+  FormControlLabel,
+  Typography
+} from "@mui/material";
 
-import Box, { BoxProps } from '@mui/material/Box'
-import { styled, useTheme} from '@mui/material/styles'
-import Typography, { TypographyProps} from '@mui/material/Typography'
-import MuiFormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel'
+import Box, { BoxProps } from "@mui/material/Box";
+import { styled, useTheme } from "@mui/material/styles";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, Controller } from "react-hook-form";
 
-import Icon from 'src/@core/components/icon'
+import Icon from "src/@core/components/icon";
 
-import { z } from "zod"
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm, Controller } from 'react-hook-form'
+import { trpc } from "@/common/trpc";
 
+import { signUpSchema, ISignUp } from "../../common/validation/auth";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
-import themeConfig from '@/configs/themeConfig'
-
-
-import BlankLayout from '@/@core/layouts/BlankLayout'
-
-import { trpc } from "@/common/trpc"
-
-import FooterIllustrationsV2 from '@/views/pages/auth/FooterIllustrationsV2'
-import { useSettings } from '../../@core/hooks/useSettings';
-import { signUpSchema, ISignUp } from '../../common/validation/auth';
-
-const RegisterIllustrationWrapper = styled(Box)<BoxProps>(({ theme }) => ({
-    padding: theme.spacing(20),
-    paddingRight: '0 !important',
-    [theme.breakpoints.down('lg')]: {
-      padding: theme.spacing(10)
-    }
-  }))
-
-  const RegisterIllustration = styled('img')(({ theme }) => ({
-    maxWidth: '48rem',
-    [theme.breakpoints.down('xl')]: {
-      maxWidth: '38rem'
-    },
-    [theme.breakpoints.down('lg')]: {
-      maxWidth: '30rem'
-    }
-  }))
-
-  const RightWrapper = styled(Box)<BoxProps>(({ theme }) => ({
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      maxWidth: 400
-    },
-    [theme.breakpoints.up('lg')]: {
-      maxWidth: 450
-    }
-  }))
-
-  const BoxWrapper = styled(Box)<BoxProps>(({ theme }) => ({
-    width: '100%',
-    [theme.breakpoints.down('md')]: {
-      maxWidth: 400
-    }
-  }))
-
-  const TypographyStyled = styled(Typography)<TypographyProps>(({ theme }) => ({
-    fontWeight: 600,
-    letterSpacing: '0.18px',
-    marginBottom: theme.spacing(1.5),
-    [theme.breakpoints.down('md')]: { marginTop: theme.spacing(8) }
-  }))
-
-  const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ theme }) => ({
-    marginBottom: theme.spacing(4),
-    '& .MuiFormControlLabel-label': {
-      fontSize: '0.875rem',
-      color: theme.palette.text.secondary
-    }
-  }))
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 
-
-
+const theme = createTheme();
 
 const RegisterPage: NextPage = (props) => {
-    const [showPassword, setShowPassword] = useState<boolean>(false)
-    const router = useRouter();
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const router = useRouter();
 
+  const {
+    control,
+    setError,
+    handleSubmit,
+    reset,
 
-    const theme = useTheme()
-    const { settings } = useSettings()
-    const hidden = useMediaQuery(theme.breakpoints.down('md'))
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      username: "",
+      email: "",
+      password: "",
+      terms: false,
+    },
+    mode: "onBlur",
+    resolver: zodResolver(signUpSchema),
+  });
 
-
-    const { skin } = settings
-
-    const {
-        control,
-        setError,
-        handleSubmit,
-        reset,
-        formState: { errors}
-
-    } = useForm({
-        defaultValues: {
-            username: "",
-            email: "",
-            password: "",
-            terms: false,
-        },
-        mode: 'onBlur',
-        resolver: zodResolver(signUpSchema)
-
-
-    })
-
-    const { mutateAsync } = trpc.signup.useMutation();
-    const onSubmit = useCallback(
-        async(data: ISignUp) => {
-        try {
-            const result = await mutateAsync(data);
-            if(result.status === 201) {
-                reset();
-                router.push('/login/');
-            }
-        } catch (err) {
-            console.error(err);
+  const { mutateAsync } = trpc.signup.useMutation();
+  const registerHandler = useCallback(
+    async (data: ISignUp) => {
+      try {
+        const result = await mutateAsync(data);
+        if (result.status === 201) {
+          reset();
+          router.push("/login/");
         }
+      } catch (err) {
+        console.error(err);
+      }
     },
     [mutateAsync, router, reset]
-    )
-
-    const imageSource = skin === 'bordered' ? 'auth-v2-register-illustration-bordered' : 'auth-v2-register-illustration'
-
-
-
+  );
 
   return (
-    <Box className='content-right'>
-      {!hidden ? (
-        <Box sx={{ flex: 1, display: 'flex', position: 'relative', alignItems: 'center', justifyContent: 'center' }}>
-          <RegisterIllustrationWrapper>
-            <RegisterIllustration
-              alt='register-illustration'
-              src={`/images/pages/${imageSource}-${theme.palette.mode}.png`}
-            />
-          </RegisterIllustrationWrapper>
-          <FooterIllustrationsV2 image={`/images/pages/auth-v2-register-mask-${theme.palette.mode}.png`} />
-        </Box>
-      ) : null}
-      <RightWrapper sx={skin === 'bordered' && !hidden ? { borderLeft: `1px solid ${theme.palette.divider}` } : {}}>
-        <Box
+    <ThemeProvider theme={theme}>
+      <Grid container component="main" sx={{ height: "100vh " }}>
+        <CssBaseline />
+        <Grid
+          item
+          xs={false}
+          sm={4}
+          md={7}
           sx={{
-            p: 7,
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: 'background.paper'
+            backgroundImage:
+              "url(https://source.unsplash.com/random/?hospital/)",
+            backgroundRepeat: "no-repeat",
+            backgroundColor: (t) =>
+              t.palette.mode === "light"
+                ? t.palette.grey[50]
+                : t.palette.grey[900],
+            backgroundSize: "cover",
+            backgroundPosition: "center",
           }}
-        >
-          <BoxWrapper>
-            <Box
-              sx={{
-                top: 30,
-                left: 40,
-                display: 'flex',
-                position: 'absolute',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
-            >
-              <svg width={47} fill='none' height={26} viewBox='0 0 268 150' xmlns='http://www.w3.org/2000/svg'>
-                <rect
-                  rx='25.1443'
-                  width='50.2886'
-                  height='143.953'
-                  fill={theme.palette.primary.main}
-                  transform='matrix(-0.865206 0.501417 0.498585 0.866841 195.571 0)'
-                />
-                <rect
-                  rx='25.1443'
-                  width='50.2886'
-                  height='143.953'
-                  fillOpacity='0.4'
-                  fill='url(#paint0_linear_7821_79167)'
-                  transform='matrix(-0.865206 0.501417 0.498585 0.866841 196.084 0)'
-                />
-                <rect
-                  rx='25.1443'
-                  width='50.2886'
-                  height='143.953'
-                  fill={theme.palette.primary.main}
-                  transform='matrix(0.865206 0.501417 -0.498585 0.866841 173.147 0)'
-                />
-                <rect
-                  rx='25.1443'
-                  width='50.2886'
-                  height='143.953'
-                  fill={theme.palette.primary.main}
-                  transform='matrix(-0.865206 0.501417 0.498585 0.866841 94.1973 0)'
-                />
-                <rect
-                  rx='25.1443'
-                  width='50.2886'
-                  height='143.953'
-                  fillOpacity='0.4'
-                  fill='url(#paint1_linear_7821_79167)'
-                  transform='matrix(-0.865206 0.501417 0.498585 0.866841 94.1973 0)'
-                />
-                <rect
-                  rx='25.1443'
-                  width='50.2886'
-                  height='143.953'
-                  fill={theme.palette.primary.main}
-                  transform='matrix(0.865206 0.501417 -0.498585 0.866841 71.7728 0)'
-                />
-                <defs>
-                  <linearGradient
-                    y1='0'
-                    x1='25.1443'
-                    x2='25.1443'
-                    y2='143.953'
-                    id='paint0_linear_7821_79167'
-                    gradientUnits='userSpaceOnUse'
-                  >
-                    <stop />
-                    <stop offset='1' stopOpacity='0' />
-                  </linearGradient>
-                  <linearGradient
-                    y1='0'
-                    x1='25.1443'
-                    x2='25.1443'
-                    y2='143.953'
-                    id='paint1_linear_7821_79167'
-                    gradientUnits='userSpaceOnUse'
-                  >
-                    <stop />
-                    <stop offset='1' stopOpacity='0' />
-                  </linearGradient>
-                </defs>
-              </svg>
-              <Typography variant='h6' sx={{ ml: 2, lineHeight: 1, fontWeight: 700, fontSize: '1.5rem !important' }}>
-                {themeConfig.templateName}
+        />
+        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+          <Box
+            sx={{
+              my: 8,
+              mx: 4,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Box sx={{ mb: 6 }}>
+              <Typography variant="body2">
+                Please sign-in to your account and start the adventure
               </Typography>
             </Box>
-            <Box sx={{ mb: 6 }}>
-              <TypographyStyled variant='h5'>Adventure starts here 🚀</TypographyStyled>
-              <Typography variant='body2'>Make your app management easy and fun!</Typography>
-            </Box>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form
+              noValidate
+              autoComplete="off"
+              onSubmit={handleSubmit(registerHandler)}
+            >
               <FormControl fullWidth sx={{ mb: 4 }}>
                 <Controller
-                  name='username'
+                  name="username"
                   control={control}
                   rules={{ required: true }}
                   render={({ field: { value, onChange, onBlur } }) => (
@@ -271,60 +133,78 @@ const RegisterPage: NextPage = (props) => {
                       autoFocus
                       value={value}
                       onBlur={onBlur}
-                      label='Username'
+                      label="Username"
                       onChange={onChange}
-                      placeholder='johndoe'
+                      placeholder="johndoe"
                       error={Boolean(errors.username)}
                     />
                   )}
                 />
                 {errors.username && (
-                  <FormHelperText sx={{ color: 'error.main' }}>{errors.username.message}</FormHelperText>
+                  <FormHelperText sx={{ color: "error.main" }}>
+                    {errors.username.message}
+                  </FormHelperText>
                 )}
               </FormControl>
               <FormControl fullWidth sx={{ mb: 4 }}>
                 <Controller
-                  name='email'
+                  name="email"
                   control={control}
                   rules={{ required: true }}
                   render={({ field: { value, onChange, onBlur } }) => (
                     <TextField
+                      autoFocus
+                      label="Email"
                       value={value}
-                      label='Email'
                       onBlur={onBlur}
                       onChange={onChange}
                       error={Boolean(errors.email)}
-                      placeholder='user@email.com'
+                      placeholder="glennpower@gmail.com"
                     />
                   )}
                 />
-                {errors.email && <FormHelperText sx={{ color: 'error.main' }}>{errors.email.message}</FormHelperText>}
+                {errors.email && (
+                  <FormHelperText sx={{ color: "error.main" }}>
+                    {errors.email.message}
+                  </FormHelperText>
+                )}
               </FormControl>
+
               <FormControl fullWidth>
-                <InputLabel htmlFor='auth-login-v2-password' error={Boolean(errors.password)}>
+                <InputLabel
+                  htmlFor="auth-login-v2-password"
+                  error={Boolean(errors.password)}
+                >
                   Password
                 </InputLabel>
                 <Controller
-                  name='password'
+                  name="password"
                   control={control}
                   rules={{ required: true }}
                   render={({ field: { value, onChange, onBlur } }) => (
                     <OutlinedInput
                       value={value}
-                      label='Password'
                       onBlur={onBlur}
+                      label="Password"
                       onChange={onChange}
-                      id='auth-login-v2-password'
+                      id="auth-login-v2-password"
                       error={Boolean(errors.password)}
-                      type={showPassword ? 'text' : 'password'}
+                      type={showPassword ? "text" : "password"}
                       endAdornment={
-                        <InputAdornment position='end'>
+                        <InputAdornment position="end">
                           <IconButton
-                            edge='end'
-                            onMouseDown={e => e.preventDefault()}
+                            edge="end"
+                            onMouseDown={(e) => e.preventDefault()}
                             onClick={() => setShowPassword(!showPassword)}
                           >
-                            <Icon icon={showPassword ? 'mdi:eye-outline' : 'mdi:eye-off-outline'} />
+                            <Icon
+                              icon={
+                                showPassword
+                                  ? "mdi:eye-outline"
+                                  : "mdi:eye-off-outline"
+                              }
+                              fontSize={20}
+                            />
                           </IconButton>
                         </InputAdornment>
                       }
@@ -332,13 +212,15 @@ const RegisterPage: NextPage = (props) => {
                   )}
                 />
                 {errors.password && (
-                  <FormHelperText sx={{ color: 'error.main' }}>{errors.password.message}</FormHelperText>
+                  <FormHelperText sx={{ color: "error.main" }} id="">
+                    {errors.password.message}
+                  </FormHelperText>
                 )}
               </FormControl>
 
               <FormControl sx={{ my: 0 }} error={Boolean(errors.terms)}>
                 <Controller
-                  name="terms"
+                  name='terms'
                   control={control}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => {
@@ -388,7 +270,7 @@ const RegisterPage: NextPage = (props) => {
               </Button>
               <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
                 <Typography sx={{ mr: 2, color: 'text.secondary' }}>Already have an account?</Typography>
-                <Typography href='/Login/' component={Link} sx={{ color: 'primary.main', textDecoration: 'none' }}>
+                <Typography href='/login' component={Link} sx={{ color: 'primary.main', textDecoration: 'none' }}>
                   Sign in instead
                 </Typography>
               </Box>
@@ -401,46 +283,56 @@ const RegisterPage: NextPage = (props) => {
               >
                 or
               </Divider>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
                 <IconButton
-                  href='/'
+                  href="/"
                   component={Link}
-                  sx={{ color: '#497ce2' }}
+                  sx={{ color: "#497ce2" }}
                   onClick={(e: MouseEvent<HTMLElement>) => e.preventDefault()}
                 >
-                  <Icon icon='mdi:facebook' />
+                  <Icon icon="mdi:facebook" />
                 </IconButton>
                 <IconButton
-                  href='/'
+                  href="/"
                   component={Link}
-                  sx={{ color: '#1da1f2' }}
+                  sx={{ color: "#1da1f2" }}
                   onClick={(e: MouseEvent<HTMLElement>) => e.preventDefault()}
                 >
-                  <Icon icon='mdi:twitter' />
+                  <Icon icon="mdi:twitter" />
                 </IconButton>
                 <IconButton
-                  href='/'
+                  href="/"
                   component={Link}
                   onClick={(e: MouseEvent<HTMLElement>) => e.preventDefault()}
-                  sx={{ color: theme => (theme.palette.mode === 'light' ? '#272727' : 'grey.300') }}
+                  sx={{
+                    color: (theme) =>
+                      theme.palette.mode === "light" ? "#272727" : "grey.300",
+                  }}
                 >
-                  <Icon icon='mdi:github' />
+                  <Icon icon="mdi:github" />
                 </IconButton>
                 <IconButton
-                  href='/'
+                  href="/"
                   component={Link}
-                  sx={{ color: '#db4437' }}
+                  sx={{ color: "#db4437" }}
                   onClick={(e: MouseEvent<HTMLElement>) => e.preventDefault()}
                 >
-                  <Icon icon='mdi:google' />
+                  <Icon icon="mdi:google" />
                 </IconButton>
               </Box>
+              {/* <Copyright sx={{ mt: 5 }} /> */}
             </form>
-          </BoxWrapper>
-        </Box>
-      </RightWrapper>
-    </Box>
-  )
-}
+          </Box>
+        </Grid>
+      </Grid>
+    </ThemeProvider>
+  );
+};
 
-export default RegisterPage
+export default RegisterPage;
