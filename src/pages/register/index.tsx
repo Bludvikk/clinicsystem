@@ -10,7 +10,6 @@ import {
   TextField,
   InputLabel,
   FormControl,
-  useMediaQuery,
   OutlinedInput,
   FormHelperText,
   InputAdornment,
@@ -29,7 +28,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 
-import Icon from "src/@core/components/icon";
+import Icon from "@/@core/components/icon";
 
 import { trpc } from "@/common/trpc";
 

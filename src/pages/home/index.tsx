@@ -102,6 +102,7 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 import { requireAuth } from "@/common/requireAuth";
+import AddPatientForm from "@/views/AddPatientForm";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: {} };
@@ -210,7 +211,11 @@ const Dashboard: NextPage = () => {
             <TabPanel value="1">
               <DataTable />
             </TabPanel>
-            <TabPanel value="2">Patient</TabPanel>
+            <TabPanel value="2">
+
+              <AddPatientForm />
+
+            </TabPanel>
             <TabPanel value="3">Department</TabPanel>
           </TabContext>
         </Box>

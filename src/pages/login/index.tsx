@@ -31,7 +31,7 @@ import Typography, { TypographyProps } from "@mui/material/Typography";
 
 import { signIn } from "next-auth/react";
 
-import Icon from "@/components/icon";
+import Icon from "@/@core/components/icon";
 
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
