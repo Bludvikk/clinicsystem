@@ -24,7 +24,7 @@ import {
 import { styled } from "@mui/material/styles";
 
 import { signUpSchema, ISignUp } from "../common/validation/auth";
-import { trpc } from "../common/trpc";
+import { trpc } from "../utils/trpc";
 
 const Form = styled("form")(({ theme }) => ({
   maxWidth: 600,
@@ -62,12 +62,7 @@ const SignUp: NextPage = () => {
   );
 
   return (
-    <Grid
-      container
-      alignItems="center"
-      justifyContent="center"
-      sx={{ height: "100vh" }}
-    >
+    <Grid container alignItems="center" justifyContent="center" sx={{ height: "100vh" }}>
       <Card>
         <CardHeader title="Sign Up" />
         <CardContent>
@@ -77,27 +72,21 @@ const SignUp: NextPage = () => {
                 <Controller
                   name="username"
                   control={control}
-                  render={({ field }) => (
-                    <TextField fullWidth label="Username" {...field} />
-                  )}
+                  render={({ field }) => <TextField fullWidth label="Username" {...field} />}
                 />
               </Grid>
               <Grid item xs={12}>
                 <Controller
                   name="email"
                   control={control}
-                  render={({ field }) => (
-                    <TextField fullWidth label="Email" {...field} />
-                  )}
+                  render={({ field }) => <TextField fullWidth label="Email" {...field} />}
                 />
               </Grid>
               <Grid item xs={12}>
                 <Controller
                   name="password"
                   control={control}
-                  render={({ field }) => (
-                    <TextField fullWidth label="Password" {...field} />
-                  )}
+                  render={({ field }) => <TextField fullWidth label="Password" {...field} />}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -114,9 +103,7 @@ const SignUp: NextPage = () => {
                     Sign Up!
                   </Button>
                   <Box sx={{ display: "flex", alignItems: "center" }}>
-                    <Typography sx={{ mr: 2 }}>
-                      Already have an account?
-                    </Typography>
+                    <Typography sx={{ mr: 2 }}>Already have an account?</Typography>
                     <Link href="/" passHref>
                       Log in
                     </Link>
