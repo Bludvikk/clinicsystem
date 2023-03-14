@@ -7,6 +7,7 @@ export const loginSchema = z.object({
 
 export const signUpSchema = loginSchema.extend({
   username: z.string(),
+  terms: z.literal<boolean>(true, {required_error: "You must accept the privacy policy & terms"}),
 });
 
 export type ILogin = z.infer<typeof loginSchema>;

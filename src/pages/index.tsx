@@ -1,124 +1,127 @@
-import { NextPage } from "next";
-import Head from "next/head";
-import Link from "next/link";
-import { useCallback } from "react";
-import { signIn } from "next-auth/react";
-import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Button,
-  Card,
-  CardActions,
-  Grid,
-  Box,
-  TextField,
-  CardContent,
-  CardHeader,
-} from "@mui/material";
+import * as React from 'react';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Link from '@mui/material/Link';
+import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Typography from '@mui/material/Typography';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-import Typography, { TypographyProps } from "@mui/material/Typography";
+function Copyright(props: any) {
+  return (
+    <Typography variant="body2" color="text.secondary" align="center" {...props}>
+      {'Copyright © '}
+      <Link color="inherit" href="https://mui.com/">
+        Your Website
+      </Link>{' '}
+      {new Date().getFullYear()}
+      {'.'}
+    </Typography>
+  );
+}
 
-import { styled } from "@mui/material/styles";
+const theme = createTheme();
 
-import { loginSchema, ILogin } from "../common/validation/auth";
-
-const TypographyStyled = styled(Typography)<TypographyProps>(({ theme }) => ({
-  fontWeight: 600,
-  letterSpacing: "0.18px",
-  marginBottom: theme.spacing(1.5),
-  [theme.breakpoints.down("md")]: { marginTop: theme.spacing(8) },
-}));
-
-const Form = styled("form")(({ theme }) => ({
-  maxWidth: 600,
-  padding: theme.spacing(12),
-  borderRadius: theme.shape.borderRadius,
-  border: `1px solid ${theme.palette.divider}`,
-}));
-const Home: NextPage = () => {
-  const { handleSubmit, control, reset } = useForm<ILogin>({
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-    resolver: zodResolver(loginSchema),
-  });
-
-  // const onSubmit = useCallback(
-  //   async (data: ILogin) => {
-  //     try {
-  //       await signIn("credentials", { ...data, callbackUrl: "/dashboard" });
-  //       console.log('succesfully signed in')
-  //       reset();
-  //     } catch (err) {
-  //       console.error(err);
-  //     }
-  //   },
-  //   [reset]
-  // );
-
-  const loginHandler = async (data: ILogin) => {
-    const result = await signIn("credentials", {
-      ...data,
-      callbackUrl: "/dashboard",
+export default function SignInSide() {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    console.log({
+      email: data.get('email'),
+      password: data.get('password'),
     });
-    console.log({ result });
   };
 
   return (
-    <Grid
-      container
-      alignItems="center"
-      justifyContent="center"
-      sx={{ height: "100vh" }}
-    >
-      <Card>
-        <CardHeader title="Sign In" />
-        <CardContent>
-          <Form onSubmit={handleSubmit(loginHandler)}>
-            <Grid container spacing={5}>
-              <Grid item xs={12}>
-                <Controller
-                  name="email"
-                  control={control}
-                  render={({ field }) => (
-                    <TextField fullWidth label="Email" {...field} />
-                  )}
-                />
+    <ThemeProvider theme={theme}>
+      <Grid container component="main" sx={{ height: '100vh' }}>
+        <CssBaseline />
+        <Grid
+          item
+          xs={false}
+          sm={4}
+          md={7}
+          sx={{
+            backgroundImage: 'url(https://source.unsplash.com/random)',
+            backgroundRepeat: 'no-repeat',
+            backgroundColor: (t) =>
+              t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        />
+        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+          <Box
+            sx={{
+              my: 8,
+              mx: 4,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
+            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Sign in
+            </Typography>
+            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                autoFocus
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+              />
+              <FormControlLabel
+                control={<Checkbox value="remember" color="primary" />}
+                label="Remember me"
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Sign In
+              </Button>
+              <Grid container>
+                <Grid item xs>
+                  <Link href="#" variant="body2">
+                    Forgot password?
+                  </Link>
+                </Grid>
+                <Grid item>
+                  <Link href="#" variant="body2">
+                    {"Don't have an account? Sign Up"}
+                  </Link>
+                </Grid>
               </Grid>
-              <Grid item xs={12}>
-                <Controller
-                  name="password"
-                  control={control}
-                  render={({ field }) => (
-                    <TextField fullWidth label="Password" {...field} />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <Box
-                  
-                >
-                  <Button type="submit" variant="contained">
-                    Login
-                  </Button>
-                </Box>
-              </Grid>
-              <Grid item xs={6}>
-                <Box
-                  
-                >
-                  <Button variant="contained" color="secondary" href="/sign-up">
-                    Sign Up
-                  </Button>
-                </Box>
-              </Grid>
-            </Grid>
-          </Form>
-        </CardContent>
-      </Card>
-    </Grid>
+              <Copyright sx={{ mt: 5 }} />
+            </Box>
+          </Box>
+        </Grid>
+      </Grid>
+    </ThemeProvider>
   );
-};
-
-export default Home;
+}
