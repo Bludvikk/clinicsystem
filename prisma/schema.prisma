@@ -17,65 +17,42 @@ model User {
 }
 
 model Patient {
-  id                 String              @id @default(uuid())
+  id                 String      @id @default(uuid())
   firstName          String
   lastName           String
-  middleInitial      String?             @default("N/A")
+  middleInitial      String?     @default("N/A")
   address            String
   dateOfBirth        DateTime
-  civilStatus        String
+  civilStatus        CivilStatus @relation(fields: [civilStatusId], references: [id])
+  civilStatusId      Int
   age                Int
-  occupation         String              @default("N/A")
-  gender             String
-  contactNumber      String              @default("N/A")
-  createdAt          DateTime            @default(now())
-  updatedAt          DateTime            @updatedAt
-  familyHistory      FamilyHistory?
-  obGyne             ObGyne?
-  pastMedicalHistory PastMedicalHistory?
-  personalHistory    PersonalHistory?
+  occupation         Occupation  @relation(fields: [occupationId], references: [id])
+  occupationId       Int
+  gender             Gender      @relation(fields: [genderId], references: [id])
+  genderId           Int
+  contactNumber      String?     @default("N/A")
+  familyHistory      Json
+  personalHistory    Json
+  pastMedicalHistory Json
+  obGyne             Json
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
 }
 
-model FamilyHistory {
-  id                      String  @id @default(uuid())
-  isBronchialAsthma       Boolean @default(false)
-  isPulmonaryTuberculosis Boolean @default(false)
-  isHypertension          Boolean @default(false)
-  isDiabetesMellitus      Boolean @default(false)
-  isHearthDisease         Boolean @default(false)
-  isCancer                Boolean @default(false)
-  others                  String?
-  patientId               String  @unique
-  Patient                 Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+model CivilStatus {
+  id      Int       @id @default(autoincrement())
+  name    String
+  Patient Patient[]
 }
 
-model PersonalHistory {
-  id                     String   @id @default(uuid())
-  isSmoking              String[]
-  isAlcohol             String[]
-  currentHealthCondition String
-  medications            Json?
-  patientId              String   @unique
-  Patient                Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+model Occupation {
+  id      Int       @id @default(autoincrement())
+  name    String
+  Patient Patient[]
 }
 
-model PastMedicalHistory {
-  id             String   @id @default(uuid())
-  isHospitalized String[]
-  isInjuries     String[]
-  isSurgeries    String[]
-  isAllergies    String[]
-  isMeasles      String[]
-  isChickenPox   String[]
-  others         String?
-  patientId      String   @unique
-  Patient        Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
-}
-
-model ObGyne {
-  id             String    @id @default(uuid())
-  menstrualCycle DateTime?
-  days           Int?
-  patientId      String    @unique
-  Patient        Patient   @relation(fields: [patientId], references: [id], onDelete: Cascade)
+model Gender {
+  id      Int       @id @default(autoincrement())
+  name    String
+  Patient Patient[]
 }
