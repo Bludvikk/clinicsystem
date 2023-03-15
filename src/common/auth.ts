@@ -5,7 +5,6 @@ import { verify } from "argon2";
 import { prisma } from "./prisma";
 import { loginSchema } from "./validation/auth";
 
-
 export const nextAuthOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
@@ -33,7 +32,6 @@ export const nextAuthOptions: NextAuthOptions = {
           if (!isValidPassword) return null;
 
           return { id: result.id, email, username: result.username };
-
         } catch {
           return null;
         }
@@ -47,7 +45,6 @@ export const nextAuthOptions: NextAuthOptions = {
         token.email = user.email;
         token.username = user.username;
       }
-      console.log("jwt", { token, user });
       return token;
     },
     session: async ({ session, token }) => {

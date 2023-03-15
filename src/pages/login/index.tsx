@@ -24,8 +24,6 @@ import {
   Box,
 } from "@mui/material";
 
-
-
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Typography, { TypographyProps } from "@mui/material/Typography";
 
@@ -62,7 +60,7 @@ const LoginPage: NextPage = (props) => {
   const loginHandler = async (data: ILogin) => {
     const result = await signIn("credentials", {
       ...data,
-      callbackUrl: "/home/",
+      callbackUrl: "/dashboard",
     });
     console.log({ result });
   };
