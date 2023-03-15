@@ -1,0 +1,34 @@
+import { NextPage } from "next";
+import { useSession, signOut } from "next-auth/react";
+
+import Box from "@mui/material/Box";
+
+import { requireAuth } from "@/common/requireAuth";
+import { Card, CardContent, CardHeader, Grid, Typography } from "@mui/material";
+
+export const getServerSideProps = requireAuth(async () => {
+  return { props: {} };
+});
+
+const Patient: NextPage = () => {
+  const { data } = useSession();
+
+  return (
+    <Grid container>
+      <Card>
+        <CardHeader title="Patient"></CardHeader>
+        <CardContent>
+          <Typography variant="subtitle1" component="p">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce
+            tincidunt dui id libero gravida pharetra. Pellentesque augue velit,
+            venenatis id vehicula id, tincidunt eget tellus. Duis mollis gravida
+            erat, eu malesuada quam tincidunt sit amet. Phasellus ut augue sed
+            ipsum tempus feugiat sit amet eu nisl. Nulla aliquam ex ex,
+          </Typography>
+        </CardContent>
+      </Card>
+    </Grid>
+  );
+};
+
+export default Patient;

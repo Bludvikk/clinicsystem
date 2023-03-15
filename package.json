@@ -63,6 +63,7 @@
     "zustand": "^4.3.6"
   },
   "devDependencies": {
+    "@types/nprogress": "^0.2.0",
     "@types/prismjs": "^1.26.0",
     "@types/react-datepicker": "^4.10.0",
     "prisma": "^4.11.0"
