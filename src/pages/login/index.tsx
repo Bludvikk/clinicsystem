@@ -1,4 +1,4 @@
-import { useState, ReactNode, MouseEvent } from "react";
+import { useState, ReactNode, MouseEvent, ChangeEvent } from "react";
 
 import Link from "next/link";
 import { NextPage } from "next";
@@ -19,13 +19,26 @@ import {
   Grid,
   CssBaseline,
   Paper,
-  FormControlLabel,
   Avatar,
-  Box,
 } from "@mui/material";
 
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
+
+import MuiCard, { CardProps } from "@mui/material/Card";
+
+import MuiFormControlLabel, {
+  FormControlLabelProps,
+} from "@mui/material/FormControlLabel";
+
+import Box, { BoxProps } from "@mui/material/Box";
+
 import Typography, { TypographyProps } from "@mui/material/Typography";
+
+import themeConfig from "@/configs/themeConfig";
+
+import BlankLayout from "@/@core/layouts/BlankLayout";
+
+import FooterIllustrationsV2 from "@/views/pages/auth/FooterIllustrationsV1";
 
 import { signIn } from "next-auth/react";
 
@@ -35,13 +48,78 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { loginSchema, ILogin } from "@/common/validation/auth";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import { useSettings } from "../../@core/hooks/useSettings";
 
-const theme = createTheme();
 
-const LoginPage: NextPage = (props) => {
-  const [rememberMe, setRememberMe] = useState<boolean>(true);
+
+
+const LoginIllustrationWrapper = styled(Box)<BoxProps>(({ theme }) => ({
+  padding: theme.spacing(20),
+  paddingRight: "0 !important",
+  [theme.breakpoints.down("lg")]: {
+    padding: theme.spacing(10),
+  },
+}));
+
+const LoginIllustration = styled("img")(({ theme }) => ({
+  maxWidth: "48rem",
+  [theme.breakpoints.down("xl")]: {
+    maxWidth: "38rem",
+  },
+  [theme.breakpoints.down("lg")]: {
+    maxWidth: "30rem",
+  },
+}));
+
+const RightWrapper = styled(Box)<BoxProps>(({ theme }) => ({
+  width: "100%",
+  [theme.breakpoints.up("md")]: {
+    maxWidth: 400,
+  },
+  [theme.breakpoints.up("lg")]: {
+    maxWidth: 450,
+  },
+}));
+
+const BoxWrapper = styled(Box)<BoxProps>(({ theme }) => ({
+  width: "100%",
+  [theme.breakpoints.down("md")]: {
+    maxWidth: 400,
+  },
+}));
+
+const TypographyStyled = styled(Typography)<TypographyProps>(({ theme }) => ({
+  fontWeight: 600,
+  letterSpacing: "0.18px",
+  marginBottom: theme.spacing(1.5),
+  [theme.breakpoints.down("md")]: { marginTop: theme.spacing(8) },
+}));
+
+const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(
+  ({ theme }) => ({
+    "& .MuiFormControlLabel-label": {
+      fontSize: "0.875rem",
+      color: theme.palette.text.secondary,
+    },
+  })
+);
+
+const LoginPage: NextPage = () => {
+  // const [rememberMe, setRememberMe] = useState<boolean>(true);
   const [showPassword, setShowPassword] = useState<boolean>(false);
+
+  const theme = useTheme();
+  const { settings } = useSettings();
+
+  const { skin } = settings;
+
+  const hidden = useMediaQuery(theme.breakpoints.down("md"));
+
+
+  const imageSource =
+    skin === "bordered"
+      ? "auth-v2-login-illustration-bordered"
+      : "auth-v2-login-illustration";
 
   const {
     handleSubmit,
@@ -66,42 +144,146 @@ const LoginPage: NextPage = (props) => {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <Grid container component="main" sx={{ height: "100vh " }}>
-        <CssBaseline />
-        <Grid
-          item
-          xs={false}
-          sm={4}
-          md={7}
+    <Box className="content-right">
+      {!hidden ? (
+        <Box
           sx={{
-            backgroundImage:
-              "url(https://source.unsplash.com/random/?hospital/)",
-            backgroundRepeat: "no-repeat",
-            backgroundColor: (t) =>
-              t.palette.mode === "light"
-                ? t.palette.grey[50]
-                : t.palette.grey[900],
-            backgroundSize: "cover",
-            backgroundPosition: "center",
+            flex: 1,
+            display: "flex",
+            position: "relative",
+            alignItems: "center",
+            justifyContent: "center",
           }}
-        />
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-          <Box
-            sx={{
-              my: 8,
-              mx: 4,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-              <LockOutlinedIcon />
-            </Avatar>
+        >
+          <LoginIllustrationWrapper>
+            <LoginIllustration
+              alt="login-illustration"
+              src={`/images/pages/${imageSource}-${theme.palette.mode}.png`}
+            />
+          </LoginIllustrationWrapper>
+          <FooterIllustrationsV2 />
+        </Box>
+      ) : null}
+      <RightWrapper
+        sx={
+          skin === "bordered" && !hidden
+            ? { borderLeft: `1px solid ${theme.palette.divider}` }
+            : {}
+        }
+      >
+        <Box
+          sx={{
+            p: 7,
+            height: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "background.paper",
+          }}
+        >
+          <BoxWrapper>
+            <Box
+              sx={{
+                top: 30,
+                left: 40,
+                display: "flex",
+                position: "absolute",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <svg
+                width={47}
+                fill="none"
+                height={26}
+                viewBox="0 0 268 150"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect
+                  rx="25.1443"
+                  width="50.2886"
+                  height="143.953"
+                  fill={theme.palette.primary.main}
+                  transform="matrix(-0.865206 0.501417 0.498585 0.866841 195.571 0)"
+                />
+                <rect
+                  rx="25.1443"
+                  width="50.2886"
+                  height="143.953"
+                  fillOpacity="0.4"
+                  fill="url(#paint0_linear_7821_79167)"
+                  transform="matrix(-0.865206 0.501417 0.498585 0.866841 196.084 0)"
+                />
+                <rect
+                  rx="25.1443"
+                  width="50.2886"
+                  height="143.953"
+                  fill={theme.palette.primary.main}
+                  transform="matrix(0.865206 0.501417 -0.498585 0.866841 173.147 0)"
+                />
+                <rect
+                  rx="25.1443"
+                  width="50.2886"
+                  height="143.953"
+                  fill={theme.palette.primary.main}
+                  transform="matrix(-0.865206 0.501417 0.498585 0.866841 94.1973 0)"
+                />
+                <rect
+                  rx="25.1443"
+                  width="50.2886"
+                  height="143.953"
+                  fillOpacity="0.4"
+                  fill="url(#paint1_linear_7821_79167)"
+                  transform="matrix(-0.865206 0.501417 0.498585 0.866841 94.1973 0)"
+                />
+                <rect
+                  rx="25.1443"
+                  width="50.2886"
+                  height="143.953"
+                  fill={theme.palette.primary.main}
+                  transform="matrix(0.865206 0.501417 -0.498585 0.866841 71.7728 0)"
+                />
+                <defs>
+                  <linearGradient
+                    y1="0"
+                    x1="25.1443"
+                    x2="25.1443"
+                    y2="143.953"
+                    id="paint0_linear_7821_79167"
+                    gradientUnits="userSpaceOnUse"
+                  >
+                    <stop />
+                    <stop offset="1" stopOpacity="0" />
+                  </linearGradient>
+                  <linearGradient
+                    y1="0"
+                    x1="25.1443"
+                    x2="25.1443"
+                    y2="143.953"
+                    id="paint1_linear_7821_79167"
+                    gradientUnits="userSpaceOnUse"
+                  >
+                    <stop />
+                    <stop offset="1" stopOpacity="0" />
+                  </linearGradient>
+                </defs>
+              </svg>
+              <Typography
+                variant="h6"
+                sx={{
+                  ml: 2,
+                  lineHeight: 1,
+                  fontWeight: 700,
+                  fontSize: "1.5rem !important",
+                }}
+              >
+                {themeConfig.templateName}
+              </Typography>
+            </Box>
             <Box sx={{ mb: 6 }}>
+              <TypographyStyled variant="h5">{`Welcome to ${themeConfig.templateName}! 👋🏻`}</TypographyStyled>
               <Typography variant="body2">
-                Please sign-in to your account
+                Please sign-in to your account and start the adventure
               </Typography>
             </Box>
             <form
@@ -132,7 +314,6 @@ const LoginPage: NextPage = (props) => {
                   </FormHelperText>
                 )}
               </FormControl>
-
               <FormControl fullWidth sx={{ mb: 4 }}>
                 <InputLabel
                   htmlFor="auth-login-v2-password"
@@ -180,7 +361,6 @@ const LoginPage: NextPage = (props) => {
                   </FormHelperText>
                 )}
               </FormControl>
-
               <Box
                 sx={{
                   mb: 4,
@@ -192,17 +372,15 @@ const LoginPage: NextPage = (props) => {
               >
                 <FormControlLabel
                   label="Remember Me"
-                  control={
-                    <Checkbox
-                      checked={rememberMe}
-                      onChange={(e) => setRememberMe(e.target.checked)}
-                    />
-                  }
+                  control={<Checkbox />}
+                  sx={{
+                    "& .MuiFormControlLabel-label": { color: "text.primary" },
+                  }}
                 />
                 <Typography
                   variant="body2"
                   component={Link}
-                  href="/forgot-password"
+                  href="/pages/auth/forgot-password-v2"
                   sx={{ color: "primary.main", textDecoration: "none" }}
                 >
                   Forgot Password?
@@ -229,8 +407,8 @@ const LoginPage: NextPage = (props) => {
                   New on our platform?
                 </Typography>
                 <Typography
-                  href="/register"
                   component={Link}
+                  href="/pages/auth/register-v2"
                   sx={{ color: "primary.main", textDecoration: "none" }}
                 >
                   Create an account
@@ -243,7 +421,6 @@ const LoginPage: NextPage = (props) => {
                   mb: (theme) => `${theme.spacing(7.5)} !important`,
                 }}
               >
-                {" "}
                 or
               </Divider>
               <Box
@@ -289,13 +466,15 @@ const LoginPage: NextPage = (props) => {
                   <Icon icon="mdi:google" />
                 </IconButton>
               </Box>
-              {/* <Copyright sx={{ mt: 5 }} /> */}
             </form>
-          </Box>
-        </Grid>
-      </Grid>
-    </ThemeProvider>
+          </BoxWrapper>
+        </Box>
+      </RightWrapper>
+    </Box>
   );
 };
+
+
+LoginPage.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
 
 export default LoginPage;
