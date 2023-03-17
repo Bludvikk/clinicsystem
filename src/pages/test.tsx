@@ -1,26 +1,47 @@
 import { getCivilStatus, getCivilStatuses } from "@/server/hooks/civilStatus";
 import { getGender, getGenders } from "@/server/hooks/gender";
 import { getOccupation, getOccupations } from "@/server/hooks/occupation";
-import { deletePatient, getPatient, getPatients, postPatient, putPatient } from "@/server/hooks/patient";
+import {
+  deletePatient,
+  getPatient,
+  getPatients,
+  postPatient,
+  putPatient,
+} from "@/server/hooks/patient";
+import PatientForm from "@/views/pages/patient/PatientForm";
 
 const Test = () => {
-  const { mutateAsync: postPatientMutateAsync, isLoading: postPatientIsLoading } = postPatient();
-  const { mutateAsync: putPatientMutateAsync, isLoading: putPatientIsLoading } = putPatient();
-  const { mutateAsync: deletePatientMutateAsync, isLoading: deletePatientIsLoading } = deletePatient();
+  const {
+    mutateAsync: postPatientMutateAsync,
+    isLoading: postPatientIsLoading,
+  } = postPatient();
+  const { mutateAsync: putPatientMutateAsync, isLoading: putPatientIsLoading } =
+    putPatient();
+  const {
+    mutateAsync: deletePatientMutateAsync,
+    isLoading: deletePatientIsLoading,
+  } = deletePatient();
 
-  const { data: patientsData, isLoading: patientsDataIsLoading } = getPatients();
+  const { data: patientsData, isLoading: patientsDataIsLoading } =
+    getPatients();
   const { data: patientData, isLoading: patientDataIsLoading } = getPatient({
     id: "c45e009a-8c59-4006-ba05-88d393fbca50",
   });
 
   const { data: gendersData, isLoading: gendersDataIsLoading } = getGenders();
-  const { data: genderData, isLoading: genderDataIsLoading } = getGender({ id: 2 });
+  const { data: genderData, isLoading: genderDataIsLoading } = getGender({
+    id: 2,
+  });
 
-  const { data: civilStatusesData, isLoading: civilStatusesDataIsLoading } = getCivilStatuses();
-  const { data: civilStatusData, isLoading: civilStatusDataIsLoading } = getCivilStatus({ id: 2 });
+  const { data: civilStatusesData, isLoading: civilStatusesDataIsLoading } =
+    getCivilStatuses();
+  const { data: civilStatusData, isLoading: civilStatusDataIsLoading } =
+    getCivilStatus({ id: 2 });
 
-  const { data: occupationsData, isLoading: occupationsDataIsLoading } = getOccupations();
-  const { data: occupationData, isLoading: occupationDataIsLoading } = getOccupation({ id: 1 });
+  const { data: occupationsData, isLoading: occupationsDataIsLoading } =
+    getOccupations();
+  const { data: occupationData, isLoading: occupationDataIsLoading } =
+    getOccupation({ id: 1 });
 
   const add = async () => {
     const result = await postPatientMutateAsync({
@@ -138,7 +159,7 @@ const Test = () => {
 
   const deletedPatientData = async () => {
     const result = await deletePatientMutateAsync({
-      id: "1195f5b5-261f-4a5d-9f46-a3400ff7eff6",
+      id: "db92fdfd-52e4-478b-b4cb-9298501d4756",
     });
     console.log(result);
   };
@@ -158,10 +179,22 @@ const Test = () => {
     <div>
       <button onClick={() => add()}>Add Patient</button>
       <button onClick={() => update()}>Update Patient</button>
-      {!patientsDataIsLoading ? <button onClick={() => logPatientsData()}>Log Patients Data</button> : "loading..."}
-      {!patientDataIsLoading ? <button onClick={() => logPatientData()}>Log Patient Data</button> : "loading"}
+      {!patientsDataIsLoading ? (
+        <button onClick={() => logPatientsData()}>Log Patients Data</button>
+      ) : (
+        "loading..."
+      )}
+      {!patientDataIsLoading ? (
+        <button onClick={() => logPatientData()}>Log Patient Data</button>
+      ) : (
+        "loading"
+      )}
       <button onClick={() => deletedPatientData()}>Delete</button>
       <button onClick={() => showOtherData()}>Show Other Data</button>
+
+      <div style={{ marginTop: 20 }}>
+        <PatientForm />
+      </div>
     </div>
   );
 };

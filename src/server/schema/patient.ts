@@ -1,6 +1,9 @@
 import { z } from "zod";
 
-export const addPatientSchema = z.object({
+export const PatientSchema = z.object({
+  id: z.string({
+    required_error: "Please enter a patient Id.",
+  }),
   firstName: z.string({
     required_error: "Please enter a first name.",
   }),
@@ -9,7 +12,7 @@ export const addPatientSchema = z.object({
   }),
   middleInitial: z
     .string()
-    .min(1, {
+    .max(1, {
       message: "Middle initial must be a single character.",
     })
     .optional(),
@@ -36,26 +39,12 @@ export const addPatientSchema = z.object({
   obGyne: z.any(),
 });
 
-export const getPatientSchema = z.object({
-  id: z.string({
-    required_error: "Please enter a patient Id.",
-  }),
-});
+export const addPatientSchema = PatientSchema.omit({ id: true });
+export const getPatientSchema = PatientSchema.pick({ id: true });
+export const updatePatientSchema = PatientSchema;
+export const deletePatientSchema = PatientSchema.pick({ id: true });
 
-export const updatePatientSchema = addPatientSchema.merge(
-  z.object({
-    id: z.string({
-      required_error: "Please enter a patient Id.",
-    }),
-  })
-);
-
-export const deletePatientSchema = z.object({
-  id: z.string({
-    required_error: "Please enter a patient Id.",
-  }),
-});
-
+export type IPatient = z.infer<typeof PatientSchema>;
 export type IAddPatient = z.infer<typeof addPatientSchema>;
 export type IGetPatient = z.infer<typeof getPatientSchema>;
 export type IUpdatePatient = z.infer<typeof updatePatientSchema>;

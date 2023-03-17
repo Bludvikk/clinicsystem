@@ -23,6 +23,8 @@ import themeConfig from "src/configs/themeConfig";
 
 // ** Third Party Import
 import { Toaster } from "react-hot-toast";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 
 // ** Component Imports
 import UserLayout from "src/layouts/UserLayout";
@@ -125,10 +127,12 @@ const CustomApp = ({
               <ThemeComponent settings={settings}>
                 <WindowWrapper>
                   <QueryClientProvider client={queryClient}>
-                    <SessionProvider session={pageProps.session}>
-                      {getLayout(<Component {...pageProps} />)}
-                      <ReactQueryDevtools initialIsOpen={false} />
-                    </SessionProvider>
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <SessionProvider session={pageProps.session}>
+                        {getLayout(<Component {...pageProps} />)}
+                        <ReactQueryDevtools initialIsOpen={false} />
+                      </SessionProvider>
+                    </LocalizationProvider>
                   </QueryClientProvider>
                 </WindowWrapper>
                 <ReactHotToast>
