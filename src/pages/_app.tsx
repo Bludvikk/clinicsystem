@@ -58,6 +58,8 @@ import "@/styles/globals.css";
 
 import type { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 
 // ** Extend App Props with Emotion
 type ExtendedAppProps = CustomAppProps & {
@@ -124,11 +126,13 @@ const CustomApp = ({
             return (
               <ThemeComponent settings={settings}>
                 <WindowWrapper>
-                  <QueryClientProvider client={queryClient}>
-                    <SessionProvider session={pageProps.session}>
-                      {getLayout(<Component {...pageProps} />)}
-                      <ReactQueryDevtools initialIsOpen={false} />
-                    </SessionProvider>
+                <QueryClientProvider client={queryClient}>
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <SessionProvider session={pageProps.session}>
+                        {getLayout(<Component {...pageProps} />)}
+                        <ReactQueryDevtools initialIsOpen={false} />
+                      </SessionProvider>
+                    </LocalizationProvider>
                   </QueryClientProvider>
                 </WindowWrapper>
                 <ReactHotToast>

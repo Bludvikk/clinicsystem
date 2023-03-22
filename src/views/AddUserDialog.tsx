@@ -34,6 +34,7 @@ import { postPatient } from "@/server/hooks/patient";
 import { addPatientSchema, IAddPatient } from "@/server/schema/patient";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller, useController } from "react-hook-form";
+import { DatePicker } from "@mui/x-date-pickers";
 
 const Transition = forwardRef(function Transition(
   props: FadeProps & { children?: ReactElement<any, any> },
@@ -128,13 +129,12 @@ const AddUserDialog: NextPage = () => {
                   <Controller
                     name="firstName"
                     control={control}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field }) => (
                       <TextField
+                        {...field}
                         fullWidth
-                        value={value}
-                        onChange={onChange}
+                        name="firstName"
                         label="First Name"
-                        placeholder="John"
                       />
                     )}
                   />
@@ -143,11 +143,11 @@ const AddUserDialog: NextPage = () => {
                   <Controller
                     name="lastName"
                     control={control}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field }) => (
                       <TextField
-                        value={value}
-                        onChange={onChange}
+                        {...field}
                         fullWidth
+                        name="lastName"
                         label="Last Name"
                       />
                     )}
@@ -157,13 +157,12 @@ const AddUserDialog: NextPage = () => {
                   <Controller
                     name="middleInitial"
                     control={control}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field }) => (
                       <TextField
-                        fullWidth
-                        value={value}
-                        onChange={onChange}
+                        {...field}
+                        name="middleInitial"
                         label="Middle Initial"
-                        placeholder="D"
+                        variant="outlined"
                       />
                     )}
                   />
@@ -172,13 +171,12 @@ const AddUserDialog: NextPage = () => {
                   <Controller
                     name="address"
                     control={control}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field }) => (
                       <TextField
-                        fullWidth
-                        value={value}
-                        onChange={onChange}
+                        {...field}
+                        name="address"
                         label="Address"
-                        placeholder="Jln Palma Gil St. Brgy 34-D, Davao City"
+                        variant="outlined"
                       />
                     )}
                   />
@@ -187,14 +185,8 @@ const AddUserDialog: NextPage = () => {
                   <Controller
                     name="dateOfBirth"
                     control={control}
-                    render={({ field: { value, onChange } }) => (
-                      <TextField
-                        fullWidth
-                        value={value}
-                        onChange={onChange}
-                        label="Date of Birth"
-                        placeholder="June 11, 2000"
-                      />
+                    render={({ field }) => (
+                      <DatePicker {...field} label="Date of Birth" />
                     )}
                   />
                 </Grid>
@@ -202,11 +194,10 @@ const AddUserDialog: NextPage = () => {
                   <Controller
                     name="civilStatusId"
                     control={control}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field }) => (
                       <TextField
+                        {...field}
                         fullWidth
-                        value={value}
-                        onChange={onChange}
                         label="Civil Status"
                         placeholder="Single"
                       />
@@ -217,11 +208,10 @@ const AddUserDialog: NextPage = () => {
                   <Controller
                     name="age"
                     control={control}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field }) => (
                       <TextField
+                        {...field}
                         fullWidth
-                        value={value}
-                        onChange={onChange}
                         label="Age"
                         placeholder="22"
                       />
@@ -232,11 +222,10 @@ const AddUserDialog: NextPage = () => {
                   <Controller
                     name="occupationId"
                     control={control}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field }) => (
                       <TextField
+                        {...field}
                         fullWidth
-                        value={value}
-                        onChange={onChange}
                         label="Occupation"
                         placeholder="Engineer"
                       />
@@ -247,11 +236,10 @@ const AddUserDialog: NextPage = () => {
                   <Controller
                     name="genderId"
                     control={control}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field }) => (
                       <TextField
+                        {...field}
                         fullWidth
-                        value={value}
-                        onChange={onChange}
                         label="Gender"
                         placeholder="Male"
                       />
@@ -262,11 +250,10 @@ const AddUserDialog: NextPage = () => {
                   <Controller
                     name="contactNumber"
                     control={control}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field }) => (
                       <TextField
+                        {...field}
                         fullWidth
-                        value={value}
-                        onChange={onChange}
                         label="Contact Number"
                         placeholder="+63 9770910860"
                       />
@@ -296,16 +283,15 @@ const AddUserDialog: NextPage = () => {
                           <Controller
                             name="familyHistory.bronchialAsthma"
                             control={control}
-                            render={({ field: { value, onChange } }) => (
+                            render={({ field }) => (
                               <FormControlLabel
-                                label="Bronchial Asthma"
-                                onChange={onChange}
                                 control={
                                   <Checkbox
-                                    value={value}
-                                    onChange={(e) => setCheck(e.target.checked)}
+                                    {...field}
+                                    name="familyHistory.bronchialAsthma"
                                   />
                                 }
+                                label="Bronchial Asthma"
                               />
                             )}
                           />
@@ -314,14 +300,11 @@ const AddUserDialog: NextPage = () => {
                           <Controller
                             name="familyHistory.pulmonaryTuberculosis"
                             control={control}
-                            render={({ field: { value, onChange } }) => (
+                            render={({ field }) => (
                               <FormControlLabel
-                                onChange={onChange}
                                 label="Pulmonary Tuberculosis"
                                 control={
                                   <Checkbox
-                                    value={value}
-
                                     onChange={(e) => setCheck(e.target.checked)}
                                   />
                                 }
@@ -333,14 +316,11 @@ const AddUserDialog: NextPage = () => {
                           <Controller
                             name="familyHistory.diabetesMellitus"
                             control={control}
-                            render={({ field: { value, onChange } }) => (
+                            render={({ field }) => (
                               <FormControlLabel
                                 label="Diabetes Mellitus"
-                                onChange={onChange}
                                 control={
                                   <Checkbox
-                                    value={value}
-
                                     onChange={(e) => setCheck(e.target.checked)}
                                   />
                                 }
@@ -352,14 +332,11 @@ const AddUserDialog: NextPage = () => {
                           <Controller
                             name="familyHistory.hearthDisease"
                             control={control}
-                            render={({ field: { value, onChange } }) => (
+                            render={({ field }) => (
                               <FormControlLabel
                                 label="Heart Disease"
-                                onChange={onChange}
                                 control={
                                   <Checkbox
-                                    value={value}
-
                                     onChange={(e) => setCheck(e.target.checked)}
                                   />
                                 }
@@ -371,14 +348,11 @@ const AddUserDialog: NextPage = () => {
                           <Controller
                             name="familyHistory.cancer"
                             control={control}
-                            render={({ field: { value, onChange } }) => (
+                            render={({ field }) => (
                               <FormControlLabel
-                                onChange={onChange}
                                 label="Cancer"
                                 control={
                                   <Checkbox
-                                    value={value}
-
                                     onChange={(e) => setCheck(e.target.checked)}
                                   />
                                 }
@@ -390,11 +364,10 @@ const AddUserDialog: NextPage = () => {
                           <Controller
                             name="familyHistory.others"
                             control={control}
-                            render={({ field: { value, onChange } }) => (
+                            render={({ field }) => (
                               <TextField
+                                {...field}
                                 fullWidth
-                                value={value}
-                                onChange={onChange}
                                 label="Others"
                                 placeholder="Hemophilia, Pneumonia"
                               />
@@ -419,11 +392,10 @@ const AddUserDialog: NextPage = () => {
                   <Controller
                     name="personalHistory.smoking"
                     control={control}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field }) => (
                       <TextField
+                        {...field}
                         fullWidth
-                        value={value}
-                        onChange={onChange}
                         label="How many cigarette sticks per day?"
                         placeholder="5"
                       />
@@ -436,11 +408,10 @@ const AddUserDialog: NextPage = () => {
                   <Controller
                     name="personalHistory.alcohol"
                     control={control}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field }) => (
                       <TextField
+                        {...field}
                         fullWidth
-                        value={value}
-                        onChange={onChange}
                         label="Years of drinking"
                         placeholder="5"
                       />
@@ -453,11 +424,10 @@ const AddUserDialog: NextPage = () => {
                   <Controller
                     name="personalHistory.currentHealthCondition"
                     control={control}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field }) => (
                       <TextField
+                        {...field}
                         fullWidth
-                        value={value}
-                        onChange={onChange}
                         label="Health Condition"
                         placeholder="Healthy"
                       />
@@ -480,11 +450,10 @@ const AddUserDialog: NextPage = () => {
                           <Controller
                             name="personalHistory.medications"
                             control={control}
-                            render={({ field: { value, onChange } }) => (
+                            render={({ field }) => (
                               <TextField
+                                {...field}
                                 fullWidth
-                                value={value}
-                                onChange={onChange}
                                 label="Brand Name"
                                 placeholder="Biogesic"
                               />
@@ -495,11 +464,10 @@ const AddUserDialog: NextPage = () => {
                           <Controller
                             name="personalHistory.medications"
                             control={control}
-                            render={({ field: { value, onChange } }) => (
+                            render={({ field }) => (
                               <TextField
+                                {...field}
                                 fullWidth
-                                value={value}
-                                onChange={onChange}
                                 label="Dosage"
                                 placeholder="500mg"
                               />
@@ -510,11 +478,10 @@ const AddUserDialog: NextPage = () => {
                           <Controller
                             name="personalHistory.medications"
                             control={control}
-                            render={({ field: { value, onChange } }) => (
+                            render={({ field }) => (
                               <TextField
+                                {...field}
                                 fullWidth
-                                value={value}
-                                onChange={onChange}
                                 label="Generic"
                                 placeholder="Paracetamol"
                               />
@@ -550,11 +517,10 @@ const AddUserDialog: NextPage = () => {
                           <Controller
                             name="pastMedicalHistory.hospitalized"
                             control={control}
-                            render={({ field: { value, onChange } }) => (
+                            render={({ field }) => (
                               <TextField
+                                {...field}
                                 fullWidth
-                                value={value}
-                                onChange={onChange}
                                 label="When and why"
                                 placeholder="When I was a kid, I was diagnosed with diarrhea"
                               />
@@ -568,11 +534,10 @@ const AddUserDialog: NextPage = () => {
                           <Controller
                             name="pastMedicalHistory.injuries"
                             control={control}
-                            render={({ field: { value, onChange } }) => (
+                            render={({ field }) => (
                               <TextField
+                                {...field}
                                 fullWidth
-                                value={value}
-                                onChange={onChange}
                                 label="Please specify"
                                 placeholder="Leg, back, etc."
                               />
@@ -588,11 +553,10 @@ const AddUserDialog: NextPage = () => {
                           <Controller
                             name="pastMedicalHistory.surgeries"
                             control={control}
-                            render={({ field: { value, onChange } }) => (
+                            render={({ field }) => (
                               <TextField
+                                {...field}
                                 fullWidth
-                                value={value}
-                                onChange={onChange}
                                 label="Please Specify"
                                 placeholder="Appendix removal"
                               />
@@ -605,11 +569,10 @@ const AddUserDialog: NextPage = () => {
                           <Controller
                             name="pastMedicalHistory.allergies"
                             control={control}
-                            render={({ field: { value, onChange } }) => (
+                            render={({ field }) => (
                               <TextField
+                                {...field}
                                 fullWidth
-                                value={value}
-                                onChange={onChange}
                                 label="Please Specify"
                                 placeholder="Pet Allergy"
                               />
@@ -622,11 +585,10 @@ const AddUserDialog: NextPage = () => {
                           <Controller
                             name="pastMedicalHistory.measles"
                             control={control}
-                            render={({ field: { value, onChange } }) => (
+                            render={({ field }) => (
                               <TextField
+                                {...field}
                                 fullWidth
-                                value={value}
-                                onChange={onChange}
                                 label="Measles"
                                 placeholder="Yes, and no"
                               />
@@ -640,11 +602,10 @@ const AddUserDialog: NextPage = () => {
                           <Controller
                             name="pastMedicalHistory.chickenPox"
                             control={control}
-                            render={({ field: { value, onChange } }) => (
+                            render={({ field }) => (
                               <TextField
+                                {...field}
                                 fullWidth
-                                value={value}
-                                onChange={onChange}
                                 label="Chicken Pox"
                                 placeholder="Yes, and no"
                               />
@@ -658,11 +619,10 @@ const AddUserDialog: NextPage = () => {
                           <Controller
                             name="pastMedicalHistory.others"
                             control={control}
-                            render={({ field: { value, onChange } }) => (
+                            render={({ field }) => (
                               <TextField
+                                {...field}
                                 fullWidth
-                                value={value}
-                                onChange={onChange}
                                 label="Others"
                                 placeholder="Gastritis"
                               />
@@ -685,11 +645,10 @@ const AddUserDialog: NextPage = () => {
                   <Controller
                     name="obGyne.menstrualCycle"
                     control={control}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field }) => (
                       <TextField
+                        {...field}
                         fullWidth
-                        value={value}
-                        onChange={onChange}
                         label="Menstrual Cycle"
                         placeholder="June, 16, 2023"
                       />
@@ -700,11 +659,10 @@ const AddUserDialog: NextPage = () => {
                   <Controller
                     name="obGyne.days"
                     control={control}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field }) => (
                       <TextField
+                        {...field}
                         fullWidth
-                        value={value}
-                        onChange={onChange}
                         label="Days of Menstrual Cycle"
                         placeholder="5"
                       />

@@ -5,8 +5,7 @@ import { Box, Dialog, DialogContent, DialogActions } from "@mui/material";
 
 import { requireAuth } from "@/common/requireAuth";
 import { Card, CardContent, CardHeader, Grid, Typography } from "@mui/material";
-import AddUserDialog from "@/views/AddUserDialog";
-
+import AddUserWizard from "@/views/AddUserDialogWizard";
 export const getServerSideProps = requireAuth(async () => {
   return { props: {} };
 });
@@ -30,15 +29,16 @@ const Patient: NextPage = () => {
       <Card>
         <CardHeader title="Patient"></CardHeader>
         <CardContent>
-        <Grid item md={4} sm={6} xs={12}>
-            <AddUserDialog />
+          <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <AddUserWizard />
           </Grid>
+
+          </Grid>
+
+
           <Typography variant="subtitle1" component="p">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce
-            tincidunt dui id libero gravida pharetra. Pellentesque augue velit,
-            venenatis id vehicula id, tincidunt eget tellus. Duis mollis gravida
-            erat, eu malesuada quam tincidunt sit amet. Phasellus ut augue sed
-            ipsum tempus feugiat sit amet eu nisl. Nulla aliquam ex ex,
+            add text
           </Typography>
 
 
