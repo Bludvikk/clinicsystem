@@ -6,6 +6,7 @@ import {
   getPatientSchema,
   updatePatientSchema,
 } from "@/server/schema/patient";
+
 import {
   deletePatient,
   getPatient,
@@ -15,17 +16,17 @@ import {
 } from "../services/patient";
 
 export const patientRouter = router({
-  list: publicProcedure.query(async ({ ctx }) => getPatients(ctx)),
+  list: publicProcedure.query(({ ctx }) => getPatients(ctx)),
   record: publicProcedure
     .input(getPatientSchema)
-    .query(async ({ ctx, input }) => getPatient(ctx, input)),
+    .query(({ ctx, input }) => getPatient(ctx, input)),
   post: publicProcedure
     .input(addPatientSchema)
-    .mutation(async ({ ctx, input }) => postPatient(ctx, input)),
+    .mutation(({ ctx, input }) => postPatient(ctx, input)),
   put: publicProcedure
     .input(updatePatientSchema)
-    .mutation(async ({ ctx, input }) => putPatient(ctx, input)),
+    .mutation(({ ctx, input }) => putPatient(ctx, input)),
   delete: publicProcedure
     .input(deletePatientSchema)
-    .mutation(async ({ ctx, input }) => deletePatient(ctx, input)),
+    .mutation(({ ctx, input }) => deletePatient(ctx, input)),
 });

@@ -48,4 +48,4 @@ export type IPatient = z.infer<typeof PatientSchema>;
 export type IAddPatient = z.infer<typeof addPatientSchema>;
 export type IGetPatient = z.infer<typeof getPatientSchema>;
 export type IUpdatePatient = z.infer<typeof updatePatientSchema>;
-export type IdeletePatient = z.infer<typeof deletePatientSchema>;
+export type IDeletePatient = z.infer<typeof deletePatientSchema>;
