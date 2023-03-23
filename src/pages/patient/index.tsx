@@ -1,15 +1,11 @@
 // ** React Imports
-import { useState, useEffect, MouseEvent, useCallback } from "react";
+import { useState, MouseEvent } from "react";
 
 // ** Next Imports
 import Link from "next/link";
-import { GetStaticProps, InferGetStaticPropsType } from "next/types";
 import { NextPage } from "next";
 import { useSession, signOut } from "next-auth/react";
 import { requireAuth } from "@/common/requireAuth";
-import { getGender } from "@/server/hooks/gender";
-import { getCivilStatus } from "@/server/hooks/civilStatus";
-import { getOccupation } from "@/server/hooks/occupation";
 import { deletePatient, getPatients } from "@/server/hooks/patient";
 
 // ** MUI Imports
@@ -32,7 +28,7 @@ import Icon from "src/@core/components/icon";
 import toast from "react-hot-toast";
 
 // ** Types Imports
-import { IPatient } from "@/server/schema/patient";
+import type { PatientsAsyncType } from "@/server/services/patient";
 
 // ** 3rd Party Libraries
 import moment from "moment";
@@ -41,7 +37,7 @@ import moment from "moment";
 import TableHeader from "@/views/pages/patient/TableHeader";
 
 interface CellType {
-  row: IPatient;
+  row: PatientsAsyncType;
 }
 
 export const getServerSideProps = requireAuth(async () => {
@@ -135,11 +131,13 @@ const columns: GridColDef[] = [
     headerName: "Gender",
     description: "Patient's gender",
     renderCell: ({ row }: CellType) => {
-      const { data, status } = getGender({ id: row.occupationId });
+      const {
+        gender: { name },
+      } = row;
 
       return (
         <Typography noWrap variant="body2">
-          {status === "loading" ? "Loading..." : data?.name}
+          {name}
         </Typography>
       );
     },
@@ -152,6 +150,7 @@ const columns: GridColDef[] = [
     description: "Patient's age",
     renderCell: ({ row }: CellType) => {
       const { age } = row;
+
       return (
         <Typography noWrap variant="body2">
           {age}
@@ -167,6 +166,7 @@ const columns: GridColDef[] = [
     description: "Patient's date of birth",
     renderCell: ({ row }: CellType) => {
       const { dateOfBirth } = row;
+
       return (
         <Typography noWrap variant="body2">
           {moment(dateOfBirth).format("L")}
@@ -181,10 +181,12 @@ const columns: GridColDef[] = [
     headerName: "Civil Status",
     description: "Patient's civil status",
     renderCell: ({ row }: CellType) => {
-      const { data, status } = getCivilStatus({ id: row.civilStatusId });
+      const {
+        civilStatus: { name },
+      } = row;
       return (
         <Typography noWrap variant="body2">
-          {status === "loading" ? "Loading..." : data?.name}
+          {name}
         </Typography>
       );
     },
@@ -196,10 +198,12 @@ const columns: GridColDef[] = [
     headerName: "Occupation",
     description: "Patient's current occupation",
     renderCell: ({ row }: CellType) => {
-      const { data, status } = getOccupation({ id: row.occupationId });
+      const {
+        occupation: { name },
+      } = row;
       return (
         <Typography noWrap variant="body2">
-          {status === "loading" ? "Loading..." : data?.name}
+          {name}
         </Typography>
       );
     },

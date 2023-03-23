@@ -41,9 +41,10 @@ import FooterIllustrationsV2 from "src/views/pages/auth/FooterIllustrationsV2";
 import { NextPage } from "next";
 import UseBgColor from "@/@core/hooks/useBgColor";
 import { useSettings } from "@/@core/hooks/useSettings";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { ILogin, loginSchema } from "@/common/validation/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/router";
 
 // ** Styled Components
 const LoginIllustrationWrapper = styled(Box)<BoxProps>(({ theme }) => ({
@@ -100,6 +101,8 @@ const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(
 const LoginPage: NextPage = () => {
   const [rememberMe, setRememberMe] = useState<boolean>(true);
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const router = useRouter();
+  const { status } = useSession();
 
   const {
     handleSubmit,
@@ -129,12 +132,13 @@ const LoginPage: NextPage = () => {
       : "auth-v2-login-illustration";
 
   const onSubmit = async (data: ILogin) => {
-    const result = await signIn("credentials", {
+    await signIn("credentials", {
       ...data,
       callbackUrl: "/dashboard",
     });
-    console.log({ result });
   };
+
+  if (status === "authenticated") router.push("/dashboard");
 
   return (
     <Box className="content-right">

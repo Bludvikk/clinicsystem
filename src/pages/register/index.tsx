@@ -44,6 +44,8 @@ import { useSettings } from "src/@core/hooks/useSettings";
 // ** Demo Imports
 import FooterIllustrationsV2 from "src/views/pages/auth/FooterIllustrationsV2";
 import { useRouter } from "next/router";
+import { NextPage } from "next";
+import { useSession } from "next-auth/react";
 
 const defaultValues = {
   email: "",
@@ -111,10 +113,11 @@ const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(
   })
 );
 
-const Register = () => {
+const Register: NextPage = () => {
   // ** States
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const router = useRouter();
+  const { status } = useSession();
 
   const theme = useTheme();
   const { settings } = useSettings();
@@ -161,6 +164,8 @@ const Register = () => {
     skin === "bordered"
       ? "auth-v2-register-illustration-bordered"
       : "auth-v2-register-illustration";
+
+  if (status === "authenticated") router.push("/dashboard");
 
   return (
     <Box className="content-right">

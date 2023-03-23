@@ -15,9 +15,6 @@ import {
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 
-import { getGenders } from "@/server/hooks/gender";
-import { getCivilStatuses } from "@/server/hooks/civilStatus";
-import { getOccupations } from "@/server/hooks/occupation";
 import { FormEvent, useId, useState } from "react";
 import { z } from "zod";
 
@@ -82,12 +79,6 @@ const PatientForm = () => {
     },
   };
 
-  const { data: gendersData, status: gendersDataStatus } = getGenders();
-  const { data: civilStatusesData, status: civilStatusesDataStatus } =
-    getCivilStatuses();
-  const { data: occupationsData, status: occupationsDataStatus } =
-    getOccupations();
-
   const {
     control,
     handleSubmit,
@@ -123,7 +114,7 @@ const PatientForm = () => {
     e: any
   ) => {
     reset2();
-    setMedications((prev) => [...prev, data]);
+    setMedications((prev) => [...prev, { id: useId(), ...data }]);
   };
 
   const addPatientOnSubmitHandler: SubmitHandler<IAddPatient> = async (
@@ -209,7 +200,7 @@ const PatientForm = () => {
           )}
         />
 
-        <Controller
+        {/* <Controller
           name="civilStatusId"
           control={control}
           render={({ field }) => (
@@ -228,7 +219,7 @@ const PatientForm = () => {
                 ))}
             </Select>
           )}
-        />
+        /> */}
 
         <Controller
           name="age"
@@ -247,7 +238,7 @@ const PatientForm = () => {
           )}
         />
 
-        <Controller
+        {/* <Controller
           name="occupationId"
           control={control}
           render={({ field }) => (
@@ -266,9 +257,9 @@ const PatientForm = () => {
                 ))}
             </Select>
           )}
-        />
+        /> */}
 
-        <Controller
+        {/* <Controller
           name="genderId"
           control={control}
           render={({ field }) => (
@@ -287,7 +278,7 @@ const PatientForm = () => {
                 ))}
             </Select>
           )}
-        />
+        /> */}
 
         <Controller
           name="contactNumber"
