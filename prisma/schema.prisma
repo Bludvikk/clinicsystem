@@ -17,42 +17,57 @@ model User {
 }
 
 model Patient {
-  id                 String      @id @default(uuid())
+  id                 String    @id @default(uuid())
   firstName          String
   lastName           String
-  middleInitial      String?     @default("N/A")
+  middleInitial      String?   @default("N/A")
   address            String
   dateOfBirth        DateTime
-  civilStatus        CivilStatus @relation(fields: [civilStatusId], references: [id])
   civilStatusId      Int
   age                Int
-  occupation         Occupation  @relation(fields: [occupationId], references: [id])
   occupationId       Int
-  gender             Gender      @relation(fields: [genderId], references: [id])
   genderId           Int
-  contactNumber      String?     @default("N/A")
+  contactNumber      String?   @default("N/A")
   familyHistory      Json
   personalHistory    Json
   pastMedicalHistory Json
   obGyne             Json
-  createdAt          DateTime    @default(now())
-  updatedAt          DateTime    @updatedAt
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  gender             Reference @relation("patient_genderIdToReference_relation", fields: [genderId], references: [id])
+  occupation         Reference @relation("patient_occupationIdToReference_relation", fields: [occupationId], references: [id])
+  civilStatus        Reference @relation("patient_civilStatusIdToReference_relation", fields: [civilStatusId], references: [id])
 }
 
-model CivilStatus {
-  id      Int       @id @default(autoincrement())
-  name    String
-  Patient Patient[]
+model Entity {
+  id        Int         @id @default(autoincrement())
+  code      String      @unique
+  name      String
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @default(now()) @updatedAt
+  deletedAt DateTime?
+  isShow    Boolean     @default(true)
+  isDefault Boolean     @default(false)
+  isParent  Boolean     @default(false)
+  parentId  Int?        @unique
+  fieldProp String?
+  parent    Entity?     @relation("entitiesToEntities", fields: [parentId], references: [id])
+  entities  Entity?     @relation("entitiesToEntities")
+  reference Reference[]
 }
 
-model Occupation {
-  id      Int       @id @default(autoincrement())
-  name    String
-  Patient Patient[]
-}
-
-model Gender {
-  id      Int       @id @default(autoincrement())
-  name    String
-  Patient Patient[]
+model Reference {
+  id                               Int       @id @default(autoincrement())
+  code                             String    @unique
+  name                             String
+  createdAt                        DateTime  @default(now())
+  updatedAt                        DateTime  @default(now()) @updatedAt
+  deletedAt                        DateTime?
+  isShow                           Boolean   @default(true)
+  isDefault                        Boolean   @default(false)
+  entityId                         Int
+  entities                         Entity    @relation(fields: [entityId], references: [id], onDelete: Cascade)
+  patient_genderIdToReference      Patient[] @relation("patient_genderIdToReference_relation")
+  patient_occupationIdToReference  Patient[] @relation("patient_occupationIdToReference_relation")
+  patient_civilStatusIdToReference Patient[] @relation("patient_civilStatusIdToReference_relation")
 }

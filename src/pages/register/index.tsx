@@ -1,55 +1,136 @@
-import { ReactNode, useState, Fragment, MouseEvent } from "react";
-import { NextPage } from "next";
+// ** React Imports
+import { ReactNode, useState, Fragment, MouseEvent, useCallback } from "react";
+
+// ** Next Import
 import Link from "next/link";
-import { useCallback } from "react";
-import { useRouter } from "next/router";
-import {
-  Button,
-  Divider,
-  Checkbox,
-  TextField,
-  InputLabel,
-  FormControl,
-  OutlinedInput,
-  FormHelperText,
-  InputAdornment,
-  IconButton,
-  CssBaseline,
-  Paper,
-  Grid,
-  Avatar,
-  FormControlLabel,
-  Typography
-} from "@mui/material";
 
+// ** MUI Components
+import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
+import Checkbox from "@mui/material/Checkbox";
+import TextField from "@mui/material/TextField";
+import InputLabel from "@mui/material/InputLabel";
+import IconButton from "@mui/material/IconButton";
 import Box, { BoxProps } from "@mui/material/Box";
+import FormControl from "@mui/material/FormControl";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import OutlinedInput from "@mui/material/OutlinedInput";
 import { styled, useTheme } from "@mui/material/styles";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import FormHelperText from "@mui/material/FormHelperText";
+import InputAdornment from "@mui/material/InputAdornment";
+import Typography, { TypographyProps } from "@mui/material/Typography";
+import MuiFormControlLabel, {
+  FormControlLabelProps,
+} from "@mui/material/FormControlLabel";
+
+// ** Icon Imports
+import Icon from "src/@core/components/icon";
+
+// ** Third Party Imports
 import { useForm, Controller } from "react-hook-form";
+import { ISignUp, signUpSchema } from "@/common/validation/auth";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { trpc } from "@/utils/trpc";
 
-import Icon from "@/@core/components/icon";
+// ** Configs
+import themeConfig from "src/configs/themeConfig";
 
-import { trpc } from "@/common/trpc";
+// ** Layout Import
+import BlankLayout from "src/@core/layouts/BlankLayout";
 
-import { signUpSchema, ISignUp } from "../../common/validation/auth";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+// ** Hooks
+import { useSettings } from "src/@core/hooks/useSettings";
 
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+// ** Demo Imports
+import FooterIllustrationsV2 from "src/views/pages/auth/FooterIllustrationsV2";
+import { useRouter } from "next/router";
+import { NextPage } from "next";
+import { useSession } from "next-auth/react";
 
+const defaultValues = {
+  email: "",
+  username: "",
+  password: "",
+  terms: false,
+};
+interface FormData {
+  email: string;
+  terms: boolean;
+  username: string;
+  password: string;
+}
 
-const theme = createTheme();
+// ** Styled Components
+const RegisterIllustrationWrapper = styled(Box)<BoxProps>(({ theme }) => ({
+  padding: theme.spacing(20),
+  paddingRight: "0 !important",
+  [theme.breakpoints.down("lg")]: {
+    padding: theme.spacing(10),
+  },
+}));
 
-const RegisterPage: NextPage = (props) => {
+const RegisterIllustration = styled("img")(({ theme }) => ({
+  maxWidth: "48rem",
+  [theme.breakpoints.down("xl")]: {
+    maxWidth: "38rem",
+  },
+  [theme.breakpoints.down("lg")]: {
+    maxWidth: "30rem",
+  },
+}));
+
+const RightWrapper = styled(Box)<BoxProps>(({ theme }) => ({
+  width: "100%",
+  [theme.breakpoints.up("md")]: {
+    maxWidth: 400,
+  },
+  [theme.breakpoints.up("lg")]: {
+    maxWidth: 450,
+  },
+}));
+
+const BoxWrapper = styled(Box)<BoxProps>(({ theme }) => ({
+  width: "100%",
+  [theme.breakpoints.down("md")]: {
+    maxWidth: 400,
+  },
+}));
+
+const TypographyStyled = styled(Typography)<TypographyProps>(({ theme }) => ({
+  fontWeight: 600,
+  letterSpacing: "0.18px",
+  marginBottom: theme.spacing(1.5),
+  [theme.breakpoints.down("md")]: { marginTop: theme.spacing(8) },
+}));
+
+const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(
+  ({ theme }) => ({
+    marginBottom: theme.spacing(4),
+    "& .MuiFormControlLabel-label": {
+      fontSize: "0.875rem",
+      color: theme.palette.text.secondary,
+    },
+  })
+);
+
+const Register: NextPage = () => {
+  // ** States
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const router = useRouter();
+  const { status } = useSession();
+
+  const theme = useTheme();
+  const { settings } = useSettings();
+  const hidden = useMediaQuery(theme.breakpoints.down("md"));
+
+  // ** Vars
+  const { skin } = settings;
 
   const {
     control,
     setError,
     handleSubmit,
     reset,
-
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -63,7 +144,8 @@ const RegisterPage: NextPage = (props) => {
   });
 
   const { mutateAsync } = trpc.signup.useMutation();
-  const registerHandler = useCallback(
+
+  const onSubmit = useCallback(
     async (data: ISignUp) => {
       try {
         const result = await mutateAsync(data);
@@ -78,49 +160,164 @@ const RegisterPage: NextPage = (props) => {
     [mutateAsync, router, reset]
   );
 
+  const imageSource =
+    skin === "bordered"
+      ? "auth-v2-register-illustration-bordered"
+      : "auth-v2-register-illustration";
+
+  if (status === "authenticated") router.push("/dashboard");
+
   return (
-    <ThemeProvider theme={theme}>
-      <Grid container component="main" sx={{ height: "100vh " }}>
-        <CssBaseline />
-        <Grid
-          item
-          xs={false}
-          sm={4}
-          md={7}
+    <Box className="content-right">
+      {!hidden ? (
+        <Box
           sx={{
-            backgroundImage:
-              "url(https://source.unsplash.com/random/?hospital/)",
-            backgroundRepeat: "no-repeat",
-            backgroundColor: (t) =>
-              t.palette.mode === "light"
-                ? t.palette.grey[50]
-                : t.palette.grey[900],
-            backgroundSize: "cover",
-            backgroundPosition: "center",
+            flex: 1,
+            display: "flex",
+            position: "relative",
+            alignItems: "center",
+            justifyContent: "center",
           }}
-        />
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-          <Box
-            sx={{
-              my: 8,
-              mx: 4,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-              <LockOutlinedIcon />
-            </Avatar>
+        >
+          <RegisterIllustrationWrapper>
+            <RegisterIllustration
+              alt="register-illustration"
+              src={`/images/pages/${imageSource}-${theme.palette.mode}.png`}
+            />
+          </RegisterIllustrationWrapper>
+          <FooterIllustrationsV2
+            image={`/images/pages/auth-v2-register-mask-${theme.palette.mode}.png`}
+          />
+        </Box>
+      ) : null}
+      <RightWrapper
+        sx={
+          skin === "bordered" && !hidden
+            ? { borderLeft: `1px solid ${theme.palette.divider}` }
+            : {}
+        }
+      >
+        <Box
+          sx={{
+            p: 7,
+            height: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "background.paper",
+          }}
+        >
+          <BoxWrapper>
+            <Box
+              sx={{
+                top: 30,
+                left: 40,
+                display: "flex",
+                position: "absolute",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <svg
+                width={47}
+                fill="none"
+                height={26}
+                viewBox="0 0 268 150"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect
+                  rx="25.1443"
+                  width="50.2886"
+                  height="143.953"
+                  fill={theme.palette.primary.main}
+                  transform="matrix(-0.865206 0.501417 0.498585 0.866841 195.571 0)"
+                />
+                <rect
+                  rx="25.1443"
+                  width="50.2886"
+                  height="143.953"
+                  fillOpacity="0.4"
+                  fill="url(#paint0_linear_7821_79167)"
+                  transform="matrix(-0.865206 0.501417 0.498585 0.866841 196.084 0)"
+                />
+                <rect
+                  rx="25.1443"
+                  width="50.2886"
+                  height="143.953"
+                  fill={theme.palette.primary.main}
+                  transform="matrix(0.865206 0.501417 -0.498585 0.866841 173.147 0)"
+                />
+                <rect
+                  rx="25.1443"
+                  width="50.2886"
+                  height="143.953"
+                  fill={theme.palette.primary.main}
+                  transform="matrix(-0.865206 0.501417 0.498585 0.866841 94.1973 0)"
+                />
+                <rect
+                  rx="25.1443"
+                  width="50.2886"
+                  height="143.953"
+                  fillOpacity="0.4"
+                  fill="url(#paint1_linear_7821_79167)"
+                  transform="matrix(-0.865206 0.501417 0.498585 0.866841 94.1973 0)"
+                />
+                <rect
+                  rx="25.1443"
+                  width="50.2886"
+                  height="143.953"
+                  fill={theme.palette.primary.main}
+                  transform="matrix(0.865206 0.501417 -0.498585 0.866841 71.7728 0)"
+                />
+                <defs>
+                  <linearGradient
+                    y1="0"
+                    x1="25.1443"
+                    x2="25.1443"
+                    y2="143.953"
+                    id="paint0_linear_7821_79167"
+                    gradientUnits="userSpaceOnUse"
+                  >
+                    <stop />
+                    <stop offset="1" stopOpacity="0" />
+                  </linearGradient>
+                  <linearGradient
+                    y1="0"
+                    x1="25.1443"
+                    x2="25.1443"
+                    y2="143.953"
+                    id="paint1_linear_7821_79167"
+                    gradientUnits="userSpaceOnUse"
+                  >
+                    <stop />
+                    <stop offset="1" stopOpacity="0" />
+                  </linearGradient>
+                </defs>
+              </svg>
+              <Typography
+                variant="h6"
+                sx={{
+                  ml: 2,
+                  lineHeight: 1,
+                  fontWeight: 700,
+                  fontSize: "1.5rem !important",
+                }}
+              >
+                {themeConfig.templateName}
+              </Typography>
+            </Box>
             <Box sx={{ mb: 6 }}>
-              <Typography variant="body2">
-                Please sign-in to your account and start the adventure
+              <TypographyStyled variant="h5" align="center">
+                Get started now
+              </TypographyStyled>
+              <Typography variant="body2" align="center">
+                Create an account to start using Salve
               </Typography>
             </Box>
             <form
               noValidate
               autoComplete="off"
-              onSubmit={handleSubmit(registerHandler)}
+              onSubmit={handleSubmit(onSubmit)}
             >
               <FormControl fullWidth sx={{ mb: 4 }}>
                 <Controller
@@ -152,13 +349,12 @@ const RegisterPage: NextPage = (props) => {
                   rules={{ required: true }}
                   render={({ field: { value, onChange, onBlur } }) => (
                     <TextField
-                      autoFocus
-                      label="Email"
                       value={value}
+                      label="Email"
                       onBlur={onBlur}
                       onChange={onChange}
                       error={Boolean(errors.email)}
-                      placeholder="glennpower@gmail.com"
+                      placeholder="user@email.com"
                     />
                   )}
                 />
@@ -183,8 +379,8 @@ const RegisterPage: NextPage = (props) => {
                   render={({ field: { value, onChange, onBlur } }) => (
                     <OutlinedInput
                       value={value}
-                      onBlur={onBlur}
                       label="Password"
+                      onBlur={onBlur}
                       onChange={onChange}
                       id="auth-login-v2-password"
                       error={Boolean(errors.password)}
@@ -202,7 +398,6 @@ const RegisterPage: NextPage = (props) => {
                                   ? "mdi:eye-outline"
                                   : "mdi:eye-off-outline"
                               }
-                              fontSize={20}
                             />
                           </IconButton>
                         </InputAdornment>
@@ -211,7 +406,7 @@ const RegisterPage: NextPage = (props) => {
                   )}
                 />
                 {errors.password && (
-                  <FormHelperText sx={{ color: "error.main" }} id="">
+                  <FormHelperText sx={{ color: "error.main" }}>
                     {errors.password.message}
                   </FormHelperText>
                 )}
@@ -219,69 +414,101 @@ const RegisterPage: NextPage = (props) => {
 
               <FormControl sx={{ my: 0 }} error={Boolean(errors.terms)}>
                 <Controller
-                  name='terms'
+                  name="terms"
                   control={control}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => {
                     return (
                       <FormControlLabel
                         sx={{
-                          ...(errors.terms ? { color: 'error.main' } : null),
-                          '& .MuiFormControlLabel-label': { fontSize: '0.875rem' }
+                          ...(errors.terms ? { color: "error.main" } : null),
+                          "& .MuiFormControlLabel-label": {
+                            fontSize: "0.875rem",
+                          },
                         }}
                         control={
                           <Checkbox
                             checked={value}
                             onChange={onChange}
-                            sx={errors.terms ? { color: 'error.main' } : null}
+                            sx={errors.terms ? { color: "error.main" } : null}
                           />
                         }
                         label={
                           <Fragment>
                             <Typography
-                              variant='body2'
-                              component='span'
-                              sx={{ color: errors.terms ? 'error.main' : '' }}
+                              variant="body2"
+                              component="span"
+                              sx={{ color: errors.terms ? "error.main" : "" }}
                             >
-                              I agree to{' '}
+                              I agree to{" "}
                             </Typography>
                             <Typography
-                              href='/'
-                              variant='body2'
+                              href="/"
+                              variant="body2"
                               component={Link}
-                              sx={{ color: 'primary.main', textDecoration: 'none' }}
-                              onClick={(e: MouseEvent<HTMLElement>) => e.preventDefault()}
+                              sx={{
+                                color: "primary.main",
+                                textDecoration: "none",
+                              }}
+                              onClick={(e: MouseEvent<HTMLElement>) =>
+                                e.preventDefault()
+                              }
                             >
                               privacy policy & terms
                             </Typography>
                           </Fragment>
                         }
                       />
-                    )
+                    );
                   }}
                 />
                 {errors.terms && (
-                  <FormHelperText sx={{ mt: 0, color: 'error.main' }}>{errors.terms.message}</FormHelperText>
+                  <FormHelperText sx={{ mt: -2, pb: 4, color: "error.main" }}>
+                    {errors.terms.message}
+                  </FormHelperText>
                 )}
               </FormControl>
-              <Button fullWidth size='large' type='submit' variant='contained' sx={{ mb: 7 }}>
+
+              <Button
+                fullWidth
+                size="large"
+                type="submit"
+                variant="contained"
+                sx={{ mb: 7 }}
+              >
                 Sign up
               </Button>
-              <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
-                <Typography sx={{ mr: 2, color: 'text.secondary' }}>Already have an account?</Typography>
-                <Typography href='/login' component={Link} sx={{ color: 'primary.main', textDecoration: 'none' }}>
+
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  flexWrap: "wrap",
+                  justifyContent: "center",
+                }}
+              >
+                <Typography sx={{ mr: 2, color: "text.secondary" }}>
+                  Already have an account?
+                </Typography>
+                <Typography
+                  href="/login"
+                  component={Link}
+                  sx={{ color: "primary.main", textDecoration: "none" }}
+                >
                   Sign in instead
                 </Typography>
               </Box>
+
               <Divider
                 sx={{
-                  '& .MuiDivider-wrapper': { px: 4 },
-                  mt: theme => `${theme.spacing(5)} !important`,
-                  mb: theme => `${theme.spacing(7.5)} !important`
+                  "& .MuiDivider-wrapper": { px: 4 },
+                  mt: (theme) => `${theme.spacing(5)} !important`,
+                  mb: (theme) => `${theme.spacing(7.5)} !important`,
                 }}
               >
                 or
               </Divider>
+
               <Box
                 sx={{
                   display: "flex",
@@ -325,13 +552,14 @@ const RegisterPage: NextPage = (props) => {
                   <Icon icon="mdi:google" />
                 </IconButton>
               </Box>
-              {/* <Copyright sx={{ mt: 5 }} /> */}
             </form>
-          </Box>
-        </Grid>
-      </Grid>
-    </ThemeProvider>
+          </BoxWrapper>
+        </Box>
+      </RightWrapper>
+    </Box>
   );
 };
 
-export default RegisterPage;
+Register.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>;
+
+export default Register;

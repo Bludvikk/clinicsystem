@@ -1,47 +1,108 @@
+// ** React Imports
 import { useState, ReactNode, MouseEvent } from "react";
 
+// ** Next Imports
 import Link from "next/link";
-import { NextPage } from "next";
 
-import {
-  Alert,
-  Button,
-  Divider,
-  Checkbox,
-  TextField,
-  InputLabel,
-  IconButton,
-  FormControl,
-  useMediaQuery,
-  OutlinedInput,
-  FormHelperText,
-  InputAdornment,
-  Grid,
-  CssBaseline,
-  Paper,
-  FormControlLabel,
-  Avatar,
-  Box,
-} from "@mui/material";
-
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+// ** MUI Components
+import Alert from "@mui/material/Alert";
+import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
+import Checkbox from "@mui/material/Checkbox";
+import TextField from "@mui/material/TextField";
+import InputLabel from "@mui/material/InputLabel";
+import IconButton from "@mui/material/IconButton";
+import Box, { BoxProps } from "@mui/material/Box";
+import FormControl from "@mui/material/FormControl";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import { styled, useTheme } from "@mui/material/styles";
+import FormHelperText from "@mui/material/FormHelperText";
+import InputAdornment from "@mui/material/InputAdornment";
 import Typography, { TypographyProps } from "@mui/material/Typography";
+import MuiFormControlLabel, {
+  FormControlLabelProps,
+} from "@mui/material/FormControlLabel";
 
-import { signIn } from "next-auth/react";
+// ** Icon Imports
+import Icon from "src/@core/components/icon";
 
-import Icon from "@/@core/components/icon";
-
+// ** Third Party Imports
 import { useForm, Controller } from "react-hook-form";
+
+// ** Configs
+import themeConfig from "src/configs/themeConfig";
+
+// ** Layout Import
+import BlankLayout from "src/@core/layouts/BlankLayout";
+
+// ** Demo Imports
+import FooterIllustrationsV2 from "src/views/pages/auth/FooterIllustrationsV2";
+import { NextPage } from "next";
+import UseBgColor from "@/@core/hooks/useBgColor";
+import { useSettings } from "@/@core/hooks/useSettings";
+import { signIn, useSession } from "next-auth/react";
+import { ILogin, loginSchema } from "@/common/validation/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/router";
 
-import { loginSchema, ILogin } from "@/common/validation/auth";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+// ** Styled Components
+const LoginIllustrationWrapper = styled(Box)<BoxProps>(({ theme }) => ({
+  padding: theme.spacing(20),
+  paddingRight: "0 !important",
+  [theme.breakpoints.down("lg")]: {
+    padding: theme.spacing(10),
+  },
+}));
 
-const theme = createTheme();
+const LoginIllustration = styled("img")(({ theme }) => ({
+  maxWidth: "48rem",
+  [theme.breakpoints.down("xl")]: {
+    maxWidth: "38rem",
+  },
+  [theme.breakpoints.down("lg")]: {
+    maxWidth: "30rem",
+  },
+}));
 
-const LoginPage: NextPage = (props) => {
+const RightWrapper = styled(Box)<BoxProps>(({ theme }) => ({
+  width: "100%",
+  [theme.breakpoints.up("md")]: {
+    maxWidth: 400,
+  },
+  [theme.breakpoints.up("lg")]: {
+    maxWidth: 450,
+  },
+}));
+
+const BoxWrapper = styled(Box)<BoxProps>(({ theme }) => ({
+  width: "100%",
+  [theme.breakpoints.down("md")]: {
+    maxWidth: 400,
+  },
+}));
+
+const TypographyStyled = styled(Typography)<TypographyProps>(({ theme }) => ({
+  fontWeight: 600,
+  letterSpacing: "0.18px",
+  marginBottom: theme.spacing(1.5),
+  [theme.breakpoints.down("md")]: { marginTop: theme.spacing(8) },
+}));
+
+const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(
+  ({ theme }) => ({
+    "& .MuiFormControlLabel-label": {
+      fontSize: "0.875rem",
+      color: theme.palette.text.secondary,
+    },
+  })
+);
+
+const LoginPage: NextPage = () => {
   const [rememberMe, setRememberMe] = useState<boolean>(true);
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const router = useRouter();
+  const { status } = useSession();
 
   const {
     handleSubmit,
@@ -57,57 +118,182 @@ const LoginPage: NextPage = (props) => {
     resolver: zodResolver(loginSchema),
   });
 
-  const loginHandler = async (data: ILogin) => {
-    const result = await signIn("credentials", {
+  // ** Hooks
+  const theme = useTheme();
+  const { settings } = useSettings();
+  const hidden = useMediaQuery(theme.breakpoints.down("md"));
+
+  // ** Vars
+  const { skin } = settings;
+
+  const imageSource =
+    skin === "bordered"
+      ? "auth-v2-login-illustration-bordered"
+      : "auth-v2-login-illustration";
+
+  const onSubmit = async (data: ILogin) => {
+    await signIn("credentials", {
       ...data,
       callbackUrl: "/dashboard",
     });
-    console.log({ result });
   };
 
+  if (status === "authenticated") router.push("/dashboard");
+
   return (
-    <ThemeProvider theme={theme}>
-      <Grid container component="main" sx={{ height: "100vh " }}>
-        <CssBaseline />
-        <Grid
-          item
-          xs={false}
-          sm={4}
-          md={7}
+    <Box className="content-right">
+      {!hidden ? (
+        <Box
           sx={{
-            backgroundImage:
-              "url(https://source.unsplash.com/random/?hospital/)",
-            backgroundRepeat: "no-repeat",
-            backgroundColor: (t) =>
-              t.palette.mode === "light"
-                ? t.palette.grey[50]
-                : t.palette.grey[900],
-            backgroundSize: "cover",
-            backgroundPosition: "center",
+            flex: 1,
+            display: "flex",
+            position: "relative",
+            alignItems: "center",
+            justifyContent: "center",
           }}
-        />
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-          <Box
-            sx={{
-              my: 8,
-              mx: 4,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-              <LockOutlinedIcon />
-            </Avatar>
+        >
+          <LoginIllustrationWrapper>
+            <LoginIllustration
+              alt="login-illustration"
+              src={`/images/pages/${imageSource}-${theme.palette.mode}.png`}
+            />
+          </LoginIllustrationWrapper>
+          <FooterIllustrationsV2 />
+        </Box>
+      ) : null}
+
+      <RightWrapper
+        sx={
+          skin === "bordered" && !hidden
+            ? { borderLeft: `1px solid ${theme.palette.divider}` }
+            : {}
+        }
+      >
+        <Box
+          sx={{
+            p: 7,
+            height: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "background.paper",
+          }}
+        >
+          <BoxWrapper>
+            <Box
+              sx={{
+                top: 30,
+                left: 40,
+                display: "flex",
+                position: "absolute",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <svg
+                width={47}
+                fill="none"
+                height={26}
+                viewBox="0 0 268 150"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect
+                  rx="25.1443"
+                  width="50.2886"
+                  height="143.953"
+                  fill={theme.palette.primary.main}
+                  transform="matrix(-0.865206 0.501417 0.498585 0.866841 195.571 0)"
+                />
+                <rect
+                  rx="25.1443"
+                  width="50.2886"
+                  height="143.953"
+                  fillOpacity="0.4"
+                  fill="url(#paint0_linear_7821_79167)"
+                  transform="matrix(-0.865206 0.501417 0.498585 0.866841 196.084 0)"
+                />
+                <rect
+                  rx="25.1443"
+                  width="50.2886"
+                  height="143.953"
+                  fill={theme.palette.primary.main}
+                  transform="matrix(0.865206 0.501417 -0.498585 0.866841 173.147 0)"
+                />
+                <rect
+                  rx="25.1443"
+                  width="50.2886"
+                  height="143.953"
+                  fill={theme.palette.primary.main}
+                  transform="matrix(-0.865206 0.501417 0.498585 0.866841 94.1973 0)"
+                />
+                <rect
+                  rx="25.1443"
+                  width="50.2886"
+                  height="143.953"
+                  fillOpacity="0.4"
+                  fill="url(#paint1_linear_7821_79167)"
+                  transform="matrix(-0.865206 0.501417 0.498585 0.866841 94.1973 0)"
+                />
+                <rect
+                  rx="25.1443"
+                  width="50.2886"
+                  height="143.953"
+                  fill={theme.palette.primary.main}
+                  transform="matrix(0.865206 0.501417 -0.498585 0.866841 71.7728 0)"
+                />
+                <defs>
+                  <linearGradient
+                    y1="0"
+                    x1="25.1443"
+                    x2="25.1443"
+                    y2="143.953"
+                    id="paint0_linear_7821_79167"
+                    gradientUnits="userSpaceOnUse"
+                  >
+                    <stop />
+                    <stop offset="1" stopOpacity="0" />
+                  </linearGradient>
+                  <linearGradient
+                    y1="0"
+                    x1="25.1443"
+                    x2="25.1443"
+                    y2="143.953"
+                    id="paint1_linear_7821_79167"
+                    gradientUnits="userSpaceOnUse"
+                  >
+                    <stop />
+                    <stop offset="1" stopOpacity="0" />
+                  </linearGradient>
+                </defs>
+              </svg>
+              <Typography
+                variant="h6"
+                sx={{
+                  ml: 2,
+                  lineHeight: 1,
+                  fontWeight: 700,
+                  fontSize: "1.5rem !important",
+                }}
+              >
+                {themeConfig.templateName}
+              </Typography>
+            </Box>
+
             <Box sx={{ mb: 6 }}>
-              <Typography variant="body2">
+              <TypographyStyled
+                align="center"
+                variant="h5"
+              >{`Welcome back to ${themeConfig.templateName}! 👋🏻`}</TypographyStyled>
+
+              <Typography align="center" variant="body2">
                 Please sign-in to your account
               </Typography>
             </Box>
+
             <form
               noValidate
               autoComplete="off"
-              onSubmit={handleSubmit(loginHandler)}
+              onSubmit={handleSubmit(onSubmit)}
             >
               <FormControl fullWidth sx={{ mb: 4 }}>
                 <Controller
@@ -122,7 +308,7 @@ const LoginPage: NextPage = (props) => {
                       onBlur={onBlur}
                       onChange={onChange}
                       error={Boolean(errors.email)}
-                      placeholder="glennpower@gmail.com"
+                      placeholder="admin@materialize.com"
                     />
                   )}
                 />
@@ -133,7 +319,7 @@ const LoginPage: NextPage = (props) => {
                 )}
               </FormControl>
 
-              <FormControl fullWidth sx={{ mb: 4 }}>
+              <FormControl fullWidth sx={{ mb: 2 }}>
                 <InputLabel
                   htmlFor="auth-login-v2-password"
                   error={Boolean(errors.password)}
@@ -180,7 +366,6 @@ const LoginPage: NextPage = (props) => {
                   </FormHelperText>
                 )}
               </FormControl>
-
               <Box
                 sx={{
                   mb: 4,
@@ -243,7 +428,6 @@ const LoginPage: NextPage = (props) => {
                   mb: (theme) => `${theme.spacing(7.5)} !important`,
                 }}
               >
-                {" "}
                 or
               </Divider>
               <Box
@@ -289,13 +473,14 @@ const LoginPage: NextPage = (props) => {
                   <Icon icon="mdi:google" />
                 </IconButton>
               </Box>
-              {/* <Copyright sx={{ mt: 5 }} /> */}
             </form>
-          </Box>
-        </Grid>
-      </Grid>
-    </ThemeProvider>
+          </BoxWrapper>
+        </Box>
+      </RightWrapper>
+    </Box>
   );
 };
+
+LoginPage.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>;
 
 export default LoginPage;
