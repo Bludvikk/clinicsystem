@@ -10,7 +10,6 @@ import type { AppProps } from "next/app";
 import { queryClient, trpc } from "@/utils/trpc";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClientProvider } from "@tanstack/react-query";
-
 // ** Loader Import
 import Nprogress from "nprogress";
 
@@ -23,8 +22,6 @@ import themeConfig from "src/configs/themeConfig";
 
 // ** Third Party Import
 import { Toaster } from "react-hot-toast";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 
 // ** Component Imports
 import UserLayout from "src/layouts/UserLayout";
@@ -60,6 +57,8 @@ import "@/styles/globals.css";
 
 import type { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 
 // ** Extend App Props with Emotion
 type ExtendedAppProps = CustomAppProps & {
@@ -126,8 +125,8 @@ const CustomApp = ({
             return (
               <ThemeComponent settings={settings}>
                 <WindowWrapper>
-                  <QueryClientProvider client={queryClient}>
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <QueryClientProvider client={queryClient}>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
                       <SessionProvider session={pageProps.session}>
                         {getLayout(<Component {...pageProps} />)}
                         <ReactQueryDevtools initialIsOpen={false} />

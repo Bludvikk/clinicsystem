@@ -3,34 +3,46 @@ import { ReactNode, useState, Fragment, MouseEvent, useCallback } from "react";
 
 // ** Next Import
 import Link from "next/link";
+import { useRouter } from "next/router";
+import {
+  Button,
+  Divider,
+  Checkbox,
+  TextField,
+  InputLabel,
+  FormControl,
+  OutlinedInput,
+  FormHelperText,
+  InputAdornment,
+  IconButton,
+  CssBaseline,
+  Paper,
+  Grid,
+  Avatar,
+  useMediaQuery,
+} from "@mui/material";
 
-// ** MUI Components
-import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
-import Checkbox from "@mui/material/Checkbox";
-import TextField from "@mui/material/TextField";
-import InputLabel from "@mui/material/InputLabel";
-import IconButton from "@mui/material/IconButton";
-import Box, { BoxProps } from "@mui/material/Box";
-import FormControl from "@mui/material/FormControl";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import OutlinedInput from "@mui/material/OutlinedInput";
 import { styled, useTheme } from "@mui/material/styles";
-import FormHelperText from "@mui/material/FormHelperText";
-import InputAdornment from "@mui/material/InputAdornment";
-import Typography, { TypographyProps } from "@mui/material/Typography";
+
 import MuiFormControlLabel, {
   FormControlLabelProps,
 } from "@mui/material/FormControlLabel";
+import Typography, { TypographyProps } from "@mui/material/Typography";
+import Box, { BoxProps } from "@mui/material/Box";
 
-// ** Icon Imports
-import Icon from "src/@core/components/icon";
-
-// ** Third Party Imports
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { ISignUp, signUpSchema } from "@/common/validation/auth";
-import { zodResolver } from "@hookform/resolvers/zod";
+
+
 import { trpc } from "@/utils/trpc";
+
+
+import { NextPage } from "next";
+import { useSession } from "next-auth/react";
+
+import Icon from "src/@core/components/icon";
 
 // ** Configs
 import themeConfig from "src/configs/themeConfig";
@@ -43,24 +55,7 @@ import { useSettings } from "src/@core/hooks/useSettings";
 
 // ** Demo Imports
 import FooterIllustrationsV2 from "src/views/pages/auth/FooterIllustrationsV2";
-import { useRouter } from "next/router";
-import { NextPage } from "next";
-import { useSession } from "next-auth/react";
 
-const defaultValues = {
-  email: "",
-  username: "",
-  password: "",
-  terms: false,
-};
-interface FormData {
-  email: string;
-  terms: boolean;
-  username: string;
-  password: string;
-}
-
-// ** Styled Components
 const RegisterIllustrationWrapper = styled(Box)<BoxProps>(({ theme }) => ({
   padding: theme.spacing(20),
   paddingRight: "0 !important",
@@ -113,18 +108,16 @@ const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(
   })
 );
 
-const Register: NextPage = () => {
-  // ** States
+const RegisterPage: NextPage = (props) => {
+  const theme = useTheme();
+  const { settings } = useSettings();
+
+  const { skin } = settings;
+  const hidden = useMediaQuery(theme.breakpoints.down("md"));
+
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const router = useRouter();
   const { status } = useSession();
-
-  const theme = useTheme();
-  const { settings } = useSettings();
-  const hidden = useMediaQuery(theme.breakpoints.down("md"));
-
-  // ** Vars
-  const { skin } = settings;
 
   const {
     control,
@@ -164,8 +157,6 @@ const Register: NextPage = () => {
     skin === "bordered"
       ? "auth-v2-register-illustration-bordered"
       : "auth-v2-register-illustration";
-
-  if (status === "authenticated") router.push("/dashboard");
 
   return (
     <Box className="content-right">
@@ -307,11 +298,11 @@ const Register: NextPage = () => {
               </Typography>
             </Box>
             <Box sx={{ mb: 6 }}>
-              <TypographyStyled variant="h5" align="center">
-                Get started now
+              <TypographyStyled variant="h5">
+                Adventure starts here 🚀
               </TypographyStyled>
-              <Typography variant="body2" align="center">
-                Create an account to start using Salve
+              <Typography variant="body2">
+                Make your app management easy and fun!
               </Typography>
             </Box>
             <form
@@ -463,12 +454,11 @@ const Register: NextPage = () => {
                   }}
                 />
                 {errors.terms && (
-                  <FormHelperText sx={{ mt: -2, pb: 4, color: "error.main" }}>
+                  <FormHelperText sx={{ mt: 0, color: "error.main" }}>
                     {errors.terms.message}
                   </FormHelperText>
                 )}
               </FormControl>
-
               <Button
                 fullWidth
                 size="large"
@@ -478,7 +468,6 @@ const Register: NextPage = () => {
               >
                 Sign up
               </Button>
-
               <Box
                 sx={{
                   display: "flex",
@@ -560,6 +549,7 @@ const Register: NextPage = () => {
   );
 };
 
-Register.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>;
+RegisterPage.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
 
-export default Register;
+
+export default RegisterPage;

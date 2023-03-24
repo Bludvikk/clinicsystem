@@ -1,31 +1,39 @@
-// ** React Imports
-import { useState, ReactNode, MouseEvent } from "react";
+import { useState, ReactNode, MouseEvent, ChangeEvent } from "react";
 
 // ** Next Imports
 import Link from "next/link";
 
-// ** MUI Components
-import Alert from "@mui/material/Alert";
-import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
-import Checkbox from "@mui/material/Checkbox";
-import TextField from "@mui/material/TextField";
-import InputLabel from "@mui/material/InputLabel";
-import IconButton from "@mui/material/IconButton";
-import Box, { BoxProps } from "@mui/material/Box";
-import FormControl from "@mui/material/FormControl";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import OutlinedInput from "@mui/material/OutlinedInput";
+import {
+  Alert,
+  Button,
+  Divider,
+  Checkbox,
+  TextField,
+  InputLabel,
+  IconButton,
+  FormControl,
+  useMediaQuery,
+  OutlinedInput,
+  FormHelperText,
+  InputAdornment,
+  Grid,
+  CssBaseline,
+  Paper,
+  Avatar,
+} from "@mui/material";
+
 import { styled, useTheme } from "@mui/material/styles";
-import FormHelperText from "@mui/material/FormHelperText";
-import InputAdornment from "@mui/material/InputAdornment";
+
+import MuiCard, { CardProps } from "@mui/material/Card";
+
+import Box, { BoxProps } from "@mui/material/Box";
+
 import Typography, { TypographyProps } from "@mui/material/Typography";
 import MuiFormControlLabel, {
   FormControlLabelProps,
 } from "@mui/material/FormControlLabel";
 
-// ** Icon Imports
-import Icon from "src/@core/components/icon";
+import Icon from "@/@core/components/icon";
 
 // ** Third Party Imports
 import { useForm, Controller } from "react-hook-form";
@@ -40,13 +48,13 @@ import BlankLayout from "src/@core/layouts/BlankLayout";
 import FooterIllustrationsV2 from "src/views/pages/auth/FooterIllustrationsV2";
 import { NextPage } from "next";
 import UseBgColor from "@/@core/hooks/useBgColor";
-import { useSettings } from "@/@core/hooks/useSettings";
 import { signIn, useSession } from "next-auth/react";
-import { ILogin, loginSchema } from "@/common/validation/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/router";
 
-// ** Styled Components
+import { loginSchema, ILogin } from "@/common/validation/auth";
+import { useSettings } from "../../@core/hooks/useSettings";
+
 const LoginIllustrationWrapper = styled(Box)<BoxProps>(({ theme }) => ({
   padding: theme.spacing(20),
   paddingRight: "0 !important",
@@ -99,10 +107,17 @@ const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(
 );
 
 const LoginPage: NextPage = () => {
-  const [rememberMe, setRememberMe] = useState<boolean>(true);
+  // const [rememberMe, setRememberMe] = useState<boolean>(true);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const router = useRouter();
   const { status } = useSession();
+
+  const theme = useTheme();
+  const { settings } = useSettings();
+
+  const { skin } = settings;
+
+  const hidden = useMediaQuery(theme.breakpoints.down("md"));
 
   const {
     handleSubmit,
@@ -117,14 +132,6 @@ const LoginPage: NextPage = () => {
     mode: "onBlur",
     resolver: zodResolver(loginSchema),
   });
-
-  // ** Hooks
-  const theme = useTheme();
-  const { settings } = useSettings();
-  const hidden = useMediaQuery(theme.breakpoints.down("md"));
-
-  // ** Vars
-  const { skin } = settings;
 
   const imageSource =
     skin === "bordered"
@@ -161,7 +168,6 @@ const LoginPage: NextPage = () => {
           <FooterIllustrationsV2 />
         </Box>
       ) : null}
-
       <RightWrapper
         sx={
           skin === "bordered" && !hidden
@@ -278,15 +284,10 @@ const LoginPage: NextPage = () => {
                 {themeConfig.templateName}
               </Typography>
             </Box>
-
             <Box sx={{ mb: 6 }}>
-              <TypographyStyled
-                align="center"
-                variant="h5"
-              >{`Welcome back to ${themeConfig.templateName}! 👋🏻`}</TypographyStyled>
-
-              <Typography align="center" variant="body2">
-                Please sign-in to your account
+              <TypographyStyled variant="h5">{`Welcome to ${themeConfig.templateName}! 👋🏻`}</TypographyStyled>
+              <Typography variant="body2">
+                Please sign-in to your account and start the adventure
               </Typography>
             </Box>
 
@@ -318,8 +319,7 @@ const LoginPage: NextPage = () => {
                   </FormHelperText>
                 )}
               </FormControl>
-
-              <FormControl fullWidth sx={{ mb: 2 }}>
+              <FormControl fullWidth sx={{ mb: 4 }}>
                 <InputLabel
                   htmlFor="auth-login-v2-password"
                   error={Boolean(errors.password)}
@@ -377,17 +377,15 @@ const LoginPage: NextPage = () => {
               >
                 <FormControlLabel
                   label="Remember Me"
-                  control={
-                    <Checkbox
-                      checked={rememberMe}
-                      onChange={(e) => setRememberMe(e.target.checked)}
-                    />
-                  }
+                  control={<Checkbox />}
+                  sx={{
+                    "& .MuiFormControlLabel-label": { color: "text.primary" },
+                  }}
                 />
                 <Typography
                   variant="body2"
                   component={Link}
-                  href="/forgot-password"
+                  href="/pages/auth/forgot-password-v2"
                   sx={{ color: "primary.main", textDecoration: "none" }}
                 >
                   Forgot Password?
@@ -414,8 +412,8 @@ const LoginPage: NextPage = () => {
                   New on our platform?
                 </Typography>
                 <Typography
-                  href="/register"
                   component={Link}
+                  href="/pages/auth/register-v2"
                   sx={{ color: "primary.main", textDecoration: "none" }}
                 >
                   Create an account
