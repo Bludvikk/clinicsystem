@@ -10,11 +10,12 @@ import { PrismaService } from 'prisma/prisma.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { PatientEntity } from './entities/patient.entity';
 
+@UseGuards(JwtAuthGuard)
 @Controller('patient')
 export class PatientController {
   constructor(private readonly patientService: PatientService, private prisma: PrismaService ){}
 
-  @UseGuards(JwtAuthGuard)
+  
   @Post()
   async createPatient(@Body() createPatientDto: CreatePatientDto) {
     const createPatient = await this.patientService.createPatient(createPatientDto);
@@ -23,7 +24,7 @@ export class PatientController {
     return this.patientService.create(createPatientDto);
   }*/
 }
-  @UseGuards(JwtAuthGuard)
+  
   @Get()
   @ApiResponse({ status: 200, type: [ViewPatientDto] })
   async getPatients(): Promise<ViewPatientDto[]> {
@@ -39,7 +40,7 @@ export class PatientController {
 
   }
 
-  @UseGuards(JwtAuthGuard)
+  
   @Patch(':id')
   @ApiCreatedResponse({ type: PatientEntity })
   update( @Param('id') id: string,  @Body() updatepatientdto: UpdatePatientDto,) 
@@ -47,7 +48,7 @@ export class PatientController {
     return this.patientService.update(id, updatepatientdto);
   }
   
-  @UseGuards(JwtAuthGuard)
+  
   @Delete(':id')
     async deleteExample(@Param('id') id: string): Promise<any> {
       return this.prisma.patient.delete(
