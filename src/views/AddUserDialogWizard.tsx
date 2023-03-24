@@ -34,9 +34,6 @@ import Icon from "src/@core/components/icon";
 import StepperCustomDot from "./AddUserWizard/StepperCustomDot";
 
 import StepperWrapper from "@/@core/styles/mui/stepper";
-import { getGenders } from "@/server/hooks/gender";
-import { getCivilStatuses } from "@/server/hooks/civilStatus";
-import { getOccupations } from "@/server/hooks/occupation";
 import { postPatient } from "@/server/hooks/patient";
 import { IAddPatient } from "../server/schema/patient";
 import { addPatientSchema } from "@/server/schema/patient";

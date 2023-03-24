@@ -4,15 +4,22 @@ import { Prisma as prismaCli } from "@prisma/client";
 
 import type {
   IAddPatient,
-  IdeletePatient,
+  IDeletePatient,
   IGetPatient,
   IUpdatePatient,
 } from "@/server/schema/patient";
 
+export type PatientsAsyncType = Awaited<ReturnType<typeof getPatients>>[number];
+
 export const getPatients = async (ctx: Context) => {
   try {
-    const res = await ctx.prisma.patient.findMany();
-    return res;
+    return await ctx.prisma.patient.findMany({
+      include: {
+        civilStatus: true,
+        gender: true,
+        occupation: true,
+      },
+    });
   } catch (err) {
     throw err;
   }
@@ -20,12 +27,14 @@ export const getPatients = async (ctx: Context) => {
 
 export const getPatient = async (ctx: Context, input: IGetPatient) => {
   try {
-    const { id } = input;
-    const res = await ctx.prisma.patient.findUnique({
-      where: { id },
+    return await ctx.prisma.patient.findUnique({
+      where: { ...input },
+      include: {
+        civilStatus: true,
+        gender: true,
+        occupation: true,
+      },
     });
-
-    return res;
   } catch (err) {
     if (err instanceof prismaCli.PrismaClientKnownRequestError) {
       if (err.code === "P2025") {
@@ -59,27 +68,25 @@ export const postPatient = async (ctx: Context, input: IAddPatient) => {
       obGyne,
     } = input;
 
-    const res = await ctx.prisma.patient.create({
-      data: {
-        firstName,
-        lastName,
-        middleInitial,
-        address,
-        dateOfBirth,
-        civilStatusId,
-        age,
-        occupationId,
-        genderId,
-        contactNumber,
-        familyHistory,
-        personalHistory,
-        pastMedicalHistory,
-        obGyne,
-      },
-    });
-
     return {
-      data: res,
+      data: await ctx.prisma.patient.create({
+        data: {
+          firstName,
+          lastName,
+          middleInitial,
+          address,
+          dateOfBirth,
+          civilStatusId,
+          age,
+          occupationId,
+          genderId,
+          contactNumber,
+          familyHistory,
+          personalHistory,
+          pastMedicalHistory,
+          obGyne,
+        },
+      }),
       message: "Patient added successfully.",
       status: "success",
     };
@@ -99,48 +106,10 @@ export const postPatient = async (ctx: Context, input: IAddPatient) => {
 
 export const putPatient = async (ctx: Context, input: IUpdatePatient) => {
   try {
-    const {
-      id,
-      firstName,
-      lastName,
-      middleInitial,
-      address,
-      dateOfBirth,
-      civilStatusId,
-      age,
-      occupationId,
-      genderId,
-      contactNumber,
-      familyHistory,
-      personalHistory,
-      pastMedicalHistory,
-      obGyne,
-    } = input;
-
-    const res = await ctx.prisma.patient.update({
-      where: {
-        id,
-      },
-      data: {
-        firstName,
-        lastName,
-        middleInitial,
-        address,
-        dateOfBirth,
-        civilStatusId,
-        age,
-        occupationId,
-        genderId,
-        contactNumber,
-        familyHistory,
-        personalHistory,
-        pastMedicalHistory,
-        obGyne,
-      },
-    });
+    const { id, ...data } = input;
 
     return {
-      data: res,
+      data: await ctx.prisma.patient.update({ where: { id }, data }),
       message: "Patient updated successfully.",
       status: "success",
     };
@@ -158,17 +127,12 @@ export const putPatient = async (ctx: Context, input: IUpdatePatient) => {
   }
 };
 
-export const deletePatient = async (ctx: Context, input: IdeletePatient) => {
+export const deletePatient = async (ctx: Context, input: IDeletePatient) => {
   try {
-    const { id } = input;
-    const res = await ctx.prisma.patient.delete({
-      where: {
-        id,
-      },
-    });
-
     return {
-      data: res,
+      data: await ctx.prisma.patient.delete({
+        where: { ...input },
+      }),
       message: "Patient removed successfully.",
       status: "success",
     };

@@ -1,7 +1,8 @@
-import { ReactNode, useState, Fragment, MouseEvent } from "react";
-import { NextPage } from "next";
+// ** React Imports
+import { ReactNode, useState, Fragment, MouseEvent, useCallback } from "react";
+
+// ** Next Import
 import Link from "next/link";
-import { useCallback } from "react";
 import { useRouter } from "next/router";
 import {
   Button,
@@ -32,13 +33,14 @@ import Box, { BoxProps } from "@mui/material/Box";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
+import { ISignUp, signUpSchema } from "@/common/validation/auth";
+
 
 import { trpc } from "@/utils/trpc";
 
-import { signUpSchema, ISignUp } from "../../common/validation/auth";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { NextPage } from "next";
+import { useSession } from "next-auth/react";
 
 import Icon from "src/@core/components/icon";
 
@@ -110,19 +112,18 @@ const RegisterPage: NextPage = (props) => {
   const theme = useTheme();
   const { settings } = useSettings();
 
-  // ** Vars
   const { skin } = settings;
   const hidden = useMediaQuery(theme.breakpoints.down("md"));
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const router = useRouter();
+  const { status } = useSession();
 
   const {
     control,
     setError,
     handleSubmit,
     reset,
-
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -136,7 +137,8 @@ const RegisterPage: NextPage = (props) => {
   });
 
   const { mutateAsync } = trpc.signup.useMutation();
-  const registerHandler = useCallback(
+
+  const onSubmit = useCallback(
     async (data: ISignUp) => {
       try {
         const result = await mutateAsync(data);
@@ -306,7 +308,7 @@ const RegisterPage: NextPage = (props) => {
             <form
               noValidate
               autoComplete="off"
-              onSubmit={handleSubmit(registerHandler)}
+              onSubmit={handleSubmit(onSubmit)}
             >
               <FormControl fullWidth sx={{ mb: 4 }}>
                 <Controller
@@ -338,13 +340,12 @@ const RegisterPage: NextPage = (props) => {
                   rules={{ required: true }}
                   render={({ field: { value, onChange, onBlur } }) => (
                     <TextField
-                      autoFocus
-                      label="Email"
                       value={value}
+                      label="Email"
                       onBlur={onBlur}
                       onChange={onChange}
                       error={Boolean(errors.email)}
-                      placeholder="glennpower@gmail.com"
+                      placeholder="user@email.com"
                     />
                   )}
                 />
@@ -369,8 +370,8 @@ const RegisterPage: NextPage = (props) => {
                   render={({ field: { value, onChange, onBlur } }) => (
                     <OutlinedInput
                       value={value}
-                      onBlur={onBlur}
                       label="Password"
+                      onBlur={onBlur}
                       onChange={onChange}
                       id="auth-login-v2-password"
                       error={Boolean(errors.password)}
@@ -388,7 +389,6 @@ const RegisterPage: NextPage = (props) => {
                                   ? "mdi:eye-outline"
                                   : "mdi:eye-off-outline"
                               }
-                              fontSize={20}
                             />
                           </IconButton>
                         </InputAdornment>
@@ -397,7 +397,7 @@ const RegisterPage: NextPage = (props) => {
                   )}
                 />
                 {errors.password && (
-                  <FormHelperText sx={{ color: "error.main" }} id="">
+                  <FormHelperText sx={{ color: "error.main" }}>
                     {errors.password.message}
                   </FormHelperText>
                 )}
@@ -487,6 +487,7 @@ const RegisterPage: NextPage = (props) => {
                   Sign in instead
                 </Typography>
               </Box>
+
               <Divider
                 sx={{
                   "& .MuiDivider-wrapper": { px: 4 },
@@ -496,6 +497,7 @@ const RegisterPage: NextPage = (props) => {
               >
                 or
               </Divider>
+
               <Box
                 sx={{
                   display: "flex",
@@ -539,7 +541,6 @@ const RegisterPage: NextPage = (props) => {
                   <Icon icon="mdi:google" />
                 </IconButton>
               </Box>
-              {/* <Copyright sx={{ mt: 5 }} /> */}
             </form>
           </BoxWrapper>
         </Box>

@@ -7,7 +7,6 @@ import clsx from 'clsx'
 // ** Types
 import { CustomChipProps } from './types'
 
-
 // ** Hooks Imports
 import useBgColor, { UseBgColorType } from 'src/@core/hooks/useBgColor'
 

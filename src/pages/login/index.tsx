@@ -1,7 +1,7 @@
 import { useState, ReactNode, MouseEvent, ChangeEvent } from "react";
 
+// ** Next Imports
 import Link from "next/link";
-import { NextPage } from "next";
 
 import {
   Alert,
@@ -26,32 +26,34 @@ import { styled, useTheme } from "@mui/material/styles";
 
 import MuiCard, { CardProps } from "@mui/material/Card";
 
+import Box, { BoxProps } from "@mui/material/Box";
+
+import Typography, { TypographyProps } from "@mui/material/Typography";
 import MuiFormControlLabel, {
   FormControlLabelProps,
 } from "@mui/material/FormControlLabel";
 
-import Box, { BoxProps } from "@mui/material/Box";
-
-import Typography, { TypographyProps } from "@mui/material/Typography";
-
-import themeConfig from "@/configs/themeConfig";
-
-import BlankLayout from "@/@core/layouts/BlankLayout";
-
-import FooterIllustrationsV2 from "@/views/pages/auth/FooterIllustrationsV1";
-
-import { signIn } from "next-auth/react";
-
 import Icon from "@/@core/components/icon";
 
+// ** Third Party Imports
 import { useForm, Controller } from "react-hook-form";
+
+// ** Configs
+import themeConfig from "src/configs/themeConfig";
+
+// ** Layout Import
+import BlankLayout from "src/@core/layouts/BlankLayout";
+
+// ** Demo Imports
+import FooterIllustrationsV2 from "src/views/pages/auth/FooterIllustrationsV2";
+import { NextPage } from "next";
+import UseBgColor from "@/@core/hooks/useBgColor";
+import { signIn, useSession } from "next-auth/react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/router";
 
 import { loginSchema, ILogin } from "@/common/validation/auth";
 import { useSettings } from "../../@core/hooks/useSettings";
-
-
-
 
 const LoginIllustrationWrapper = styled(Box)<BoxProps>(({ theme }) => ({
   padding: theme.spacing(20),
@@ -107,6 +109,8 @@ const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(
 const LoginPage: NextPage = () => {
   // const [rememberMe, setRememberMe] = useState<boolean>(true);
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const router = useRouter();
+  const { status } = useSession();
 
   const theme = useTheme();
   const { settings } = useSettings();
@@ -114,12 +118,6 @@ const LoginPage: NextPage = () => {
   const { skin } = settings;
 
   const hidden = useMediaQuery(theme.breakpoints.down("md"));
-
-
-  const imageSource =
-    skin === "bordered"
-      ? "auth-v2-login-illustration-bordered"
-      : "auth-v2-login-illustration";
 
   const {
     handleSubmit,
@@ -135,13 +133,19 @@ const LoginPage: NextPage = () => {
     resolver: zodResolver(loginSchema),
   });
 
-  const loginHandler = async (data: ILogin) => {
-    const result = await signIn("credentials", {
+  const imageSource =
+    skin === "bordered"
+      ? "auth-v2-login-illustration-bordered"
+      : "auth-v2-login-illustration";
+
+  const onSubmit = async (data: ILogin) => {
+    await signIn("credentials", {
       ...data,
       callbackUrl: "/dashboard",
     });
-    console.log({ result });
   };
+
+  if (status === "authenticated") router.push("/dashboard");
 
   return (
     <Box className="content-right">
@@ -286,10 +290,11 @@ const LoginPage: NextPage = () => {
                 Please sign-in to your account and start the adventure
               </Typography>
             </Box>
+
             <form
               noValidate
               autoComplete="off"
-              onSubmit={handleSubmit(loginHandler)}
+              onSubmit={handleSubmit(onSubmit)}
             >
               <FormControl fullWidth sx={{ mb: 4 }}>
                 <Controller
@@ -304,7 +309,7 @@ const LoginPage: NextPage = () => {
                       onBlur={onBlur}
                       onChange={onChange}
                       error={Boolean(errors.email)}
-                      placeholder="glennpower@gmail.com"
+                      placeholder="admin@materialize.com"
                     />
                   )}
                 />
@@ -474,7 +479,6 @@ const LoginPage: NextPage = () => {
   );
 };
 
-
-LoginPage.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
+LoginPage.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>;
 
 export default LoginPage;
