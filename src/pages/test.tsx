@@ -17,6 +17,7 @@ import {
   putReference,
   deleteReference,
 } from "@/server/hooks/reference";
+import PatientForm from "@/views/pages/patient/PatientForm";
 // import PatientForm from "@/views/pages/patient/PatientForm";
 
 const Test = () => {
@@ -263,7 +264,9 @@ const Test = () => {
         <button onClick={() => deleteEntityFunc()}>delete entity</button>
       </div>
 
-      <div style={{ marginTop: 20 }}>{/* <PatientForm /> */}</div>
+      <div style={{ marginTop: 20 }}>
+        <PatientForm />
+      </div>
     </div>
   );
 };

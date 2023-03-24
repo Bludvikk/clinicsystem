@@ -20,6 +20,7 @@ import { z } from "zod";
 
 import { postPatient } from "@/server/hooks/patient";
 import { toast } from "react-hot-toast";
+import { getReferences } from "@/server/hooks/reference";
 
 type Medications = {
   brandName: string;
@@ -38,6 +39,10 @@ const PatientForm = () => {
 
   const { mutateAsync: postPatientMutateAsync, status: postPatientStatus } =
     postPatient();
+
+  const { data: referencesData, status: referencesDataStatus } = getReferences({
+    entities: [1, 2, 3],
+  });
 
   const defaultValues = {
     firstName: "",
@@ -200,26 +205,29 @@ const PatientForm = () => {
           )}
         />
 
-        {/* <Controller
+        <Controller
           name="civilStatusId"
           control={control}
           render={({ field }) => (
             <Select
               label="Civil Status"
-              disabled={civilStatusesDataStatus === "loading"}
+              disabled={referencesDataStatus === "loading"}
               variant="outlined"
+              placeholder="Civil Status"
               {...field}
             >
-              {civilStatusesData &&
-                civilStatusesData?.length > 0 &&
-                civilStatusesData.map((civilStatus) => (
-                  <MenuItem key={civilStatus.id} value={civilStatus.id}>
-                    {civilStatus.name}
-                  </MenuItem>
-                ))}
+              {referencesData &&
+                referencesData?.length > 0 &&
+                referencesData
+                  .filter((reference) => reference.entityId === 3)
+                  .map((civilStatus) => (
+                    <MenuItem key={civilStatus.id} value={civilStatus.id}>
+                      {civilStatus.name}
+                    </MenuItem>
+                  ))}
             </Select>
           )}
-        /> */}
+        />
 
         <Controller
           name="age"
@@ -238,47 +246,53 @@ const PatientForm = () => {
           )}
         />
 
-        {/* <Controller
+        <Controller
           name="occupationId"
           control={control}
           render={({ field }) => (
             <Select
               label="Civil Status"
-              disabled={occupationsDataStatus === "loading"}
+              disabled={referencesDataStatus === "loading"}
               variant="outlined"
+              placeholder="Occupation"
               {...field}
             >
-              {occupationsData &&
-                occupationsData?.length > 0 &&
-                occupationsData.map((occupation) => (
-                  <MenuItem key={occupation.id} value={occupation.id}>
-                    {occupation.name}
-                  </MenuItem>
-                ))}
+              {referencesData &&
+                referencesData?.length > 0 &&
+                referencesData
+                  .filter((reference) => reference.entityId === 2)
+                  .map((occupation) => (
+                    <MenuItem key={occupation.id} value={occupation.id}>
+                      {occupation.name}
+                    </MenuItem>
+                  ))}
             </Select>
           )}
-        /> */}
+        />
 
-        {/* <Controller
+        <Controller
           name="genderId"
           control={control}
           render={({ field }) => (
             <Select
               label="Gender"
-              disabled={gendersDataStatus === "loading"}
+              disabled={referencesDataStatus === "loading"}
               variant="outlined"
+              placeholder="Gender"
               {...field}
             >
-              {gendersData &&
-                gendersData?.length > 0 &&
-                gendersData.map((gender) => (
-                  <MenuItem key={gender.id} value={gender.id}>
-                    {gender.name}
-                  </MenuItem>
-                ))}
+              {referencesData &&
+                referencesData?.length > 0 &&
+                referencesData
+                  .filter((reference) => reference.entityId === 1)
+                  .map((gender) => (
+                    <MenuItem key={gender.id} value={gender.id}>
+                      {gender.name}
+                    </MenuItem>
+                  ))}
             </Select>
           )}
-        /> */}
+        />
 
         <Controller
           name="contactNumber"
