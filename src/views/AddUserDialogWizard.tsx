@@ -32,7 +32,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Icon from "src/@core/components/icon";
 
 import StepperCustomDot from "./AddUserWizard/StepperCustomDot";
-
+import { getReferences } from "@/server/hooks/reference";
 import StepperWrapper from "@/@core/styles/mui/stepper";
 import { postPatient } from "@/server/hooks/patient";
 import { IAddPatient } from "../server/schema/patient";
@@ -90,6 +90,9 @@ const AddUserWizard: NextPage = () => {
   const [show, setShow] = useState<boolean>(false);
   const { mutateAsync: postPatientMutateAsync, status: postPatientStatus } =
     postPatient();
+  const { data: referencesData, status: referencesDataStatus } = getReferences({
+    entities: [1, 2, 3],
+  });
 
   const defaultValues = {
     firstName: "",
@@ -133,12 +136,6 @@ const AddUserWizard: NextPage = () => {
       g: 0,
     },
   };
-
-  const { data: gendersData, status: genderDataStatus } = getGenders();
-  const { data: civilStatusesData, status: civilStatusesDataStatus } =
-    getCivilStatuses();
-  const { data: occupationsData, status: occupationsDataStatus } =
-    getOccupations();
 
   const {
     control,
@@ -232,7 +229,6 @@ const AddUserWizard: NextPage = () => {
                 >
                   {steps[0].title}
                 </Typography>
-
               </Grid>
               <Grid item sm={5}>
                 <Controller
@@ -345,19 +341,22 @@ const AddUserWizard: NextPage = () => {
                       <Select
                         {...field}
                         label="Civil Status"
-                        disabled={civilStatusesDataStatus === "loading"}
+                        disabled={referencesDataStatus === "loading"}
                         error={Boolean(errors.civilStatusId)}
                       >
-                        {civilStatusesData &&
-                          civilStatusesData?.length > 0 &&
-                          civilStatusesData.map((civilStatus) => (
-                            <MenuItem
-                              key={civilStatus.id}
-                              value={civilStatus.id}
-                            >
-                              {civilStatus.name}
-                            </MenuItem>
-                          ))}
+                        {" "}
+                        {referencesData &&
+                          referencesData?.length > 0 &&
+                          referencesData
+                            .filter((reference) => reference.entityId === 3)
+                            .map((civilStatus) => (
+                              <MenuItem
+                                key={civilStatus.id}
+                                value={civilStatus.id}
+                              >
+                                {civilStatus.name}
+                              </MenuItem>
+                            ))}
                       </Select>
                     </FormControl>
                   )}
