@@ -10,7 +10,6 @@ import type { AppProps } from "next/app";
 import { queryClient, trpc } from "@/utils/trpc";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClientProvider } from "@tanstack/react-query";
-
 // ** Loader Import
 import Nprogress from "nprogress";
 
@@ -127,7 +126,7 @@ const CustomApp = ({
               <ThemeComponent settings={settings}>
                 <WindowWrapper>
                 <QueryClientProvider client={queryClient}>
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
                       <SessionProvider session={pageProps.session}>
                         {getLayout(<Component {...pageProps} />)}
                         <ReactQueryDevtools initialIsOpen={false} />

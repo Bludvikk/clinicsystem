@@ -39,7 +39,6 @@
     "argon2": "^0.30.3",
     "bcrypt": "^5.1.0",
     "clipboard-copy": "^4.0.1",
-    "date-fns": "^2.29.3",
     "eslint": "8.35.0",
     "eslint-config-next": "13.2.3",
     "jsonwebtoken": "^9.0.0",

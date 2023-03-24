@@ -1,5 +1,5 @@
-import { Fragment, MouseEvent, useState } from "react";
-
+import { Fragment, forwardRef, useState, ReactElement, Ref } from "react";
+import { NextPage } from "next";
 import {
   Box,
   Card,
@@ -14,15 +14,14 @@ import {
   TextField,
   Typography,
   InputLabel,
-  IconButton,
   CardContent,
   FormControl,
-  OutlinedInput,
   FormHelperText,
-  InputAdornment,
   FormControlLabel,
   Checkbox,
   ListItemText,
+  Stack,
+  IconButton,
 } from "@mui/material";
 
 import { z } from "zod";
@@ -35,41 +34,37 @@ import Icon from "src/@core/components/icon";
 import StepperCustomDot from "./AddUserWizard/StepperCustomDot";
 
 import StepperWrapper from "@/@core/styles/mui/stepper";
-import { NextPage } from "next";
 import { getGenders } from "@/server/hooks/gender";
 import { getCivilStatuses } from "@/server/hooks/civilStatus";
 import { getOccupations } from "@/server/hooks/occupation";
-import { FormEvent, useId } from "react";
 import { postPatient } from "@/server/hooks/patient";
 import { IAddPatient } from "../server/schema/patient";
 import { addPatientSchema } from "@/server/schema/patient";
-import { DatePicker } from "@mui/x-date-pickers";
-import { Container } from "@mui/material";
-import ListItem from "@mui/material/ListItem";
-import CustomChip from "src/@core/components/mui/chip";
 import Paper from "@mui/material/Paper";
+import { DatePicker } from "@mui/x-date-pickers";
 import moment from "moment";
-
+import Fade, { FadeProps } from "@mui/material/Fade";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import Dialog from "@mui/material/Dialog";
 const steps = [
   {
     title: "Personal Information",
-    subtitle: "Enter your personal information",
   },
   {
     title: "Family History",
-    subtitle: "Enter your family history",
   },
   {
     title: "Personal History",
-    subtitle: "Enter your personal history",
   },
   {
     title: "Past Medical History",
-    subtitle: "Enter your past medical history",
   },
   {
     title: "Obstetrics and Gynecology",
-    subtitle: "Enter your ObGyne Information",
+  },
+  {
+    title: "Review",
   },
 ];
 
@@ -85,10 +80,17 @@ const MedicationsSchema = z.object({
   generic: z.string(),
 });
 
-const AddUserWizard = () => {
+const Transition = forwardRef(function Transition(
+  props: FadeProps & { children?: ReactElement<any, any> },
+  ref: Ref<unknown>
+) {
+  return <Fade ref={ref} {...props} />;
+});
+
+const AddUserWizard: NextPage = () => {
   const [activeStep, setActiveStep] = useState<number>(0);
   const [medications, setMedications] = useState<Medications[]>([]);
-
+  const [show, setShow] = useState<boolean>(false);
   const { mutateAsync: postPatientMutateAsync, status: postPatientStatus } =
     postPatient();
 
@@ -179,6 +181,12 @@ const AddUserWizard = () => {
     setMedications((prev) => [...prev, data]);
   };
 
+  const removeMedications = (index: number) => {
+    const updatedMedications = [...medications];
+    updatedMedications.splice(index, 1);
+    setMedications(updatedMedications);
+  };
+
   const addPatientOnSubmitHandler: SubmitHandler<IAddPatient> = async (
     data: IAddPatient
   ) => {
@@ -212,8 +220,8 @@ const AddUserWizard = () => {
     }
   };
 
-  console.log(watch());
-
+  // console.log(watch());
+  const values = getValues();
   const getStepContent = (step: number) => {
     switch (step) {
       case 0:
@@ -227,9 +235,7 @@ const AddUserWizard = () => {
                 >
                   {steps[0].title}
                 </Typography>
-                <Typography variant="caption" component="p">
-                  {steps[0].subtitle}
-                </Typography>
+
               </Grid>
               <Grid item sm={5}>
                 <Controller
@@ -473,16 +479,8 @@ const AddUserWizard = () => {
               <Grid
                 item
                 xs={12}
-                sx={{ display: "flex", justifyContent: "space-between" }}
+                sx={{ display: "flex", justifyContent: "flex-end" }}
               >
-                <Button
-                  size="large"
-                  variant="outlined"
-                  color="secondary"
-                  onClick={handleBack}
-                >
-                  Back
-                </Button>
                 <Button size="large" type="submit" variant="contained">
                   Next
                 </Button>
@@ -500,9 +498,6 @@ const AddUserWizard = () => {
                   sx={{ fontWeight: 600, color: "text.primary" }}
                 >
                   {steps[1].title}
-                </Typography>
-                <Typography variant="caption" component="p">
-                  {steps[1].subtitle}
                 </Typography>
               </Grid>
               <Grid item xs={4.5}>
@@ -714,11 +709,11 @@ const AddUserWizard = () => {
                       />
                     </Grid>
                     <Grid item xs={2}>
-                      <IconButton
+                      <Button
                         onClick={handleSubmit2(medicationOnSubmitHandler)}
                       >
                         <Icon icon="material-symbols:add-circle-outline-rounded" />
-                      </IconButton>
+                      </Button>
                     </Grid>
                   </Grid>
 
@@ -727,7 +722,10 @@ const AddUserWizard = () => {
                   <Paper>
                     {medications.length > 0 &&
                       medications.map((medication, i) => (
-                        <CardContent>
+                        <Box
+                          sx={{ p: 2, backgroundColor: "action.hover" }}
+                          key={i}
+                        >
                           <Grid container spacing={1}>
                             <Grid item xs={5}>
                               <ListItemText
@@ -739,12 +737,12 @@ const AddUserWizard = () => {
                               <ListItemText secondary={medication.dosage} />
                             </Grid>
                             <Grid item xs={2} mt={2}>
-                              <IconButton>
+                              <Button onClick={() => removeMedications(i)}>
                                 <Icon icon="ph:trash-thin" />
-                              </IconButton>
+                              </Button>
                             </Grid>
                           </Grid>
-                        </CardContent>
+                        </Box>
                       ))}
                   </Paper>
                 </form>
@@ -779,9 +777,6 @@ const AddUserWizard = () => {
                   sx={{ fontWeight: 600, color: "text.primary" }}
                 >
                   {steps[3].title}
-                </Typography>
-                <Typography variant="caption" component="p">
-                  {steps[3].subtitle}
                 </Typography>
               </Grid>
               <Grid item xs={6}>
@@ -932,9 +927,6 @@ const AddUserWizard = () => {
                 >
                   {steps[4].title}
                 </Typography>
-                <Typography variant="caption" component="p">
-                  {steps[4].subtitle}
-                </Typography>
               </Grid>
               <Grid item xs={6}>
                 <Controller
@@ -946,7 +938,7 @@ const AddUserWizard = () => {
                       slotProps={{
                         textField: {
                           fullWidth: true,
-                          label: "Menstrual Cycle Date Range",
+                          label: "Date of Birth",
                         },
                       }}
                     />
@@ -1016,64 +1008,318 @@ const AddUserWizard = () => {
             </Grid>
           </form>
         );
-      default:
-        return null;
+      case 5:
+        return (
+          <form key={4} onSubmit={handleSubmit(onSubmit)}>
+            <Typography>Review</Typography>
+            <Paper>
+              <Box sx={{ p: "6px", backgroundColor: "action.hover" }}>
+                <Grid container spacing={1}>
+                  <Grid item xs={12}>
+                    <Typography
+                      variant="body1"
+                      sx={{ fontWeight: 600, color: "text.primary" }}
+                    >
+                      {steps[0].title}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={1.5}>
+                    <ListItemText
+                      primary="First Name"
+                      secondary={values.firstName}
+                    />
+                  </Grid>
+                  <Grid item xs={1.5}>
+                    <ListItemText
+                      primary="Last Name"
+                      secondary={values.lastName}
+                    />
+                  </Grid>
+                  <Grid item xs={1.5}>
+                    <ListItemText
+                      primary="Middle Initial"
+                      secondary={values.middleInitial}
+                    />
+                  </Grid>
+                  <Grid item xs={1.5}>
+                    <ListItemText
+                      primary="Date of Birth"
+                      secondary={moment(values.dateOfBirth).format("L")}
+                    />
+                  </Grid>
+                  <Grid item xs={1.5}>
+                    <ListItemText
+                      primary="Civil Status"
+                      secondary={values.civilStatusId}
+                    />
+                  </Grid>
+                  <Grid item xs={1}>
+                    <ListItemText primary="Age" secondary={values.age} />
+                  </Grid>
+                  <Grid item xs={1}>
+                    <ListItemText
+                      primary="Gender"
+                      secondary={values.genderId}
+                    />
+                  </Grid>
+                  <Grid item xs={1}>
+                    <FormControl fullWidth>
+                      <ListItemText
+                        primary="Occupation"
+                        secondary={values.occupationId}
+                      />
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={1.5}>
+                    <FormControl fullWidth>
+                      <ListItemText
+                        primary="Contact Number"
+                        secondary={values.contactNumber}
+                      />
+                    </FormControl>
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    <FormControl fullWidth>
+                      <ListItemText
+                        primary="Address"
+                        secondary={values.address}
+                      />
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Divider />
+                    <Typography
+                      variant="body1"
+                      sx={{ fontWeight: 600, color: "text.primary" }}
+                    >
+                      {steps[1].title}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={2}>
+                    <ListItemText
+                      primary="Bronchial Asthma"
+                      secondary={
+                        getValues("familyHistory.cancer") ? "Yes" : "No"
+                      }
+                    ></ListItemText>
+                  </Grid>
+                  <Grid item xs={2}>
+                    <ListItemText
+                      primary="Pulmonary Tuberculosis"
+                      secondary={
+                        getValues("familyHistory.pulmonaryTuberculosis")
+                          ? "Yes"
+                          : "No"
+                      }
+                    ></ListItemText>
+                  </Grid>
+                  <Grid item xs={2}>
+                    <ListItemText
+                      primary="Hypertension"
+                      secondary={
+                        getValues("familyHistory.hearthDisease") ? "Yes" : "No"
+                      }
+                    ></ListItemText>
+                  </Grid>
+                  <Grid item xs={2}>
+                    <ListItemText
+                      primary="Diabetes Mellitus"
+                      secondary={
+                        getValues("familyHistory.diabetesMellitus")
+                          ? "Yes"
+                          : "No"
+                      }
+                    ></ListItemText>
+                  </Grid>
+                  <Grid item xs={2}>
+                    <ListItemText
+                      primary="Cancer"
+                      secondary={
+                        getValues("familyHistory.cancer") ? (
+                          "Yes"
+                        ) : (
+                          <Icon
+                            icon="gridicons:cross
+                        "
+                          />
+                        )
+                      }
+                    ></ListItemText>
+                  </Grid>
+                  <Grid item xs={2}>
+                    <ListItemText
+                      primary="Others"
+                      secondary={values.familyHistory.others}
+                    ></ListItemText>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Divider />
+                    <Typography
+                      variant="body1"
+                      sx={{ fontWeight: 600, color: "text.primary" }}
+                    >
+                      {steps[2].title}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={1.5}>
+                    <ListItemText
+                      primary="Cigarrete sticks per day"
+                      secondary={values.personalHistory.smoking}
+                    ></ListItemText>
+                  </Grid>
+                  <Grid item xs={1.5}>
+                    <ListItemText
+                      primary="Years of drinking alcohol"
+                      secondary={values.personalHistory.alcohol}
+                    ></ListItemText>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <ListItemText
+                      primary="Current Health Condition"
+                      secondary={values.personalHistory.currentHealthCondition}
+                    ></ListItemText>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Paper>
+                      <Typography sx={{ m: 2 }}>
+                        Medications (Any medications taken regularly)
+                      </Typography>
+                      {medications.length > 0 &&
+                        medications.map((medication, i) => (
+                          <Box
+                            sx={{ p: "6px", backgroundColor: "action.hover" }}
+                            key={i}
+                          >
+                            <Grid container spacing={2}>
+                              <Grid item xs={5}>
+                                <ListItemText
+                                  primary={medication.generic}
+                                  secondary={medication.brandName}
+                                />
+                              </Grid>
+                              <Grid item xs={4} mt={4}>
+                                <ListItemText secondary={medication.dosage} />
+                              </Grid>
+                            </Grid>
+                          </Box>
+                        ))}
+                    </Paper>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Divider />
+                    <Typography
+                      variant="body1"
+                      sx={{ fontWeight: 600, color: "text.primary" }}
+                    >
+                      {steps[3].title}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} pt={10} pl={2}>
+                    <ListItemText
+                      primary="Have you ever been hospitalized?"
+                      secondary={values.pastMedicalHistory.hospitalized}
+                    />
+                  </Grid>
+                  <Grid item xs={12} p={2}>
+                    <ListItemText
+                      primary="Have you ever had serious injuries and/or broken bones??"
+                      secondary={values.pastMedicalHistory.injuries}
+                    />
+                  </Grid>
+                  <Grid item xs={12} p={2}>
+                    <ListItemText
+                      primary="Have you undergone any surgeries?"
+                      secondary={values.pastMedicalHistory.surgeries}
+                    />
+                  </Grid>
+                  <Grid item xs={12} p={2}>
+                    <ListItemText
+                      primary="Do you have allergies?"
+                      secondary={values.pastMedicalHistory.allergies}
+                    />
+                  </Grid>
+                  <Grid item xs={12} p={2}>
+                    <ListItemText
+                      primary="Have you had measles?"
+                      secondary={values.pastMedicalHistory.measles}
+                    />
+                  </Grid>
+                  <Grid item xs={12} p={2}>
+                    <ListItemText
+                      primary="Have you had chicken pox?"
+                      secondary={values.pastMedicalHistory.chickenPox}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Divider />
+                    <Typography
+                      variant="body1"
+                      sx={{ fontWeight: 600, color: "text.primary" }}
+                    >
+                      {steps[4].title}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={6} p={2}>
+                    <ListItemText
+                      primary="Menstrual Cycle?"
+                      secondary={moment(values.obGyne.menstrualCycle).format(
+                        "L"
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={6} p={2}>
+                    <ListItemText
+                      primary="Menstrual Cycle Days"
+                      secondary={values.obGyne.days}
+                    />
+                  </Grid>
+                  <Grid item xs={6} p={2}>
+                    <ListItemText primary="Para" secondary={values.obGyne.p} />
+                  </Grid>
+                  <Grid item xs={6} p={2}>
+                    <ListItemText
+                      primary="Gravida"
+                      secondary={values.obGyne.g}
+                    />
+                  </Grid>
+                </Grid>
+              </Box>
+            </Paper>
+
+            <Box sx={{ mt: 4, display: "flex", justifyContent: "flex-end" }}>
+              <Stack direction="row" spacing={2}>
+                <Button
+                  size="large"
+                  variant="outlined"
+                  color="secondary"
+                  onClick={handleBack}
+                >
+                  Back
+                </Button>
+
+                <Button size="large" type="submit" variant="contained">
+                  Next
+                </Button>
+              </Stack>
+            </Box>
+          </form>
+        );
     }
   };
 
   const renderContent = () => {
-    const values = getValues([
-      "firstName",
-      "lastName",
-      "middleInitial",
-      "dateOfBirth",
-      "civilStatusId",
-      "age",
-
-    ]);
     if (activeStep === steps.length) {
       return (
         <Fragment>
-          <Typography>Review</Typography>
-
-          <Grid container spacing={2}>
-            <Grid item xs={1.5}>
-              <ListItemText primary="First Name" secondary={values[0]} />
-            </Grid>
-            <Grid item xs={1.5}>
-              <ListItemText primary="Last Name" secondary={values[1]} />
-            </Grid>
-            <Grid item xs={1.5}>
-              <ListItemText primary="Middle Initial" secondary={getValues(['civilStatusId', 'civilStatus.name'])} />
-            </Grid>
-            <Grid item xs={1.5}>
-              <ListItemText
-                primary="Date of Birth"
-                secondary={moment(values[3]).format("L")}
-              />
-            </Grid>
-            <Grid item xs={1.5}>
-
-                  <ListItemText
-                    primary="Civil Status"
-                    secondary={values[4]}
-                  />
-            </Grid>
-            <Grid item xs={1.5}>
-            <ListItemText
-                primary="Age"
-                secondary={values[5]}
-              />
-
-            </Grid>
-          </Grid>
+          <Typography>All steps are completed!</Typography>
           <Box sx={{ mt: 4, display: "flex", justifyContent: "flex-end" }}>
             <Button
               size="large"
               variant="contained"
               onClick={handleSubmit(addPatientOnSubmitHandler)}
             >
-              Submit
+              Reset
             </Button>
           </Box>
         </Fragment>
@@ -1086,50 +1332,87 @@ const AddUserWizard = () => {
   return (
     <Card>
       <CardContent>
-        <StepperWrapper>
-          <Stepper activeStep={activeStep}>
-            {steps.map((step, index) => {
-              const labelProps: {
-                error?: boolean;
-              } = {};
-              if (index === activeStep) {
-                labelProps.error = false;
-                if (errors.firstName && activeStep === 0) {
-                  labelProps.error = true;
-                } else {
-                  labelProps.error = false;
-                }
-              }
-
-              return (
-                <Step key={index}>
-                  <StepLabel
-                    {...labelProps}
-                    StepIconComponent={StepperCustomDot}
-                  >
-                    <div className="step-label">
-                      <Typography className="step-number">{`${
-                        index + 1
-                      }`}</Typography>
-                      <div>
-                        <Typography className="step-title">
-                          {step.title}
-                        </Typography>
-                        <Typography className="step-subtitle">
-                          {step.subtitle}
-                        </Typography>
-                      </div>
-                    </div>
-                  </StepLabel>
-                </Step>
-              );
-            })}
-          </Stepper>
-        </StepperWrapper>
+        <Button variant="contained" onClick={() => setShow(true)}>
+          Add Patient
+        </Button>
       </CardContent>
-      <Divider sx={{ m: "0 !important" }} />
+      <Dialog
+        fullWidth
+        open={show}
+        maxWidth="lg"
+        scroll="body"
+        onClose={() => setShow(false)}
+        TransitionComponent={Transition}
+        onBackdropClick={() => setShow(false)}
+      >
+        <DialogContent
+          sx={{
+            pb: 6,
+            px: { xs: 8, sm: 15 },
+            pt: { xs: 8, sm: 12.5 },
+            position: "relative",
+          }}
+        >
+          <IconButton
+            size="small"
+            onClick={() => setShow(false)}
+            sx={{ position: "absolute", right: "1rem", top: "1rem" }}
+          >
+            <Icon icon="mdi:close" />
+          </IconButton>
+          <Box sx={{ mb: 8, textAlign: "center" }}>
+            <Typography variant="h5" sx={{ mb: 3, lineHeight: "2rem" }}>
+              Add Patient Information to the system
+            </Typography>
+            <Typography variant="body2">
+              Adding patient information will receive a privacy audit
+            </Typography>
+          </Box>
 
-      <CardContent>{renderContent()}</CardContent>
+          <CardContent>
+            <StepperWrapper>
+              <Stepper activeStep={activeStep}>
+                {steps.map((step, index) => {
+                  const labelProps: {
+                    error?: boolean;
+                  } = {};
+                  if (index === activeStep) {
+                    labelProps.error = false;
+                    if (errors.firstName && activeStep === 0) {
+                      labelProps.error = true;
+                    } else {
+                      labelProps.error = false;
+                    }
+                  }
+
+                  return (
+                    <Step key={index}>
+                      <StepLabel
+                        {...labelProps}
+                        StepIconComponent={StepperCustomDot}
+                      >
+                        <div className="step-label">
+                          <Typography className="step-number">{`${
+                            index + 1
+                          }`}</Typography>
+                          <div>
+                            <Typography className="step-title">
+                              {step.title}
+                            </Typography>
+                          </div>
+                        </div>
+                      </StepLabel>
+                    </Step>
+                  );
+                })}
+              </Stepper>
+            </StepperWrapper>
+          </CardContent>
+          <Divider sx={{ m: "0 !important" }} />
+
+          <CardContent>{renderContent()}</CardContent>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 };
