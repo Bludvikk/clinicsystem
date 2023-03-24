@@ -119,7 +119,7 @@ const PatientForm = () => {
     e: any
   ) => {
     reset2();
-    setMedications((prev) => [...prev, { id: useId(), ...data }]);
+    setMedications((prev) => [...prev, { ...data }]);
   };
 
   const addPatientOnSubmitHandler: SubmitHandler<IAddPatient> = async (
@@ -407,6 +407,7 @@ const PatientForm = () => {
 
         <Box>
           <Typography>Personal History </Typography>
+
           <Controller
             name="personalHistory.smoking"
             control={control}
@@ -430,11 +431,12 @@ const PatientForm = () => {
             render={({ field }) => (
               <TextField
                 {...field}
+                type="number"
                 name="personalHistory.alcohol"
                 label="Alcohol"
                 variant="outlined"
                 InputLabelProps={{ shrink: true }}
-                inputProps={{ min: 0, valueasnumber: true }}
+                inputProps={{ min: 0, valueAsNumber: true }}
                 onChange={(e) => field.onChange(parseInt(e.target.value))}
               />
             )}
