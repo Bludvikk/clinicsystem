@@ -55,7 +55,6 @@ export class CreatePatientDto {
     @IsObject()
     pastMedicalHistory: any;
 
-
     @IsObject()
     obGyne: any;
 
