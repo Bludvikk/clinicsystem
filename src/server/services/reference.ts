@@ -10,9 +10,7 @@ import {
   IUpdateReference,
 } from "@/server/schema/reference";
 
-export type ReferencesAsyncType = Awaited<
-  ReturnType<typeof getReferences>
->[number];
+export type ReferencesAsyncType = typeof getReferences
 
 export const getReferences = async (
   ctx: Context,

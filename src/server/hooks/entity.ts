@@ -1,11 +1,15 @@
 import { trpc, queryClient } from "@/utils/trpc";
 import { IGetEntity } from "../schema/entity";
 import { getQueryKey } from "@trpc/react-query";
+import { FilterQueryInputType } from "@/utils/common.type";
 
 const entityListQueryKey = getQueryKey(trpc.entity.list, undefined, "query");
 
 export const getEntities = () => {
-  const result = trpc.entity.list.useQuery(undefined, { staleTime: Infinity });
+  const result = trpc.entity.list.useQuery(
+    undefined,
+    { staleTime: Infinity
+    });
   return result;
 };
 
@@ -60,3 +64,9 @@ export const deleteEntity = () => {
   });
   return mutation;
 };
+
+export const findEntityDataById = ({ id}: FilterQueryInputType ) => {
+  const { data } = getEntities()
+
+  return data?.find(row => row.id === id)
+}

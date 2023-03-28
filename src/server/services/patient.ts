@@ -9,7 +9,7 @@ import type {
   IUpdatePatient,
 } from "@/server/schema/patient";
 
-export type PatientsAsyncType = Awaited<ReturnType<typeof getPatients>>[number];
+export type PatientsAsyncType = typeof getPatients
 
 export const getPatients = async (ctx: Context) => {
   try {

@@ -1,38 +1,28 @@
-import { z } from "zod";
+import { object, z } from "zod";
+import { params } from "./common";
 
 export const PatientSchema = z.object({
   id: z.string({
     required_error: "Please enter a patient Id.",
   }),
-  firstName: z.string({
-    required_error: "Please enter a first name.",
-  }),
-  lastName: z.string({
-    required_error: "Please enter a last name.",
-  }),
+  firstName: z.string().min(1, {message: 'First name is required'}),
+  lastName: z.string().min(1, {message: 'Last name is required'}),
   middleInitial: z
     .string()
     .max(1, {
       message: "Middle initial must be a single character.",
-    })
-    .optional(),
-  address: z.string({
-    required_error: "Please enter a valid address.",
-  }),
-  dateOfBirth: z.date({
-    required_error: "Please enter a valid date of birth.",
-  }),
+    }),
+  address: z.string().min(1, {message: 'Please enter a valid address'}),
+  dateOfBirth: z.date().min(new Date("1900-01-01"), { message: "Too old" }).max(new Date(), { message: "Too young!" }),
   civilStatusId: z.number({
     required_error: "Please enter a civil status ID.",
   }),
-  age: z.number({
-    required_error: "Please enter an age.",
-  }),
+  age: z.number().min(1, {message: 'Age is required'}),
   occupationId: z.number({
     required_error: "Please enter an occupation ID.",
   }),
   genderId: z.number({ required_error: "Please enter a gender ID." }),
-  contactNumber: z.string().optional(),
+  contactNumber: z.string(),
   familyHistory: z.any(),
   personalHistory: z.any(),
   pastMedicalHistory: z.any(),
@@ -49,3 +39,13 @@ export type IAddPatient = z.infer<typeof addPatientSchema>;
 export type IGetPatient = z.infer<typeof getPatientSchema>;
 export type IUpdatePatient = z.infer<typeof updatePatientSchema>;
 export type IDeletePatient = z.infer<typeof deletePatientSchema>;
+
+
+export const postPatientDtoSchema = z.object({
+  params,
+  body: PatientSchema
+})
+
+export type PatientDtoSchemaType = z.TypeOf<typeof PatientSchema>
+export type PostPatientDtoType = z.TypeOf<typeof postPatientDtoSchema>
+export type PatientUnionFieldType = keyof PatientDtoSchemaType

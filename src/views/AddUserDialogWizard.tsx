@@ -28,7 +28,7 @@ import { z } from "zod";
 import toast from "react-hot-toast";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
+import { ReferenceSchema } from "@/server/schema/reference";
 import Icon from "src/@core/components/icon";
 
 import StepperCustomDot from "./AddUserWizard/StepperCustomDot";
@@ -88,54 +88,11 @@ const AddUserWizard: NextPage = () => {
   const [activeStep, setActiveStep] = useState<number>(0);
   const [medications, setMedications] = useState<Medications[]>([]);
   const [show, setShow] = useState<boolean>(false);
-  const { mutateAsync: postPatientMutateAsync, status: postPatientStatus } =
+  const { mutate, mutateAsync: postPatientMutateAsync, status: postPatientStatus } =
     postPatient();
   const { data: referencesData, status: referencesDataStatus } = getReferences({
     entities: [1, 2, 3],
   });
-
-  const defaultValues = {
-    firstName: "",
-    lastName: "",
-    middleInitial: "",
-    address: "",
-    dateOfBirth: new Date(""),
-    civilStatusId: 0,
-    age: 0,
-    occupationId: 0,
-    genderId: 0,
-    contactNumber: "",
-    familyHistory: {
-      bronchialAsthma: false,
-      pulmonaryTuberculosis: false,
-      diabetesMellitus: false,
-      hearthDisease: false,
-      hypertension: false,
-      cancer: false,
-      others: "",
-    },
-    personalHistory: {
-      smoking: 0,
-      alcohol: 0,
-      currentHealthCondition: "",
-      medications: [],
-    },
-    pastMedicalHistory: {
-      hospitalized: "",
-      injuries: "",
-      surgeries: "",
-      allergies: "",
-      measles: "",
-      chickenPox: "",
-      others: "",
-    },
-    obGyne: {
-      menstrualCycle: new Date(""),
-      days: 0,
-      p: 0,
-      g: 0,
-    },
-  };
 
   const {
     control,
@@ -143,11 +100,50 @@ const AddUserWizard: NextPage = () => {
     setValue,
     getValues,
     reset,
-    setError,
-    watch,
     formState: { errors },
   } = useForm<IAddPatient>({
-    defaultValues,
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      middleInitial: "",
+      address: "",
+      dateOfBirth: new Date(""),
+      civilStatusId: 0,
+      age: 0,
+      occupationId: 0,
+      genderId: 0,
+      contactNumber: "",
+      familyHistory: {
+        bronchialAsthma: false,
+        pulmonaryTuberculosis: false,
+        diabetesMellitus: false,
+        hearthDisease: false,
+        hypertension: false,
+        cancer: false,
+        others: "",
+      },
+      personalHistory: {
+        smoking: 0,
+        alcohol: 0,
+        currentHealthCondition: "",
+        medications: [],
+      },
+      pastMedicalHistory: {
+        hospitalized: "",
+        injuries: "",
+        surgeries: "",
+        allergies: "",
+        measles: "",
+        chickenPox: "",
+        others: "",
+      },
+      obGyne: {
+        menstrualCycle: new Date(""),
+        days: 0,
+        p: 0,
+        g: 0,
+      },
+    },
     mode: "onBlur",
     resolver: zodResolver(addPatientSchema),
   });
@@ -186,6 +182,7 @@ const AddUserWizard: NextPage = () => {
   ) => {
     try {
       setValue("personalHistory.medications", medications);
+
       const result = await postPatientMutateAsync(data);
       if (result.data) {
         toast.success(result.message);
@@ -231,24 +228,27 @@ const AddUserWizard: NextPage = () => {
                 </Typography>
               </Grid>
               <Grid item sm={5}>
-                <Controller
-                  name="firstName"
-                  control={control}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      name="firstName"
-                      label="First Name"
-                      error={Boolean(errors.firstName)}
-                    />
+                <FormControl fullWidth>
+                  <Controller
+                    name="firstName"
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        fullWidth
+                        name="firstName"
+                        label="First Name"
+                        error={Boolean(errors.firstName)}
+                      />
+                    )}
+                  />
+                  {errors.firstName && (
+                    <FormHelperText sx={{ color: "error.main" }}>
+                      {errors.firstName.message}
+                    </FormHelperText>
                   )}
-                />
-                {errors.firstName && (
-                  <FormHelperText sx={{ color: "error.main" }}>
-                    {errors.firstName.message}
-                  </FormHelperText>
-                )}
+                </FormControl>
               </Grid>
               <Grid item sm={5}>
                 <Controller
@@ -325,11 +325,17 @@ const AddUserWizard: NextPage = () => {
                         textField: {
                           fullWidth: true,
                           label: "Date of Birth",
+                          error: Boolean(errors.dateOfBirth)
                         },
                       }}
                     />
                   )}
                 />
+                {errors.dateOfBirth && (
+                  <FormHelperText sx={{ color: "error.main" }}>
+                    {errors.dateOfBirth.message}
+                  </FormHelperText>
+                )}
               </Grid>
               <Grid item sm={6}>
                 <Controller
@@ -340,16 +346,20 @@ const AddUserWizard: NextPage = () => {
                       <InputLabel id="civilStatusId"> Civil Status </InputLabel>
                       <Select
                         {...field}
+                        defaultValue={0}
                         label="Civil Status"
                         disabled={referencesDataStatus === "loading"}
                         error={Boolean(errors.civilStatusId)}
                       >
-                        {" "}
+                        <MenuItem value={0}>None</MenuItem>
                         {referencesData &&
                           referencesData?.length > 0 &&
                           referencesData
-                            .filter((reference) => reference.entityId === 3)
-                            .map((civilStatus) => (
+                            .filter(
+                              (reference: ReferenceSchema) =>
+                                reference.entityId === 3
+                            )
+                            .map((civilStatus: ReferenceSchema) => (
                               <MenuItem
                                 key={civilStatus.id}
                                 value={civilStatus.id}
@@ -401,17 +411,27 @@ const AddUserWizard: NextPage = () => {
                       <InputLabel id="occupationId"> Occupation </InputLabel>
                       <Select
                         {...field}
+                        defaultValue={0}
                         label="Occupation"
-                        disabled={occupationsDataStatus === "loading"}
+                        disabled={referencesDataStatus === "loading"}
                         error={Boolean(errors.occupationId)}
-                      >
-                        {occupationsData &&
-                          occupationsData?.length > 0 &&
-                          occupationsData.map((occupation) => (
-                            <MenuItem key={occupation.id} value={occupation.id}>
-                              {occupation.name}
-                            </MenuItem>
-                          ))}
+
+                      ><MenuItem value={0}>None</MenuItem>
+                        {referencesData &&
+                          referencesData?.length > 0 &&
+                          referencesData
+                            .filter(
+                              (reference: ReferenceSchema) =>
+                                reference.entityId === 2
+                            )
+                            .map((occupation: ReferenceSchema) => (
+                              <MenuItem
+                                key={occupation.id}
+                                value={occupation.id}
+                              >
+                                {occupation.name}
+                              </MenuItem>
+                            ))}
                       </Select>
                     </FormControl>
                   )}
@@ -430,18 +450,26 @@ const AddUserWizard: NextPage = () => {
                     <FormControl fullWidth>
                       <InputLabel id="genderId"> Gender </InputLabel>
                       <Select
+                        defaultValue={0}
                         {...field}
                         label="Gender"
-                        disabled={genderDataStatus === "loading"}
+                        disabled={referencesDataStatus === "loading"}
                         error={Boolean(errors.genderId)}
+                        placeholder="Gender"
                       >
-                        {gendersData &&
-                          gendersData?.length > 0 &&
-                          gendersData.map((gender) => (
-                            <MenuItem key={gender.id} value={gender.id}>
-                              {gender.name}
-                            </MenuItem>
-                          ))}
+                        <MenuItem value={0}>Select Gender</MenuItem>
+                        {referencesData &&
+                          referencesData?.length > 0 &&
+                          referencesData
+                            .filter(
+                              (reference: ReferenceSchema) =>
+                                reference.entityId === 1
+                            )
+                            .map((gender: ReferenceSchema) => (
+                              <MenuItem key={gender.id} value={gender.id}>
+                                {gender.name}
+                              </MenuItem>
+                            ))}
                       </Select>
                     </FormControl>
                   )}
@@ -1313,7 +1341,7 @@ const AddUserWizard: NextPage = () => {
             <Button
               size="large"
               variant="contained"
-              onClick={handleSubmit(addPatientOnSubmitHandler)}
+              onClick={handleSubmit(addPatientOnSubmitHandler, handleReset)}
             >
               Reset
             </Button>
@@ -1327,11 +1355,10 @@ const AddUserWizard: NextPage = () => {
 
   return (
     <Card>
-      <CardContent>
-        <Button variant="contained" onClick={() => setShow(true)}>
-          Add Patient
-        </Button>
-      </CardContent>
+      <Button variant="contained" onClick={() => setShow(true)}>
+        Add Patient
+      </Button>
+
       <Dialog
         fullWidth
         open={show}

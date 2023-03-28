@@ -12,6 +12,7 @@ export const EntitySchema = z.object({
   fieldProp: z.string().optional(),
 });
 
+
 export const addEntitySchema = EntitySchema.omit({ id: true });
 export const getEntitySchema = EntitySchema.pick({ id: true });
 export const updateEntitySchema = EntitySchema;

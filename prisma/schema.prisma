@@ -20,14 +20,14 @@ model Patient {
   id                 String    @id @default(uuid())
   firstName          String
   lastName           String
-  middleInitial      String?   @default("N/A")
+  middleInitial      String     @default("N/A")
   address            String
   dateOfBirth        DateTime
   civilStatusId      Int
   age                Int
   occupationId       Int
   genderId           Int
-  contactNumber      String?   @default("N/A")
+  contactNumber      String   @default("N/A")
   familyHistory      Json
   personalHistory    Json
   pastMedicalHistory Json

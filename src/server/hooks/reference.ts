@@ -1,6 +1,17 @@
 import { trpc, queryClient } from "@/utils/trpc";
 import { IGetReference, IGetReferencesByEntityId } from "../schema/reference";
 import { getQueryKey } from "@trpc/react-query";
+import { getEntities } from "./entity";
+import { FilterQueryInputType } from "@/utils/common.type";
+
+
+export function fetchDependencyData(filterQuery: FilterQueryInputType) {
+  const entities = getEntities()
+  const reference = getReferences(filterQuery)
+
+  return { entities, reference}
+}
+
 
 export const getReferences = ({ entities }: IGetReferencesByEntityId) => {
   const result = trpc.reference.list.useQuery(

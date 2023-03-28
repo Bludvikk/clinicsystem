@@ -42,3 +42,4 @@ export const ServerRouter = router({
 });
 
 export type ServerRouter = typeof ServerRouter;
+export type RouterKeyType = keyof Omit<typeof ServerRouter, 'index' | '_def' | 'createCaller' | 'getErrorShape'>
