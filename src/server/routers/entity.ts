@@ -9,7 +9,7 @@ import {
   deleteEntity,
   getEntities,
   getEntity,
-  postEntity,
+  // postEntity,
   putEntity,
 } from "../services/entity";
 
@@ -18,9 +18,9 @@ export const EntityRouter = router({
   record: publicProcedure
     .input(getEntitySchema)
     .query(({ ctx, input }) => getEntity(ctx, input)),
-  post: publicProcedure
-    .input(addEntitySchema)
-    .mutation(({ ctx, input }) => postEntity(ctx, input)),
+  // post: publicProcedure
+  //   .input(addEntitySchema)
+  //   .mutation(({ ctx, input }) => postEntity(ctx, input)),
   put: publicProcedure
     .input(updateEntitySchema)
     .mutation(({ ctx, input }) => putEntity(ctx, input)),

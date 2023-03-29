@@ -7,6 +7,8 @@ import { router, publicProcedure } from "../trpc";
 import { referenceRouter } from "./reference";
 import { EntityRouter } from "./entity";
 
+
+
 export const ServerRouter = router({
   signup: publicProcedure
     .input(signUpSchema)
@@ -23,7 +25,6 @@ export const ServerRouter = router({
           message: "User already exists.",
         });
       }
-
       const hashedPassword = await hash(password);
 
       const result = await ctx.prisma.user.create({

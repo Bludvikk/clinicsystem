@@ -15,9 +15,27 @@ export const getPatients = async (ctx: Context) => {
   try {
     return await ctx.prisma.patient.findMany({
       include: {
-        civilStatus: true,
-        gender: true,
-        occupation: true,
+        civilStatus: {
+          select: {
+            id: true,
+            code: true,
+            name: true
+          }
+        },
+        gender: {
+          select: {
+            id: true,
+            code: true,
+            name: true
+          }
+        },
+        occupation: {
+          select: {
+            id: true,
+            code: true,
+            name: true
+          }
+        }
       },
     });
   } catch (err) {

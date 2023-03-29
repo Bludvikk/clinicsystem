@@ -24,7 +24,7 @@ export type TableHeaderPropsType = {
   handleSearchFilter: (...event: any[]) => void
 }
 
-export type FormInputType = 'textField' | 'number' | 'dropDown' | 'textarea' | 'multiselect'
+export type FormInputType = 'textField' | 'number' | 'dropDown' | 'textarea' | 'multiselect' | 'multiline' | 'checkbox' | 'DatePicker'
 
 export type FormControlPropsType<TUnionField> = {
   label: string

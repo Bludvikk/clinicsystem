@@ -5,6 +5,8 @@ import { verify } from "argon2";
 import { prisma } from "./prisma";
 import { loginSchema } from "./validation/auth";
 
+
+
 export const nextAuthOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({

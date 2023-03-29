@@ -1,7 +1,8 @@
-import { fetchDependencyData } from '@/server/hooks/reference'
-import { InputLabel, Select, MenuItem, TextField, FormControl, TextFieldProps, SelectProps } from '@mui/material'
+import { fetchDependencyData, getReference, getReferences } from '@/server/hooks/reference'
+import { InputLabel, Select, MenuItem, TextField, FormControl, TextFieldProps, SelectProps, FormControlLabel, Checkbox } from '@mui/material'
 import FormHelperText from '@mui/material/FormHelperText'
 import { DefaultComponentProps, OverridableTypeMap } from '@mui/material/OverridableComponent'
+import { DatePicker } from '@mui/x-date-pickers'
 import { Controller, ControllerFieldState, ControllerRenderProps, FieldErrorsImpl } from 'react-hook-form'
 import { FormControlPropsType } from './common.type'
 import { getFilterObjValue } from './helper'
@@ -17,9 +18,11 @@ type FormContextType<TUnion> = {
 
 export function FormContextType<TUnion>(props: FormContextType<TUnion>) {
   const { objFieldProp, field, fieldState, extendedProps } = props
-  const { textFieldAttribute, dropDownAttribute, formControlAttribute } = extendedProps
+  const { textFieldAttribute, dropDownAttribute, formControlAttribute, checkboxAttribute} = extendedProps
+
 
   const label = objFieldProp.required ? objFieldProp.label + '*' : objFieldProp.label
+
 
   switch (objFieldProp.type) {
     case 'dropDown':
@@ -37,6 +40,22 @@ export function FormContextType<TUnion>(props: FormContextType<TUnion>) {
           formControlAttribute={formControlAttribute}
         />
       )
+      case 'DatePicker':
+        return (
+          <DatePicker
+          {...field}
+          slotProps={{
+            textField: {
+              fullWidth: true,
+              label: label,
+              placeholder: label,
+              autoFocus: objFieldProp.autoFocus,
+              error: Boolean(fieldState.error),
+              value: field.value ? field.value : '',
+            }
+          }}
+          />
+        )
     case 'multiline':
       return (
         <FormControl {...(formControlAttribute ? formControlAttribute : {fullWidth: true})}>
@@ -73,9 +92,9 @@ export function FormContextType<TUnion>(props: FormContextType<TUnion>) {
 }
 
 export function FormObjectComponent<TUnion>(
-  props: Pick<FormContextType<TUnion>, 'objFieldProp' | 'control' | 'errors'>
+  props: Pick<FormContextType<TUnion>, 'objFieldProp' | 'control' | 'errors' | 'extendedProps'>
 ) {
-  const { objFieldProp, control, errors } = props
+  const { objFieldProp, control, errors, extendedProps } = props
 
   const objControl = (
     <Controller
@@ -85,6 +104,7 @@ export function FormObjectComponent<TUnion>(
         FormContextType<TUnion>({ objFieldProp, control, errors, field, fieldState, extendedProps: props })
       }
     />
+
   )
 
   return (

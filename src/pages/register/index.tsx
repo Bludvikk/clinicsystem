@@ -40,7 +40,6 @@ import { trpc } from "@/utils/trpc";
 
 
 import { NextPage } from "next";
-import { useSession } from "next-auth/react";
 
 import Icon from "src/@core/components/icon";
 
@@ -117,7 +116,6 @@ const RegisterPage: NextPage = (props) => {
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const router = useRouter();
-  const { status } = useSession();
 
   const {
     control,
@@ -125,7 +123,7 @@ const RegisterPage: NextPage = (props) => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm({
+  } = useForm<ISignUp>({
     defaultValues: {
       username: "",
       email: "",

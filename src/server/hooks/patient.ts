@@ -74,5 +74,5 @@ export const deletePatient = () => {
 export const findPatientDataById = ({ id }: FilterQueryInputType) => {
   const { data } = getPatients({ id });
 
-  return data?.find((row) => row.id === id);
+  return data?.find(row => row.id === id);
 };

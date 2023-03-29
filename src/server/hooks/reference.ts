@@ -3,6 +3,7 @@ import { IGetReference, IGetReferencesByEntityId } from "../schema/reference";
 import { getQueryKey } from "@trpc/react-query";
 import { getEntities } from "./entity";
 import { FilterQueryInputType } from "@/utils/common.type";
+import { FilterData } from "@/utils/rq.context";
 
 
 export function fetchDependencyData(filterQuery: FilterQueryInputType) {
@@ -13,7 +14,21 @@ export function fetchDependencyData(filterQuery: FilterQueryInputType) {
 }
 
 
-export const getReferences = ({ entities }: IGetReferencesByEntityId) => {
+export const getReferences = ({ entities, ...filterQuery }: FilterQueryInputType) => {
+  const result = trpc.reference.list.useQuery(
+    entities ? { entities } : {},
+    {
+    select: data => {
+      return new FilterData(data, filterQuery).filter()
+    },
+    enabled: !!entities,
+    staleTime: Infinity
+  })
+
+  return result
+};
+
+export const getReferences2 = ({ entities }: IGetReferencesByEntityId) => {
   const result = trpc.reference.list.useQuery(
     { entities },
     {
@@ -21,8 +36,7 @@ export const getReferences = ({ entities }: IGetReferencesByEntityId) => {
     }
   );
   return result;
-};
-
+}
 export const getReference = ({ id }: IGetReference) => {
   const result = trpc.reference.record.useQuery(
     { id },
@@ -90,3 +104,7 @@ export const deleteReference = ({ entities }: IGetReferencesByEntityId) => {
   });
   return mutation;
 };
+
+export const findReferenceDataById = ({ id, entities }: FilterQueryInputType) => {
+
+}

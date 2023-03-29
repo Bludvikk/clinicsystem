@@ -3,6 +3,7 @@ import { useState, SyntheticEvent, Fragment } from "react";
 
 // ** Next Import
 import { useRouter } from "next/router";
+import { useSession, signOut } from 'next-auth/react'
 
 // ** MUI Imports
 import Box from "@mui/material/Box";
@@ -73,7 +74,7 @@ const UserDropdown = (props: Props) => {
   };
 
   const handleLogout = () => {
-    handleDropdownClose();
+    signOut()
   };
 
   return (
@@ -189,7 +190,7 @@ const UserDropdown = (props: Props) => {
             "& svg": { mr: 2, fontSize: "1.375rem", color: "text.primary" },
           }}
         >
-          <Icon icon="mdi:logout-variant" />
+          <Icon icon="mdi:logout-variant" onClick={() => signOut()} />
           Logout
         </MenuItem>
       </Menu>

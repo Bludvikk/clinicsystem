@@ -50,7 +50,7 @@ model Entity {
   isDefault Boolean     @default(false)
   isParent  Boolean     @default(false)
   parentId  Int?        @unique
-  fieldProp String?
+  fieldProp String
   parent    Entity?     @relation("entitiesToEntities", fields: [parentId], references: [id])
   entities  Entity?     @relation("entitiesToEntities")
   reference Reference[]

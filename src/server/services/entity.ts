@@ -45,26 +45,26 @@ export const getEntity = async (ctx: Context, input: IGetEntity) => {
   }
 };
 
-export const postEntity = async (ctx: Context, input: IAddEntity) => {
-  try {
-    return {
-      data: await ctx.prisma.entity.create({ data: { ...input } }),
-      message: "Entity added successfully.",
-      status: "success",
-    };
-  } catch (err) {
-    if (err instanceof prismaCli.PrismaClientKnownRequestError) {
-      if (err.code === "P2002") {
-        throw new TRPCError({
-          code: "CONFLICT",
-          message: "Record already exist.",
-          cause: err,
-        });
-      }
-    }
-    throw err;
-  }
-};
+// export const postEntity = async (ctx: Context, input: IAddEntity) => {
+//   try {
+//     return {
+//       data: await ctx.prisma.entity.create({ data: { ...input } }),
+//       message: "Entity added successfully.",
+//       status: "success",
+//     };
+//   } catch (err) {
+//     if (err instanceof prismaCli.PrismaClientKnownRequestError) {
+//       if (err.code === "P2002") {
+//         throw new TRPCError({
+//           code: "CONFLICT",
+//           message: "Record already exist.",
+//           cause: err,
+//         });
+//       }
+//     }
+//     throw err;
+//   }
+// };
 
 export const putEntity = async (ctx: Context, input: IUpdateEntity) => {
   try {

@@ -9,7 +9,7 @@ export const EntitySchema = z.object({
   isDefault: z.boolean().default(false),
   isParent: z.boolean().default(false),
   parentId: z.number().optional(),
-  fieldProp: z.string().optional(),
+  fieldProp: z.string()
 });
 
 

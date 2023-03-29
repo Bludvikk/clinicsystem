@@ -24,21 +24,21 @@ export const getEntity = ({ id }: IGetEntity) => {
   return result;
 };
 
-export const postEntity = () => {
-  const mutation = trpc.entity.post.useMutation({
-    onSuccess: ({ data }) => {
-      const entityRecordQueryKey = getQueryKey(
-        trpc.entity.record,
-        { id: data.id },
-        "query"
-      );
+// export const postEntity = () => {
+//   const mutation = trpc.entity.post.useMutation({
+//     onSuccess: ({ data }) => {
+//       const entityRecordQueryKey = getQueryKey(
+//         trpc.entity.record,
+//         { id: data.id },
+//         "query"
+//       );
 
-      queryClient.setQueryData(entityRecordQueryKey, data); // manually updating the cache
-      queryClient.invalidateQueries({ queryKey: entityListQueryKey }); // invalidate query
-    },
-  });
-  return mutation;
-};
+//       queryClient.setQueryData(entityRecordQueryKey, data); // manually updating the cache
+//       queryClient.invalidateQueries({ queryKey: entityListQueryKey }); // invalidate query
+//     },
+//   });
+//   return mutation;
+// };
 
 export const putEntity = () => {
   const mutation = trpc.entity.put.useMutation({
