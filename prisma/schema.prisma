@@ -16,29 +16,6 @@ model User {
   updatedAt DateTime @updatedAt
 }
 
-model Patient {
-  id                 String    @id @default(uuid())
-  firstName          String
-  lastName           String
-  middleInitial      String?   @default("N/A")
-  address            String
-  dateOfBirth        DateTime
-  civilStatusId      Int
-  age                Int
-  occupationId       Int
-  genderId           Int
-  contactNumber      String?   @default("N/A")
-  familyHistory      Json
-  personalHistory    Json
-  pastMedicalHistory Json
-  obGyne             Json
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
-  gender             Reference @relation("patient_genderIdToReference_relation", fields: [genderId], references: [id])
-  occupation         Reference @relation("patient_occupationIdToReference_relation", fields: [occupationId], references: [id])
-  civilStatus        Reference @relation("patient_civilStatusIdToReference_relation", fields: [civilStatusId], references: [id])
-}
-
 model Entity {
   id        Int         @id @default(autoincrement())
   code      String      @unique
@@ -50,24 +27,81 @@ model Entity {
   isDefault Boolean     @default(false)
   isParent  Boolean     @default(false)
   parentId  Int?        @unique
-  fieldProp String?
-  parent    Entity?     @relation("entitiesToEntities", fields: [parentId], references: [id])
-  entities  Entity?     @relation("entitiesToEntities")
+  fieldProp String
+  parent    Entity?     @relation("entityToEntity", fields: [parentId], references: [id])
+  entity    Entity?     @relation("entityToEntity")
   reference Reference[]
 }
 
 model Reference {
-  id                               Int       @id @default(autoincrement())
-  code                             String    @unique
-  name                             String
-  createdAt                        DateTime  @default(now())
-  updatedAt                        DateTime  @default(now()) @updatedAt
-  deletedAt                        DateTime?
-  isShow                           Boolean   @default(true)
-  isDefault                        Boolean   @default(false)
-  entityId                         Int
-  entities                         Entity    @relation(fields: [entityId], references: [id], onDelete: Cascade)
-  patient_genderIdToReference      Patient[] @relation("patient_genderIdToReference_relation")
-  patient_occupationIdToReference  Patient[] @relation("patient_occupationIdToReference_relation")
-  patient_civilStatusIdToReference Patient[] @relation("patient_civilStatusIdToReference_relation")
+  id                                 Int         @id @default(autoincrement())
+  code                               String      @unique
+  name                               String
+  createdAt                          DateTime    @default(now())
+  updatedAt                          DateTime    @default(now()) @updatedAt
+  deletedAt                          DateTime?
+  isShow                             Boolean     @default(true)
+  isDefault                          Boolean     @default(false)
+  entityId                           Int
+  entity                             Entity      @relation(fields: [entityId], references: [id], onDelete: Cascade)
+  patient_genderIdToReference        Patient[]   @relation("patient_genderIdToReference_relation")
+  patient_occupationIdToReference    Patient[]   @relation("patient_occupationIdToReference_relation")
+  patient_civilStatusIdToReference   Patient[]   @relation("patient_civilStatusIdToReference_relation")
+  physician_genderIdToReference      Physician[] @relation("physician_genderIdToReference_relation")
+  physician_civilStatusIdToReference Physician[] @relation("physician_civilStatusIdToReference_relation")
+}
+
+model Patient {
+  id                 String            @id @default(uuid())
+  firstName          String
+  lastName           String
+  middleInitial      String?
+  address            String
+  dateOfBirth        DateTime
+  civilStatusId      Int
+  age                Int
+  occupationId       Int
+  genderId           Int
+  contactNumber      String?
+  familyHistory      Json
+  personalHistory    Json
+  pastMedicalHistory Json
+  obGyne             Json?
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  gender             Reference         @relation("patient_genderIdToReference_relation", fields: [genderId], references: [id])
+  occupation         Reference         @relation("patient_occupationIdToReference_relation", fields: [occupationId], references: [id])
+  civilStatus        Reference         @relation("patient_civilStatusIdToReference_relation", fields: [civilStatusId], references: [id])
+  physicalCheckup    PhysicalCheckup[]
+}
+
+model PhysicalCheckup {
+  id                 String    @id @default(uuid())
+  date               DateTime  @default(now())
+  patientId          String
+  physicianId        String
+  vitalSigns         Json
+  diagnoses          Json
+  treatments         Json
+  dietaryAdviseGiven String?
+  followUp           DateTime?
+  patient            Patient   @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  physician          Physician @relation(fields: [physicianId], references: [id])
+}
+
+model Physician {
+  id              String            @id @default(uuid())
+  firstName       String
+  lastName        String
+  middleInitial   String?
+  address         String
+  dateOfBirth     DateTime
+  civilStatusId   Int
+  age             Int
+  genderId        Int
+  contactNumber   String?
+  email           String?
+  gender          Reference         @relation("physician_genderIdToReference_relation", fields: [genderId], references: [id])
+  civilStatus     Reference         @relation("physician_civilStatusIdToReference_relation", fields: [civilStatusId], references: [id])
+  physicalCheckup PhysicalCheckup[]
 }

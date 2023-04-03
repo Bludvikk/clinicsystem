@@ -8,7 +8,7 @@ import {
   IUpdateEntity,
 } from "../schema/entity";
 
-export type EntitiesAsyncType = Awaited<ReturnType<typeof getEntities>>[number];
+export type EntitiesAsyncType = ReturnType<typeof getEntities>;
 
 export const getEntities = async (ctx: Context) => {
   try {
@@ -30,7 +30,18 @@ export const getEntities = async (ctx: Context) => {
 
 export const getEntity = async (ctx: Context, input: IGetEntity) => {
   try {
-    return await ctx.prisma.entity.findUnique({ where: { ...input } });
+    return await ctx.prisma.entity.findUnique({
+      where: { ...input },
+      include: {
+        parent: {
+          select: {
+            id: true,
+            code: true,
+            name: true,
+          },
+        },
+      },
+    });
   } catch (err) {
     if (err instanceof prismaCli.PrismaClientKnownRequestError) {
       if (err.code === "P2025") {
@@ -48,7 +59,18 @@ export const getEntity = async (ctx: Context, input: IGetEntity) => {
 export const postEntity = async (ctx: Context, input: IAddEntity) => {
   try {
     return {
-      data: await ctx.prisma.entity.create({ data: { ...input } }),
+      data: await ctx.prisma.entity.create({
+        data: { ...input },
+        include: {
+          parent: {
+            select: {
+              id: true,
+              code: true,
+              name: true,
+            },
+          },
+        },
+      }),
       message: "Entity added successfully.",
       status: "success",
     };
@@ -71,7 +93,19 @@ export const putEntity = async (ctx: Context, input: IUpdateEntity) => {
     const { id, ...data } = input;
 
     return {
-      data: await ctx.prisma.entity.update({ where: { id }, data }),
+      data: await ctx.prisma.entity.update({
+        where: { id },
+        data,
+        include: {
+          parent: {
+            select: {
+              id: true,
+              code: true,
+              name: true,
+            },
+          },
+        },
+      }),
       message: "Entity updated successfully.",
       status: "success",
     };
@@ -92,7 +126,18 @@ export const putEntity = async (ctx: Context, input: IUpdateEntity) => {
 export const deleteEntity = async (ctx: Context, input: IDeleteEntity) => {
   try {
     return {
-      data: await ctx.prisma.entity.delete({ where: { ...input } }),
+      data: await ctx.prisma.entity.delete({
+        where: { ...input },
+        include: {
+          parent: {
+            select: {
+              id: true,
+              code: true,
+              name: true,
+            },
+          },
+        },
+      }),
       message: "Entity removed successfully.",
       status: "success",
     };

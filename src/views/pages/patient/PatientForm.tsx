@@ -1,4 +1,9 @@
-import { addPatientSchema, IAddPatient } from "@/server/schema/patient";
+import {
+  addPatientSchema,
+  IAddPatient,
+  IMedication,
+  addMedicationSchema,
+} from "@/server/schema/patient";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Box } from "@mui/system";
@@ -8,6 +13,7 @@ import {
   Checkbox,
   FormControl,
   FormControlLabel,
+  FormHelperText,
   MenuItem,
   Select,
   TextField,
@@ -15,27 +21,15 @@ import {
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 
-import { FormEvent, useId, useState } from "react";
-import { z } from "zod";
+import { ChangeEvent, FormEvent, useEffect, useId, useState } from "react";
+import { AgeFromDate } from "age-calculator";
 
 import { postPatient } from "@/server/hooks/patient";
 import { toast } from "react-hot-toast";
 import { getReferences } from "@/server/hooks/reference";
 
-type Medications = {
-  brandName: string;
-  dosage: string;
-  generic: string;
-};
-
-const MedicationsSchema = z.object({
-  brandName: z.string(),
-  dosage: z.string(),
-  generic: z.string(),
-});
-
 const PatientForm = () => {
-  const [medications, setMedications] = useState<Medications[]>([]);
+  const [medications, setMedications] = useState<IMedication[]>([]);
 
   const { mutateAsync: postPatientMutateAsync, status: postPatientStatus } =
     postPatient();
@@ -49,19 +43,15 @@ const PatientForm = () => {
     lastName: "",
     middleInitial: "",
     address: "",
-    dateOfBirth: new Date(""),
+    dateOfBirth: new Date(),
     civilStatusId: 0,
     age: 0,
     occupationId: 0,
     genderId: 0,
     contactNumber: "",
     familyHistory: {
-      bronchialAsthma: false,
-      pulmonaryTuberculosis: false,
-      diabetesMellitus: false,
-      hearthDisease: false,
-      cancer: false,
-      others: "",
+      diseases: [],
+      others: "N/A",
     },
     personalHistory: {
       smoking: 0,
@@ -70,17 +60,19 @@ const PatientForm = () => {
       medications: [],
     },
     pastMedicalHistory: {
-      hospitalized: "",
-      injuries: "",
-      surgeries: "",
-      allergies: "",
-      measles: "",
-      chickenPox: "",
-      others: "",
+      hospitalized: "N/A",
+      injuries: "N/A",
+      surgeries: "N/A",
+      allergies: "N/A",
+      measles: "N/A",
+      chickenPox: "N/A",
+      others: "N/A",
     },
     obGyne: {
-      menstrualCycle: new Date(""),
+      menstrualCycle: new Date(),
       days: 0,
+      p: 0,
+      g: 0,
     },
   };
 
@@ -94,9 +86,12 @@ const PatientForm = () => {
     formState: { errors },
   } = useForm<IAddPatient>({
     defaultValues,
-    mode: "onBlur",
+    mode: "onChange",
     resolver: zodResolver(addPatientSchema),
   });
+
+  const [age, setAge] = useState(0);
+  const dateOfBirthWatch = watch("dateOfBirth");
 
   const {
     reset: reset2,
@@ -104,18 +99,18 @@ const PatientForm = () => {
     handleSubmit: handleSubmit2,
     watch: watch2,
     formState: { errors: errors2 },
-  } = useForm<Medications>({
+  } = useForm<IMedication>({
     defaultValues: {
       brandName: "",
       dosage: "",
       generic: "",
     },
-    mode: "onBlur",
-    resolver: zodResolver(MedicationsSchema),
+    mode: "onChange",
+    resolver: zodResolver(addMedicationSchema),
   });
 
-  const medicationOnSubmitHandler: SubmitHandler<Medications> = (
-    data: Medications,
+  const medicationOnSubmitHandler: SubmitHandler<IMedication> = (
+    data: IMedication,
     e: any
   ) => {
     reset2();
@@ -126,11 +121,9 @@ const PatientForm = () => {
     data: IAddPatient
   ) => {
     try {
-      setValue("personalHistory.medications", medications);
       const result = await postPatientMutateAsync(data);
       if (result.data) {
         toast.success(result.message);
-        reset();
       } else {
         toast.error("something went wrong.");
       }
@@ -140,10 +133,35 @@ const PatientForm = () => {
     }
   };
 
+  const handleFamilyHistoryDisease = (e: ChangeEvent<HTMLInputElement>) => {
+    const currentDiseasesValue = getValues("familyHistory.diseases");
+
+    if (e.target.checked)
+      setValue("familyHistory.diseases", [
+        ...currentDiseasesValue,
+        parseInt(e.target.value),
+      ]);
+    else {
+      const filterValue = currentDiseasesValue.filter(
+        (value) => value !== parseInt(e.target.value)
+      );
+      setValue("familyHistory.diseases", [...filterValue]);
+    }
+  };
+
   console.log(errors);
+
+  useEffect(() => {
+    setValue("personalHistory.medications", medications);
+  }, [medications]);
+
+  useEffect(() => {
+    setValue("age", new AgeFromDate(getValues("dateOfBirth")).age);
+  }, [dateOfBirthWatch]);
 
   return (
     <Box>
+      <pre>{JSON.stringify(watch(), null, 2)}</pre>
       <form onSubmit={handleSubmit(addPatientOnSubmitHandler)}>
         <Controller
           name="firstName"
@@ -157,6 +175,11 @@ const PatientForm = () => {
             />
           )}
         />
+        <Box>
+          <FormHelperText sx={{ color: "error.main" }}>
+            {errors["firstName"]?.message}
+          </FormHelperText>
+        </Box>
 
         <Controller
           name="lastName"
@@ -170,6 +193,11 @@ const PatientForm = () => {
             />
           )}
         />
+        <Box>
+          <FormHelperText sx={{ color: "error.main" }}>
+            {errors["lastName"]?.message}
+          </FormHelperText>
+        </Box>
 
         <Controller
           name="middleInitial"
@@ -183,6 +211,11 @@ const PatientForm = () => {
             />
           )}
         />
+        <Box>
+          <FormHelperText sx={{ color: "error.main" }}>
+            {errors["middleInitial"]?.message}
+          </FormHelperText>
+        </Box>
 
         <Controller
           name="address"
@@ -196,6 +229,11 @@ const PatientForm = () => {
             />
           )}
         />
+        <Box>
+          <FormHelperText sx={{ color: "error.main" }}>
+            {errors["address"]?.message}
+          </FormHelperText>
+        </Box>
 
         <Controller
           name="dateOfBirth"
@@ -204,6 +242,11 @@ const PatientForm = () => {
             <DatePicker {...field} label="Date of Birth" />
           )}
         />
+        <Box>
+          <FormHelperText sx={{ color: "error.main" }}>
+            {errors["dateOfBirth"]?.message}
+          </FormHelperText>
+        </Box>
 
         <Controller
           name="civilStatusId"
@@ -228,6 +271,11 @@ const PatientForm = () => {
             </Select>
           )}
         />
+        <Box>
+          <FormHelperText sx={{ color: "error.main" }}>
+            {errors["civilStatusId"]?.message}
+          </FormHelperText>
+        </Box>
 
         <Controller
           name="age"
@@ -236,12 +284,11 @@ const PatientForm = () => {
             <TextField
               {...field}
               name="age"
+              disabled
               label="Age"
               type="number"
               variant="outlined"
               InputLabelProps={{ shrink: true }}
-              inputProps={{ min: 0, valueasnumber: true }}
-              onChange={(e) => field.onChange(parseInt(e.target.value))}
             />
           )}
         />
@@ -269,6 +316,11 @@ const PatientForm = () => {
             </Select>
           )}
         />
+        <Box>
+          <FormHelperText sx={{ color: "error.main" }}>
+            {errors["occupationId"]?.message}
+          </FormHelperText>
+        </Box>
 
         <Controller
           name="genderId"
@@ -293,6 +345,11 @@ const PatientForm = () => {
             </Select>
           )}
         />
+        <Box>
+          <FormHelperText sx={{ color: "error.main" }}>
+            {errors["genderId"]?.message}
+          </FormHelperText>
+        </Box>
 
         <Controller
           name="contactNumber"
@@ -308,14 +365,25 @@ const PatientForm = () => {
         />
 
         <Box>
+          <FormHelperText sx={{ color: "error.main" }}>
+            {errors["contactNumber"]?.message}
+          </FormHelperText>
+        </Box>
+
+        <Box>
           <Typography>Family History </Typography>
           <Controller
-            name="familyHistory.bronchialAsthma"
+            name="familyHistory.diseases"
             control={control}
             render={({ field }) => (
               <FormControlLabel
                 control={
-                  <Checkbox {...field} name="familyHistory.bronchialAsthma" />
+                  <Checkbox
+                    {...field}
+                    value={1}
+                    name="familyHistory.diseases"
+                    onChange={handleFamilyHistoryDisease}
+                  />
                 }
                 label="Bronchial Asthma"
               />
@@ -323,14 +391,16 @@ const PatientForm = () => {
           />
 
           <Controller
-            name="familyHistory.pulmonaryTuberculosis"
+            name="familyHistory.diseases"
             control={control}
             render={({ field }) => (
               <FormControlLabel
                 control={
                   <Checkbox
                     {...field}
-                    name="familyHistory.pulmonaryTuberculosis"
+                    value={2}
+                    name="familyHistory.diseases"
+                    onChange={handleFamilyHistoryDisease}
                   />
                 }
                 label="Pulmonary Tuberculosis"
@@ -339,14 +409,16 @@ const PatientForm = () => {
           />
 
           <Controller
-            name="familyHistory.pulmonaryTuberculosis"
+            name="familyHistory.diseases"
             control={control}
             render={({ field }) => (
               <FormControlLabel
                 control={
                   <Checkbox
                     {...field}
-                    name="familyHistory.pulmonaryTuberculosis"
+                    value={3}
+                    name="familyHistory.diseases"
+                    onChange={handleFamilyHistoryDisease}
                   />
                 }
                 label="Pulmonary Tuberculosis"
@@ -355,12 +427,17 @@ const PatientForm = () => {
           />
 
           <Controller
-            name="familyHistory.diabetesMellitus"
+            name="familyHistory.diseases"
             control={control}
             render={({ field }) => (
               <FormControlLabel
                 control={
-                  <Checkbox {...field} name="familyHistory.diabetesMellitus" />
+                  <Checkbox
+                    {...field}
+                    value={4}
+                    name="familyHistory.diseases"
+                    onChange={handleFamilyHistoryDisease}
+                  />
                 }
                 label="Diabetes Mellitus"
               />
@@ -368,12 +445,17 @@ const PatientForm = () => {
           />
 
           <Controller
-            name="familyHistory.hearthDisease"
+            name="familyHistory.diseases"
             control={control}
             render={({ field }) => (
               <FormControlLabel
                 control={
-                  <Checkbox {...field} name="familyHistory.hearthDisease" />
+                  <Checkbox
+                    {...field}
+                    value={5}
+                    name="familyHistory.diseases"
+                    onChange={handleFamilyHistoryDisease}
+                  />
                 }
                 label="Hearth Disease"
               />
@@ -381,11 +463,18 @@ const PatientForm = () => {
           />
 
           <Controller
-            name="familyHistory.cancer"
+            name="familyHistory.diseases"
             control={control}
             render={({ field }) => (
               <FormControlLabel
-                control={<Checkbox {...field} name="familyHistory.cancer" />}
+                control={
+                  <Checkbox
+                    {...field}
+                    value={6}
+                    name="familyHistory.diseases"
+                    onChange={handleFamilyHistoryDisease}
+                  />
+                }
                 label="Cancer"
               />
             )}
@@ -418,12 +507,14 @@ const PatientForm = () => {
                 name="personalHistory.smoking"
                 label="Smoking"
                 variant="outlined"
-                InputLabelProps={{ shrink: true }}
-                inputProps={{ min: 0, valueAsNumber: true }}
-                onChange={(e) => field.onChange(parseInt(e.target.value))}
               />
             )}
           />
+          <Box>
+            <FormHelperText sx={{ color: "error.main" }}>
+              {errors.personalHistory?.smoking?.message}
+            </FormHelperText>
+          </Box>
 
           <Controller
             name="personalHistory.alcohol"
@@ -436,11 +527,16 @@ const PatientForm = () => {
                 label="Alcohol"
                 variant="outlined"
                 InputLabelProps={{ shrink: true }}
-                inputProps={{ min: 0, valueAsNumber: true }}
+                inputProps={{ min: 0, valueasnumber: "true" }}
                 onChange={(e) => field.onChange(parseInt(e.target.value))}
               />
             )}
           />
+          <Box>
+            <FormHelperText sx={{ color: "error.main" }}>
+              {errors.personalHistory?.alcohol?.message}
+            </FormHelperText>
+          </Box>
         </Box>
 
         <Controller
@@ -471,6 +567,11 @@ const PatientForm = () => {
               />
             )}
           />
+          <Box>
+            <FormHelperText sx={{ color: "error.main" }}>
+              {errors2.brandName?.message}
+            </FormHelperText>
+          </Box>
           <Controller
             name="dosage"
             control={control2}
@@ -483,6 +584,11 @@ const PatientForm = () => {
               />
             )}
           />
+          <Box>
+            <FormHelperText sx={{ color: "error.main" }}>
+              {errors2.dosage?.message}
+            </FormHelperText>
+          </Box>
           <Controller
             name="generic"
             control={control2}
@@ -495,10 +601,12 @@ const PatientForm = () => {
               />
             )}
           />
+          <Box>
+            <FormHelperText sx={{ color: "error.main" }}>
+              {errors2.generic?.message}
+            </FormHelperText>
+          </Box>
 
-          {errors2 && errors2.brandName?.message}
-          {errors2 && errors2.dosage?.message}
-          {errors2 && errors2.generic?.message}
           <Button
             type="button"
             variant="contained"
@@ -629,7 +737,7 @@ const PatientForm = () => {
                   type="number"
                   variant="outlined"
                   InputLabelProps={{ shrink: true }}
-                  inputProps={{ min: 0, valueAsNumber: true }}
+                  inputProps={{ min: 0, valueasnumber: "true" }}
                   onChange={(e) => field.onChange(parseInt(e.target.value))}
                 />
               )}

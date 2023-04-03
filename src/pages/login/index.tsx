@@ -413,7 +413,7 @@ const LoginPage: NextPage = () => {
                 </Typography>
                 <Typography
                   component={Link}
-                  href="/pages/auth/register-v2"
+                  href="/register"
                   sx={{ color: "primary.main", textDecoration: "none" }}
                 >
                   Create an account

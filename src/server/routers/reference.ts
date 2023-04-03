@@ -1,4 +1,4 @@
-import { router, publicProcedure } from "@/server/trpc";
+import { router, protectedProcedure } from "@/server/trpc";
 
 import {
   addReferenceSchema,
@@ -17,19 +17,19 @@ import {
 } from "@/server/services/reference";
 
 export const referenceRouter = router({
-  list: publicProcedure
+  list: protectedProcedure
     .input(getReferencesByEntityIdSchema)
     .query(({ ctx, input }) => getReferences(ctx, input)),
-  record: publicProcedure
+  record: protectedProcedure
     .input(getReferenceSchema)
     .query(({ ctx, input }) => getReference(ctx, input)),
-  post: publicProcedure
+  post: protectedProcedure
     .input(addReferenceSchema)
     .mutation(({ ctx, input }) => postReference(ctx, input)),
-  put: publicProcedure
+  put: protectedProcedure
     .input(updateReferenceSchema)
     .mutation(({ ctx, input }) => putReference(ctx, input)),
-  delete: publicProcedure
+  delete: protectedProcedure
     .input(deleteReferenceSchema)
     .mutation(({ ctx, input }) => deleteReference(ctx, input)),
 });
