@@ -1,3 +1,6 @@
+
+import { ApiProperty } from '@nestjs/swagger';
+
 import {
   IsNotEmpty,
   IsNumber,
@@ -5,16 +8,18 @@ import {
   IsString,
   MaxLength,
   MinLength,
+  ValidateNested,
+  type
 } from 'class-validator';
 
 export class CreatePatientDto {
     @IsString()
     @IsNotEmpty()
-    firstname: string;
+    First_Name: string;
 
     @IsString()
     @IsNotEmpty()
-    lastname: string;
+    Last_Name: string;
   
     @IsString()
     @IsNotEmpty()
@@ -23,18 +28,17 @@ export class CreatePatientDto {
 
     @IsString()
     @IsNotEmpty()
-    address: string;
-
+    Address: string;
 
     @IsString()
     @IsNotEmpty()
-    dateOfBirth: Date;
+    DateOfBirth: Date;
 
     @IsNumber()
     civilstatusId: number;
 
     @IsNumber()
-    age: number;
+    Age: number;
 
     @IsNumber()
     occupationId: number;
@@ -46,35 +50,26 @@ export class CreatePatientDto {
     @MaxLength(11)
     contactNumber: string;
 
-    @IsObject()
-    familyHistory: any;
+
+    @ApiProperty()
+	  @ValidateNested({ each: true })
+	  @type(() => familyHistory_data)
+    familyHistory: familyHistory_data;
 
     @IsObject()
     personalHistory: any;
     
     @IsObject()
     pastMedicalHistory: any;
-    
-   
+
     @IsObject()
     obGyne: any;
 
+  }
 
-
-  /* @IsString()
-    @IsOptional()
-    @MaxLength(300)
-    @ApiProperty({ required: false })
-    description?: string;
-  
-    @IsString()
-    @IsNotEmpty()
-    @ApiProperty()
-    body: string;
-  
-    @IsBoolean()
-    @IsOptional()
-    @ApiProperty({ required: false, default: false })
-    published?: boolean = false;
-    */
+  class familyHistory_data{
+    
+    @IsNumber()
+	  @MaxLength(5)
+    disease: number 
   }

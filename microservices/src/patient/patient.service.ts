@@ -6,11 +6,13 @@ import { CreatePatientDto } from './dto/create-patient.dto';
 import { PatientModule } from './patient.module';
 import { PrismaClient} from '@prisma/client';
 import { PartialType } from '@nestjs/mapped-types';
-import { User } from '@prisma/client';
+import { Users } from '@prisma/client';
 import { ViewPatientDto } from './dto/view-patient.dto';
+import { UpdatePatientDto } from './dto/update-patient.dto';
+
 
 const prisma = new PrismaClient();
-  
+
   @Injectable()
   export class PatientService {
     constructor(private prisma: PrismaService) {}
@@ -27,4 +29,15 @@ const prisma = new PrismaClient();
       const patients = await this.prisma.patient.findMany();
       return patients;
     }
+
+    update(id: string, updatepatientDto: UpdatePatientDto) {
+      return this.prisma.patient.update({
+        where: { id },
+        // @ts-ignore
+        data: updatepatientDto,
+      });
+    }
+
+    
+
   }
