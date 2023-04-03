@@ -1,4 +1,4 @@
-import { router, publicProcedure } from "@/server/trpc";
+import { router, protectedProcedure } from "@/server/trpc";
 import {
   addEntitySchema,
   deleteEntitySchema,
@@ -13,18 +13,18 @@ import {
   putEntity,
 } from "../services/entity";
 
-export const EntityRouter = router({
-  list: publicProcedure.query(({ ctx }) => getEntities(ctx)),
-  record: publicProcedure
+export const entityRouter = router({
+  list: protectedProcedure.query(({ ctx }) => getEntities(ctx)),
+  record: protectedProcedure
     .input(getEntitySchema)
     .query(({ ctx, input }) => getEntity(ctx, input)),
-  post: publicProcedure
+  post: protectedProcedure
     .input(addEntitySchema)
     .mutation(({ ctx, input }) => postEntity(ctx, input)),
-  put: publicProcedure
+  put: protectedProcedure
     .input(updateEntitySchema)
     .mutation(({ ctx, input }) => putEntity(ctx, input)),
-  delete: publicProcedure
+  delete: protectedProcedure
     .input(deleteEntitySchema)
     .mutation(({ ctx, input }) => deleteEntity(ctx, input)),
 });

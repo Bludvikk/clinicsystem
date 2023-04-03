@@ -1,15 +1,16 @@
 import { z } from "zod";
 
 export const ReferenceSchema = z.object({
-  id: z.number({ required_error: "Please enter a reference Id" }),
-  code: z.string({ required_error: "Please enter a code." }),
-  name: z.string({ required_error: "Please enter a name." }),
+  id: z.number().min(1, { message: "Please enter a reference id." }),
+  code: z.string().min(1, { message: "Please enter a code." }),
+  name: z.string().min(1, { message: "Please enter a name." }),
   deletedAt: z.date().optional(),
   isShow: z.boolean().default(true),
   isDefault: z.boolean().default(false),
-  entityId: z.number({ required_error: "Please enter a entity Id." }),
+  entityId: z.number().min(1, { message: "Please enter a entity id." }),
   entities: z
-    .array(z.number({ required_error: "Please enter a entity Id." }))
+    .array(z.number())
+    .min(1, { message: "Please enter atleast one entity id." })
     .optional(),
 });
 
@@ -24,7 +25,7 @@ export const getReferencesByEntityIdSchema = ReferenceSchema.pick({
 export const updateReferenceSchema = ReferenceSchema.omit({ entities: true });
 export const deleteReferenceSchema = ReferenceSchema.pick({ id: true });
 
-export type ReferenceSchema = z.infer<typeof ReferenceSchema>;
+export type IReference = z.infer<typeof ReferenceSchema>;
 export type IAddReference = z.infer<typeof addReferenceSchema>;
 export type IGetReference = z.infer<typeof getReferenceSchema>;
 export type IGetReferencesByEntityId = z.infer<

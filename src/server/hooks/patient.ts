@@ -1,5 +1,9 @@
 import { trpc, queryClient } from "@/utils/trpc";
-import type { IGetPatient } from "@/server/schema/patient";
+import type {
+  IGetPatient,
+  IGetPhysicalCheckup,
+  IGetPhysicalCheckupsByPatientId,
+} from "@/server/schema/patient";
 import { getQueryKey } from "@trpc/react-query";
 
 const patientListQueryKey = getQueryKey(trpc.patient.list, undefined, "query");
@@ -62,4 +66,52 @@ export const deletePatient = () => {
     },
   });
   return mutation;
+};
+
+export const getPhysicalCheckups = ({
+  patientId,
+}: IGetPhysicalCheckupsByPatientId) => {
+  const result = trpc.patient.physicalCheckup.list.useQuery(
+    { patientId },
+    { enabled: !!patientId, staleTime: Infinity }
+  );
+  return result;
+};
+
+export const getPhysicalCheckup = ({ id }: IGetPhysicalCheckup) => {
+  const result = trpc.patient.physicalCheckup.record.useQuery(
+    { id },
+    { enabled: !!id, staleTime: Infinity }
+  );
+  return result;
+};
+
+export const postPhysicalCheckup = () => {
+  const mutations = trpc.patient.physicalCheckup.post.useMutation({
+    onSuccess: ({ data }) => {
+      const physicalCheckupRecordQueryKey = getQueryKey(
+        trpc.patient.physicalCheckup.record,
+        { id: data.id },
+        "query"
+      );
+
+      const physicalCheckupListQueryKey = getQueryKey(
+        trpc.patient.physicalCheckup.list,
+        { patientId: data.patientId },
+        "query"
+      );
+
+      queryClient.setQueryData(physicalCheckupRecordQueryKey, data);
+      queryClient.invalidateQueries(physicalCheckupListQueryKey);
+    },
+  });
+
+  return mutations;
+};
+
+export const getPhysicians = () => {
+  const result = trpc.patient.physicians.list.useQuery(undefined, {
+    staleTime: Infinity,
+  });
+  return result;
 };

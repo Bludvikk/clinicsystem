@@ -1,9 +1,9 @@
 import { z } from "zod";
 
 export const EntitySchema = z.object({
-  id: z.number({ required_error: "Please enter a entity Id" }),
-  code: z.string({ required_error: "Please enter a code." }),
-  name: z.string({ required_error: "Please enter a name." }),
+  id: z.number().min(1, { message: "Please enter a entity id." }),
+  code: z.string().min(1, { message: "Please enter a code." }),
+  name: z.string().min(1, { message: "Please enter a name." }),
   deletedAt: z.date().optional(),
   isShow: z.boolean().default(true),
   isDefault: z.boolean().default(false),

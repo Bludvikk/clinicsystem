@@ -5,7 +5,7 @@ import { signUpSchema } from "../../common/validation/auth";
 import { patientRouter } from "./patient";
 import { router, publicProcedure } from "../trpc";
 import { referenceRouter } from "./reference";
-import { EntityRouter } from "./entity";
+import { entityRouter } from "./entity";
 
 export const ServerRouter = router({
   signup: publicProcedure
@@ -38,7 +38,7 @@ export const ServerRouter = router({
     }),
   patient: patientRouter,
   reference: referenceRouter,
-  entity: EntityRouter,
+  entity: entityRouter,
 });
 
 export type ServerRouter = typeof ServerRouter;
