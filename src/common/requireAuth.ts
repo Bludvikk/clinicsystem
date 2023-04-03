@@ -1,15 +1,11 @@
-import type { GetServerSideProps, GetServerSidePropsContext } from "next";
+import type { GetServerSideProps, GetServerSidePropsContext } from "next/types";
 import { getServerSession } from "next-auth";
 
 import { nextAuthOptions } from "./auth";
 
 export const requireAuth =
   (func: GetServerSideProps) => async (ctx: GetServerSidePropsContext) => {
-    const session = await getServerSession(
-      ctx.req,
-      ctx.res,
-      nextAuthOptions
-    );
+    const session = await getServerSession(ctx.req, ctx.res, nextAuthOptions);
 
     if (!session) {
       return {

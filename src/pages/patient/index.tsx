@@ -35,9 +35,10 @@ import moment from "moment";
 
 // ** Custom Table Components Imports
 import TableHeader from "@/views/pages/patient/TableHeader";
+import AddPhysicalCheckupDialog from "@/views/pages/patient/AddPhysicalCheckupDialog";
 
 interface CellType {
-  row: PatientsAsyncType;
+  row: Awaited<PatientsAsyncType>[number];
 }
 
 export const getServerSideProps = requireAuth(async () => {
@@ -98,10 +99,7 @@ const RowOptions = ({ id }: { id: string }) => {
           <Icon icon="mdi:pencil-outline" fontSize={20} />
           Edit
         </MenuItem>
-        <MenuItem onClick={() => handleDelete(id)} sx={{ "& svg": { mr: 2 } }}>
-          <Icon icon="mdi:delete-outline" fontSize={20} />
-          Delete
-        </MenuItem>
+        <AddPhysicalCheckupDialog id={id} />
       </Menu>
     </>
   );
@@ -234,7 +232,6 @@ const columns: GridColDef[] = [
 ];
 
 const PatientList: NextPage = () => {
-  //  ** States
   const { data } = useSession();
   const { data: patientsData, status: patientDataStatus } = getPatients();
   const [searchValue, setSearchValue] = useState<string>("");
