@@ -1,11 +1,36 @@
 import { fetchDependencyData, getReference, getReferences } from '@/server/hooks/reference'
-import { InputLabel, Select, MenuItem, TextField, FormControl, TextFieldProps, SelectProps, FormControlLabel, Checkbox } from '@mui/material'
+import { InputLabel, Select, MenuItem, TextField, FormControl, TextFieldProps, SelectProps, FormControlLabel, Checkbox, ListItemText } from '@mui/material'
 import FormHelperText from '@mui/material/FormHelperText'
 import { DefaultComponentProps, OverridableTypeMap } from '@mui/material/OverridableComponent'
 import { DatePicker } from '@mui/x-date-pickers'
+import { contextProps } from '@trpc/react-query/shared'
+import { values } from 'lodash'
 import { Controller, ControllerFieldState, ControllerRenderProps, FieldErrorsImpl } from 'react-hook-form'
-import { FormControlPropsType } from './common.type'
+import { FormControlPropsType, ListItemTextPropsType } from './common.type'
 import { getFilterObjValue } from './helper'
+
+type ListContextType = {
+  objFieldProp: ListItemTextPropsType
+  extendedProps: any
+}
+
+export function ListContextType(props: ListContextType) {
+  const { objFieldProp, extendedProps } = props
+  const { gridAttributes, listItemTextAttribute } = extendedProps
+  const label = objFieldProp.required ? objFieldProp.label + '*' : objFieldProp.label
+
+
+  switch(objFieldProp.type) {
+    case 'ListItemText':
+      return(
+        <ListItemText
+        {...listItemTextAttribute}
+        primary={label}
+
+        />
+      )
+  }
+}
 
 type FormContextType<TUnion> = {
   objFieldProp: FormControlPropsType<TUnion>
@@ -18,7 +43,7 @@ type FormContextType<TUnion> = {
 
 export function FormContextType<TUnion>(props: FormContextType<TUnion>) {
   const { objFieldProp, field, fieldState, extendedProps } = props
-  const { textFieldAttribute, dropDownAttribute, formControlAttribute, checkboxAttribute} = extendedProps
+  const { textFieldAttribute, dropDownAttribute, formControlAttribute } = extendedProps
 
 
   const label = objFieldProp.required ? objFieldProp.label + '*' : objFieldProp.label
@@ -73,6 +98,21 @@ export function FormContextType<TUnion>(props: FormContextType<TUnion>) {
           />
         </FormControl>
       )
+      case 'notFullText':
+        return (
+          <FormControl {...(formControlAttribute ? formControlAttribute : {fullWidth: false})}>
+          <TextField
+          {...field}
+          {...textFieldAttribute}
+          id={field.name}
+          autoFocus={objFieldProp.autoFocus}
+          label={label}
+          placeholder={label}
+          error={Boolean(fieldState.error)}
+          value={field.value ? field.value : ''}
+          />
+        </FormControl>
+        )
     default:
       return (
         <FormControl {...(formControlAttribute ? formControlAttribute : { fullWidth: true })}>
@@ -91,8 +131,33 @@ export function FormContextType<TUnion>(props: FormContextType<TUnion>) {
   }
 }
 
+export function ListItemComponent (
+  props: Pick<ListContextType, 'objFieldProp' >
+) {
+  const { objFieldProp } = props
+  const label = objFieldProp.required ? objFieldProp.label + '*' : objFieldProp.label
+
+  const objControl = (
+    <ListItemText
+    primary={label}
+    secondary={objFieldProp.secondary as string}
+    sx={{
+      fontSize: 12,
+    }}
+    />
+  )
+
+  return (
+    <>
+    {objControl}
+    </>
+
+  )
+}
+
+
 export function FormObjectComponent<TUnion>(
-  props: Pick<FormContextType<TUnion>, 'objFieldProp' | 'control' | 'errors' | 'extendedProps'>
+  props: Pick<FormContextType<TUnion>, 'objFieldProp' | 'control' | 'errors' | 'extendedProps' >
 ) {
   const { objFieldProp, control, errors, extendedProps } = props
 

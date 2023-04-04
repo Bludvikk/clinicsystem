@@ -22,7 +22,7 @@ export const PatientSchema = z.object({
     .min(new Date("1900-01-01"), { message: "Too old" })
     .max(new Date(), { message: "Too young!" }),
   civilStatusId: z.number().min(1, {message: 'please select a civil status'}),
-  age: z.number().min(1, { message: "Age is required" }),
+  age: z.number(),
   occupationId: z.number().min(1, { message: 'Please select an occupation'}),
   genderId: z.number().min(1, { message: 'Please select a gender'}),
   contactNumber: z.string(),
@@ -50,7 +50,7 @@ export const PatientSchema = z.object({
     others: z.string().default('N/A'),
   }),
   obGyne: z.object({
-    menstrualCycle: z.date().nullable().optional(),
+    menstrualCycle: z.date().optional(),
     days: z.number({ invalid_type_error: "days must be a number"}).default(0),
     p: z.number({ invalid_type_error: "P (PARA) must be a number"}).nullable().optional().default(0),
     g: z.number({ invalid_type_error: "G (GRAVIDA) must be a number"}).nullable().optional().default(0),
@@ -63,12 +63,14 @@ export const addPatientSchema = PatientSchema.omit({ id: true });
 export const getPatientSchema = PatientSchema.pick({ id: true });
 export const updatePatientSchema = PatientSchema;
 export const deletePatientSchema = PatientSchema.pick({ id: true });
-
+export const addMedicationSchema = MedicationSchema
 export type IPatient = z.infer<typeof PatientSchema>;
 export type IAddPatient = z.infer<typeof addPatientSchema>;
 export type IGetPatient = z.infer<typeof getPatientSchema>;
 export type IUpdatePatient = z.infer<typeof updatePatientSchema>;
 export type IDeletePatient = z.infer<typeof deletePatientSchema>;
+export type IMedication = z.infer<typeof MedicationSchema>;
+
 
 export const postPatientDtoSchema = z.object({
   params,
@@ -83,6 +85,8 @@ type NestedKeyOf<ObjectType extends object> =
 }[keyof ObjectType & (string | number)];
 
 
+
+export type MedicationDtoType = keyof IMedication;
 export type PatientDtoSchemaType = z.TypeOf<typeof PatientSchema>;
 export type PostPatientDtoType = z.TypeOf<typeof postPatientDtoSchema>;
 export type PatientUnionFieldType = NestedKeyOf<PatientDtoSchemaType>;

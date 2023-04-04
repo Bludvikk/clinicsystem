@@ -7,6 +7,7 @@ import { requireAuth } from "@/common/requireAuth";
 import { Card, CardContent, CardHeader, Grid, Typography } from "@mui/material";
 import PatientInfoForm from "@/views/pages/patient/PatientInfoForm";
 import { FormPropsType } from "@/utils/common.type";
+import AddMedicationForm from "@/views/pages/patient/addMedication";
 
 export const getServerSideProps = requireAuth(async () => {
   return { props: {} };
