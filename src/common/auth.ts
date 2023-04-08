@@ -3,65 +3,82 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { verify } from "argon2";
 
 import { prisma } from "./prisma";
-import { loginSchema } from "./validation/auth";
+import { loginUserDtoSchema } from "../server/schema/user";
+import { AuthenticatedUserType } from "types/next-auth";
 
 export const nextAuthOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
-      name: "credentials",
-      credentials: {
-        email: {
-          label: "Email",
-          type: "email",
-          placeholder: "jsmith@gmail.com",
-        },
-        password: { label: "Password", type: "password" },
-      },
-      //@ts-ignore
+      name: "Credentials-auth",
+      type: "credentials",
+      credentials: {},
       authorize: async (credentials) => {
         try {
-          const { email, password } = await loginSchema.parseAsync(credentials);
+          const { email, password } = await loginUserDtoSchema.parseAsync(
+            credentials
+          );
 
-          const result = await prisma.user.findFirst({
+          const user = await prisma.user.findUnique({
             where: { email },
+            include: {
+              role: {
+                select: {
+                  id: true,
+                  code: true,
+                  name: true,
+                },
+              },
+              department: {
+                select: {
+                  id: true,
+                  code: true,
+                  name: true,
+                },
+              },
+              status: {
+                select: {
+                  id: true,
+                  code: true,
+                  name: true,
+                },
+              },
+            },
           });
-          if (!result) return null;
+          if (!user) throw new Error("Invalid credentials.");
 
-          const isValidPassword = await verify(result.password, password);
+          const isValidPassword = await verify(user.password, password);
+          if (!isValidPassword) throw new Error("Invalid credentials.");
 
-          if (!isValidPassword) return null;
-
-          return { id: result.id, email, username: result.username };
-        } catch {
-          return null;
+          return {
+            id: user.id,
+            email: user.email,
+            userName: user.userName,
+            role: user.role,
+            department: user.department,
+            status: user.status,
+          };
+        } catch (err) {
+          throw err;
         }
       },
     }),
   ],
   callbacks: {
     jwt: async ({ token, user }) => {
-      if (user) {
-        token.userId = user.id;
-        token.email = user.email;
-        token.username = user.username;
-      }
+      if (user) token.user = user as AuthenticatedUserType;
       return token;
     },
     session: async ({ session, token }) => {
-      if (token) {
-        session.user.userId = token.userId;
-        session.user.email = token.email;
-        session.user.username = token.username;
-      }
+      if (token) session.user = token.user;
       return session;
     },
   },
   jwt: {
-    maxAge: 15 * 24 * 30 * 60, // 15 days
+    maxAge: 24 * 60 * 60, // 24 hours
   },
   pages: {
-    signIn: "/",
-    newUser: "/sign-up",
+    signIn: "/login",
+    newUser: "/register",
   },
   session: {
     strategy: "jwt",
