@@ -137,6 +137,7 @@ const RegisterPage: NextPage = () => {
     control,
     handleSubmit,
     reset,
+    watch,
     getValues,
     setValue,
     formState: { errors },
@@ -492,7 +493,9 @@ const RegisterPage: NextPage = () => {
                             {referencesData &&
                               referencesData?.length > 0 &&
                               referencesData
-                                ?.filter((ref) => ref.entityId === 6)
+                                ?.filter(
+                                  (ref) => ref.isShow && ref.entityId === 6
+                                )
                                 .map((role) => (
                                   <MenuItem key={role.id} value={role.id}>
                                     {role.name}

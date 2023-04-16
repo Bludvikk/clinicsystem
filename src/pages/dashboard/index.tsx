@@ -1,7 +1,4 @@
 import { NextPage } from "next";
-import { useSession, signOut } from "next-auth/react";
-
-import Box from "@mui/material/Box";
 
 import { requireAuth } from "@/common/requireAuth";
 import { Card, CardContent, CardHeader, Grid, Typography } from "@mui/material";
@@ -11,8 +8,6 @@ export const getServerSideProps = requireAuth(async () => {
 });
 
 const Dashboard: NextPage = () => {
-  const { data } = useSession();
-
   return (
     <Grid container>
       <Card>
@@ -32,3 +27,8 @@ const Dashboard: NextPage = () => {
 };
 
 export default Dashboard;
+
+Dashboard.acl = {
+  action: "read",
+  subject: "dashboard",
+};

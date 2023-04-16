@@ -1,3 +1,4 @@
+import { ACLObj } from "@/configs/acl";
 import type { ReactElement, ReactNode } from "react";
 import type {
   NextComponentType,
@@ -10,6 +11,7 @@ declare module "next" {
     IP,
     P
   > & {
+    acl?: ACLObj;
     setConfig?: () => void;
     contentHeightFixed?: boolean;
     getLayout?: (page: ReactElement) => ReactNode;

@@ -3,6 +3,7 @@ import { useState, SyntheticEvent, Fragment } from "react";
 
 // ** Next Import
 import { useRouter } from "next/router";
+import { signOut, useSession } from "next-auth/react";
 
 // ** MUI Imports
 import Box from "@mui/material/Box";
@@ -19,6 +20,7 @@ import Icon from "src/@core/components/icon";
 
 // ** Type Imports
 import { Settings } from "src/@core/context/settingsContext";
+import { toast } from "react-hot-toast";
 
 interface Props {
   settings: Settings;
@@ -39,6 +41,7 @@ const UserDropdown = (props: Props) => {
 
   // ** States
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
+  const { data, status } = useSession();
 
   // ** Hooks
   const router = useRouter();
@@ -73,6 +76,8 @@ const UserDropdown = (props: Props) => {
   };
 
   const handleLogout = () => {
+    signOut();
+    toast.success("Logged out successfully.");
     handleDropdownClose();
   };
 
@@ -89,7 +94,7 @@ const UserDropdown = (props: Props) => {
         }}
       >
         <Avatar
-          alt="John Doe"
+          alt={status === "loading" ? "Loading..." : data?.user.userName}
           onClick={handleDropdownOpen}
           sx={{ width: 40, height: 40 }}
           src="/images/avatars/1.png"
@@ -120,7 +125,7 @@ const UserDropdown = (props: Props) => {
               }}
             >
               <Avatar
-                alt="John Doe"
+                alt={status === "loading" ? "Loading..." : data?.user.userName}
                 src="/images/avatars/1.png"
                 sx={{ width: "2.5rem", height: "2.5rem" }}
               />
@@ -133,12 +138,14 @@ const UserDropdown = (props: Props) => {
                 flexDirection: "column",
               }}
             >
-              <Typography sx={{ fontWeight: 600 }}>John Doe</Typography>
+              <Typography sx={{ fontWeight: 600 }}>
+                {status === "loading" ? "Loading..." : data?.user.userName}
+              </Typography>
               <Typography
                 variant="body2"
                 sx={{ fontSize: "0.8rem", color: "text.disabled" }}
               >
-                Admin
+                {status === "loading" ? "Loading..." : data?.user.role.name}
               </Typography>
             </Box>
           </Box>
@@ -162,26 +169,6 @@ const UserDropdown = (props: Props) => {
             Chat
           </Box>
         </MenuItem>
-        <Divider />
-        <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
-          <Box sx={styles}>
-            <Icon icon="mdi:cog-outline" />
-            Settings
-          </Box>
-        </MenuItem>
-        <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
-          <Box sx={styles}>
-            <Icon icon="mdi:currency-usd" />
-            Pricing
-          </Box>
-        </MenuItem>
-        <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
-          <Box sx={styles}>
-            <Icon icon="mdi:help-circle-outline" />
-            FAQ
-          </Box>
-        </MenuItem>
-        <Divider />
         <MenuItem
           onClick={handleLogout}
           sx={{

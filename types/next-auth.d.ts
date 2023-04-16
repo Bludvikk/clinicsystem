@@ -11,7 +11,9 @@ declare module "next-auth" {
     user: AuthenticatedUserType;
   }
 
-  interface User extends AuthenticatedUserType {}
+  interface User extends AuthenticatedUserType {
+    id: number;
+  }
 }
 
 declare module "next-auth/jwt" {

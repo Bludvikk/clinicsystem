@@ -11,8 +11,11 @@ import {
   getPatients,
   getPhysicalCheckup,
   getPhysicalCheckups,
+  getVitalSignsToday,
+  getVitalSignsByPhysicianIdToday,
   postPatient,
   postPhysicalCheckup,
+  postVitalSign,
   putPatient,
 } from "@/server/hooks/patient";
 import {
@@ -21,53 +24,90 @@ import {
   putReference,
   deleteReference,
 } from "@/server/hooks/reference";
-import AddUserWizard from "@/views/AddUserDialogWizard";
+import { usePhysicalCheckupFormStore } from "@/utils/patient.store";
+// import AddUserWizard from "@/views/AddUserDialogWizard";
 import AddPhysicalCheckupDialog from "@/views/pages/patient/AddPhysicalCheckupDialog";
 import PatientForm from "@/views/pages/patient/PatientForm";
-import { Box } from "@mui/material";
+import PhysicalCheckupDialog from "@/views/pages/patient/PhysicalCheckupDialog";
+import {
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  TextField,
+} from "@mui/material";
+import { NextPage } from "next";
 import { useSession } from "next-auth/react";
+import { ChangeEvent, useState } from "react";
 
-export const getServerSideProps = requireAuth(async () => {
-  return { props: {} };
-});
+// export const getServerSideProps = requireAuth(async () => {
+//   return { props: {} };
+// });
 
-const Test = () => {
-  const {
-    mutateAsync: postPatientMutateAsync,
-    isLoading: postPatientIsLoading,
-  } = postPatient();
-  const { mutateAsync: putPatientMutateAsync, isLoading: putPatientIsLoading } =
-    putPatient();
-  const {
-    mutateAsync: deletePatientMutateAsync,
-    isLoading: deletePatientIsLoading,
-  } = deletePatient();
+const Test: NextPage = () => {
+  const [age, setAge] = useState("");
 
-  // const { data } = useSession();
+  const handleChange = (event: SelectChangeEvent) => {
+    console.dir(event);
+    setAge(event.target.value as string);
+  };
 
-  const { data: patientsData, isLoading: patientsDataIsLoading } =
-    getPatients();
-  const { data: patientData, isLoading: patientDataIsLoading } = getPatient({
-    id: "c45e009a-8c59-4006-ba05-88d393fbca50",
-  });
+  const handleChange2 = (event: ChangeEvent<HTMLInputElement>) => {
+    console.dir(event);
+  };
 
-  const { mutateAsync: postReferenceMutateAsync } = postReference({
-    entities: [1, 2, 3],
-  });
-  const { mutateAsync: putReferenceMutateAsync } = putReference({
-    entities: [1, 2, 3],
-  });
-  const { mutateAsync: deleteReferenceMutateAsync } = deleteReference({
-    entities: [1, 2, 3],
-  });
-  const { data: referencesData, status: referencesDataStatus } = getReferences({
-    entities: [1, 2, 3],
-  });
+  // const {
+  //   mutateAsync: postPatientMutateAsync,
+  //   isLoading: postPatientIsLoading,
+  // } = postPatient();
+  // const { mutateAsync: putPatientMutateAsync, isLoading: putPatientIsLoading } =
+  //   putPatient();
+  // const {
+  //   mutateAsync: deletePatientMutateAsync,
+  //   isLoading: deletePatientIsLoading,
+  // } = deletePatient();
 
-  const { data: entitiesData, status } = getEntities();
-  const { mutateAsync: postEntityMutateAsync } = postEntity();
-  const { mutateAsync: putEntityMutateAsync } = putEntity();
-  const { mutateAsync: deleteEntityMutateAsync } = deleteEntity();
+  // // const { data } = useSession();
+
+  // const { data: patientsData, isLoading: patientsDataIsLoading } =
+  //   getPatients();
+  // const { data: patientData, isLoading: patientDataIsLoading } = getPatient({
+  //   id: "c45e009a-8c59-4006-ba05-88d393fbca50",
+  // });
+
+  // const { mutateAsync: postReferenceMutateAsync } = postReference({
+  //   entities: [1, 2, 3],
+  // });
+  // const { mutateAsync: putReferenceMutateAsync } = putReference({
+  //   entities: [1, 2, 3],
+  // });
+  // const { mutateAsync: deleteReferenceMutateAsync } = deleteReference({
+  //   entities: [1, 2, 3],
+  // });
+  // const { data: referencesData, status: referencesDataStatus } = getReferences({
+  //   entities: [1, 2, 3],
+  // });
+
+  // const { data: entitiesData, status } = getEntities();
+  // const { mutateAsync: postEntityMutateAsync } = postEntity();
+  // const { mutateAsync: putEntityMutateAsync } = putEntity();
+  // const { mutateAsync: deleteEntityMutateAsync } = deleteEntity();
+
+  const { mutate: postVitalSignMutate } = postVitalSign();
+  const { data: vitalSignsData } = getVitalSignsToday();
+  const { data: vitalSignsDataByPhysicianId } = getVitalSignsByPhysicianIdToday(
+    {
+      physicianId: 12,
+    }
+  );
+
+  const { showDialog, onAdd } = usePhysicalCheckupFormStore((state) => state);
+
+  const log1 = () => console.log(vitalSignsData);
+  const log2 = () => console.log(vitalSignsDataByPhysicianId);
 
   // const { mutate: physicalCheckupMutate } = postPhysicalCheckup();
   // const { data: PhysicalCheckupsData } = getPhysicalCheckups({
@@ -77,180 +117,180 @@ const Test = () => {
   //   id: "6e505243-15f4-4c4a-984f-09e3a7e91b27",
   // });
 
-  const add = async () => {
-    const result = await postPatientMutateAsync({
-      firstName: "Kiko",
-      lastName: "Canono",
-      middleInitial: "S",
-      address: "Panacan Davao City",
-      dateOfBirth: new Date("01-30-1999"),
-      civilStatusId: 10,
-      age: 10,
-      occupationId: 1,
-      genderId: 2,
-      contactNumber: "09123456789",
-      familyHistory: {
-        diseases: [1, 2, 3],
-        others: "lorem ipsum dolor",
-      },
-      personalHistory: {
-        smoking: 10,
-        alcohol: 15,
-        currentHealthCondition: "Healthy",
-        medications: [
-          {
-            brandName: "Paracetamol",
-            dosage: "100 ml",
-            generic: "generic",
-          },
-          {
-            brandName: "Biogesic",
-            dosage: "15 ml",
-            generic: "generic",
-          },
-        ],
-      },
-      pastMedicalHistory: {
-        hospitalized: "N/A",
-        injuries: "N/A",
-        surgeries: "N/A",
-        allergies: "N/A",
-        measles: "N/A",
-        chickenPox: "N/A",
-        others: "N/A",
-      },
-      obGyne: {
-        menstrualCycle: new Date("01-24-1999"),
-        days: 15,
-        p: 1,
-        g: 1,
-      },
-    });
+  // const add = async () => {
+  //   const result = await postPatientMutateAsync({
+  //     firstName: "Kiko",
+  //     lastName: "Canono",
+  //     middleInitial: "S",
+  //     address: "Panacan Davao City",
+  //     dateOfBirth: new Date("01-30-1999"),
+  //     civilStatusId: 10,
+  //     age: 10,
+  //     occupationId: 1,
+  //     genderId: 2,
+  //     contactNumber: "09123456789",
+  //     familyHistory: {
+  //       diseases: [1, 2, 3],
+  //       others: "lorem ipsum dolor",
+  //     },
+  //     personalHistory: {
+  //       smoking: 10,
+  //       alcohol: 15,
+  //       currentHealthCondition: "Healthy",
+  //       medications: [
+  //         {
+  //           brandName: "Paracetamol",
+  //           dosage: "100 ml",
+  //           generic: "generic",
+  //         },
+  //         {
+  //           brandName: "Biogesic",
+  //           dosage: "15 ml",
+  //           generic: "generic",
+  //         },
+  //       ],
+  //     },
+  //     pastMedicalHistory: {
+  //       hospitalized: "N/A",
+  //       injuries: "N/A",
+  //       surgeries: "N/A",
+  //       allergies: "N/A",
+  //       measles: "N/A",
+  //       chickenPox: "N/A",
+  //       others: "N/A",
+  //     },
+  //     obGyne: {
+  //       menstrualCycle: new Date("01-24-1999"),
+  //       days: 15,
+  //       p: 1,
+  //       g: 1,
+  //     },
+  //   });
 
-    console.log(result);
-  };
-  const update = async () => {
-    const result = await putPatientMutateAsync({
-      id: "20c4f0ed-fac4-4730-a736-b37c453b0196",
-      firstName: "Justine updatedx",
-      lastName: "Barber updatedx",
-      middleInitial: "S",
-      address: "Km 11 Sasa, Bayview",
-      dateOfBirth: new Date("01-24-2001"),
-      civilStatusId: 4,
-      age: 10,
-      occupationId: 2,
-      genderId: 2,
-      contactNumber: "09123456789",
-      familyHistory: {
-        diseases: [1, 2, 3],
-        others: "lorem ipsum dolor",
-      },
-      personalHistory: {
-        smoking: 10,
-        alcohol: 15,
-        currentHealthCondition: "Healthy",
-        medications: [
-          {
-            brandName: "Paracetamol",
-            dosage: "100 ml",
-            generic: "generic",
-          },
-          {
-            brandName: "Biogesic",
-            dosage: "15 ml",
-            generic: "generic",
-          },
-        ],
-      },
-      pastMedicalHistory: {
-        hospitalized: "lorem ipsum dolor sit amet",
-        injuries: "lorem ipsum dolor sit amet",
-        surgeries: "lorem ipsum dolor sit amet",
-        allergies: "lorem ipsum dolor sit amet",
-        measles: "lorem ipsum dolor sit amet",
-        chickenPox: "lorem ipsum dolor sit amet",
-        others: "lorem ipsum dolor sit amet",
-      },
-      obGyne: {
-        menstrualCycle: new Date("01-24-1999"),
-        days: 15,
-        p: 12,
-        g: 5,
-      },
-    });
+  //   console.log(result);
+  // };
+  // const update = async () => {
+  //   const result = await putPatientMutateAsync({
+  //     id: "20c4f0ed-fac4-4730-a736-b37c453b0196",
+  //     firstName: "Justine updatedx",
+  //     lastName: "Barber updatedx",
+  //     middleInitial: "S",
+  //     address: "Km 11 Sasa, Bayview",
+  //     dateOfBirth: new Date("01-24-2001"),
+  //     civilStatusId: 4,
+  //     age: 10,
+  //     occupationId: 2,
+  //     genderId: 2,
+  //     contactNumber: "09123456789",
+  //     familyHistory: {
+  //       diseases: [1, 2, 3],
+  //       others: "lorem ipsum dolor",
+  //     },
+  //     personalHistory: {
+  //       smoking: 10,
+  //       alcohol: 15,
+  //       currentHealthCondition: "Healthy",
+  //       medications: [
+  //         {
+  //           brandName: "Paracetamol",
+  //           dosage: "100 ml",
+  //           generic: "generic",
+  //         },
+  //         {
+  //           brandName: "Biogesic",
+  //           dosage: "15 ml",
+  //           generic: "generic",
+  //         },
+  //       ],
+  //     },
+  //     pastMedicalHistory: {
+  //       hospitalized: "lorem ipsum dolor sit amet",
+  //       injuries: "lorem ipsum dolor sit amet",
+  //       surgeries: "lorem ipsum dolor sit amet",
+  //       allergies: "lorem ipsum dolor sit amet",
+  //       measles: "lorem ipsum dolor sit amet",
+  //       chickenPox: "lorem ipsum dolor sit amet",
+  //       others: "lorem ipsum dolor sit amet",
+  //     },
+  //     obGyne: {
+  //       menstrualCycle: new Date("01-24-1999"),
+  //       days: 15,
+  //       p: 12,
+  //       g: 5,
+  //     },
+  //   });
 
-    console.log(result);
-  };
-  const logPatientsData = () => console.log(patientsData);
-  const logPatientData = () => console.log(patientData);
+  //   console.log(result);
+  // };
+  // const logPatientsData = () => console.log(patientsData);
+  // const logPatientData = () => console.log(patientData);
 
-  const deletedPatientData = async () => {
-    const result = await deletePatientMutateAsync({
-      id: "20c4f0ed-fac4-4730-a736-b37c453b0196",
-    });
-    console.log(result);
-  };
+  // const deletedPatientData = async () => {
+  //   const result = await deletePatientMutateAsync({
+  //     id: "20c4f0ed-fac4-4730-a736-b37c453b0196",
+  //   });
+  //   console.log(result);
+  // };
 
-  const logReferencesData = () => {
-    console.log(referencesData);
-  };
-  const addReference = async () => {
-    const result = await postReferenceMutateAsync({
-      code: "jordan",
-      name: "Jordan",
-      entityId: 10,
-    });
+  // const logReferencesData = () => {
+  //   console.log(referencesData);
+  // };
+  // const addReference = async () => {
+  //   const result = await postReferenceMutateAsync({
+  //     code: "jordan",
+  //     name: "Jordan",
+  //     entityId: 10,
+  //   });
 
-    console.log(result);
-  };
-  const updateReference = async () => {
-    const result = await putReferenceMutateAsync({
-      id: 18,
-      code: "jordan updated",
-      name: "Jordan  updated",
-      entityId: 10,
-    });
+  //   console.log(result);
+  // };
+  // const updateReference = async () => {
+  //   const result = await putReferenceMutateAsync({
+  //     id: 18,
+  //     code: "jordan updated",
+  //     name: "Jordan  updated",
+  //     entityId: 10,
+  //   });
 
-    console.log(result);
-  };
-  const deleteReferenceFunc = async () => {
-    const result = await deleteReferenceMutateAsync({
-      id: 18,
-    });
+  //   console.log(result);
+  // };
+  // const deleteReferenceFunc = async () => {
+  //   const result = await deleteReferenceMutateAsync({
+  //     id: 18,
+  //   });
 
-    console.log(result);
-  };
+  //   console.log(result);
+  // };
 
-  const logEntitiesData = () => {
-    console.log(entitiesData);
-  };
-  const addEntity = async () => {
-    const result = await postEntityMutateAsync({
-      code: "brand",
-      name: "Brand",
-      fieldProp: "brand",
-    });
+  // const logEntitiesData = () => {
+  //   console.log(entitiesData);
+  // };
+  // const addEntity = async () => {
+  //   const result = await postEntityMutateAsync({
+  //     code: "brand",
+  //     name: "Brand",
+  //     fieldProp: "brand",
+  //   });
 
-    console.log(result);
-  };
-  const updateEntity = async () => {
-    const result = await putEntityMutateAsync({
-      id: 10,
-      code: "brand updated",
-      name: "Brand updated",
-      fieldProp: "brandUpdated",
-    });
+  //   console.log(result);
+  // };
+  // const updateEntity = async () => {
+  //   const result = await putEntityMutateAsync({
+  //     id: 10,
+  //     code: "brand updated",
+  //     name: "Brand updated",
+  //     fieldProp: "brandUpdated",
+  //   });
 
-    console.log(result);
-  };
-  const deleteEntityFunc = async () => {
-    const result = await deleteEntityMutateAsync({
-      id: 10,
-    });
+  //   console.log(result);
+  // };
+  // const deleteEntityFunc = async () => {
+  //   const result = await deleteEntityMutateAsync({
+  //     id: 10,
+  //   });
 
-    console.log(result);
-  };
+  //   console.log(result);
+  // };
 
   // const addPhysicalCheckup = () => {
   //   physicalCheckupMutate(
@@ -299,9 +339,33 @@ const Test = () => {
   //   console.log(PhysicalCheckupData);
   // };
 
+  const addVitalSign = () => {
+    postVitalSignMutate(
+      {
+        t: 20,
+        p: 20,
+        r: 20,
+        bp: "100/120",
+        wt: 190,
+        ht: 171,
+        cbg: 110,
+        patientId: 4,
+        physicianId: 12,
+        receptionistId: 1,
+      },
+      {
+        onSuccess: (data) => {
+          console.log(data);
+        },
+      }
+    );
+  };
   return (
     <div>
-      <button onClick={() => add()}>Add Patient</button>
+      <button onClick={() => addVitalSign()}>Add Vital Signs</button>
+      <button onClick={() => log1()}>log all vital signs</button>
+      <button onClick={() => log2()}>log all vital signs by physicianId</button>
+      {/* <button onClick={() => add()}>Add Patient</button>
       <button onClick={() => update()}>Update Patient</button>
       {!patientsDataIsLoading ? (
         <button onClick={() => logPatientsData()}>Log Patients Data</button>
@@ -327,7 +391,7 @@ const Test = () => {
         <button onClick={() => addEntity()}>add entity</button>
         <button onClick={() => updateEntity()}>update entity</button>
         <button onClick={() => deleteEntityFunc()}>delete entity</button>
-      </div>
+      </div> */}
       {/* 
       <div>
         <button onClick={() => addPhysicalCheckup()}>
@@ -343,13 +407,50 @@ const Test = () => {
 
       {/* <div style={{ marginTop: 20 }}>
         <PatientForm />
-      </div> */}
+      </div>
 
-      {/* <Box mt={2}>
-        <AddPhysicalCheckupDialog />
-      </Box> */}
+       */}
+
+      {/* <Button onClick={() => onAdd(1)}>Show Physical Checkup</Button> */}
+
+      <Box mt={2}>
+        <AddPhysicalCheckupDialog id={1} />
+        {showDialog ? <PhysicalCheckupDialog /> : null}
+      </Box>
+
+      <label htmlFor="subject"></label>
+      <select id="subject" onChange={(e) => console.dir(e)}>
+        <option value="English">English</option>
+        <option value="Filipino">Filipino</option>
+        <option value="Math">Math</option>
+        <option value="Science">Science</option>
+      </select>
+
+      <Box sx={{ minWidth: 120 }}>
+        <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label">Age</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={age}
+            label="Age"
+            onChange={handleChange}
+          >
+            <MenuItem value={10}>Ten</MenuItem>
+            <MenuItem value={20}>Twenty</MenuItem>
+            <MenuItem value={30}>Thirty</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
+
+      <TextField label="test" onChange={handleChange2} />
     </div>
   );
 };
 
 export default Test;
+
+Test.acl = {
+  action: "read",
+  subject: "patient",
+};
