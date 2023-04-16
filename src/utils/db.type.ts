@@ -2,6 +2,11 @@ import { UsersAsyncType } from "@/server/services/user";
 import { ReferencesAsyncType } from "@/server/services/reference";
 import { EntitiesAsyncType } from "@/server/services/entity";
 import { ThemeColor } from "src/@core/layouts/types";
+import {
+  PatientsAsyncType,
+  PhysicalCheckupsAsyncType,
+  VitalSignAsyncType,
+} from "@/server/services/patient";
 
 export type EntitiesType = TGenerics<EntitiesAsyncType>;
 export type ReferencesEntityType = TGenerics<ReferencesAsyncType>;
@@ -9,6 +14,9 @@ export type UsersType = TGenerics<UsersAsyncType> & {
   avatars?: string | null;
   avatarColor?: ThemeColor;
 };
+export type PatientsType = TGenerics<PatientsAsyncType>;
+export type PhysicalCheckupsType = TGenerics<PhysicalCheckupsAsyncType>;
+export type VitalSignsType = TGenerics<VitalSignAsyncType>;
 
 export type TGenerics<T extends (..._args: any) => Promise<any>> =
   RecursivelyConvertDatesToStrings<ArrayElement<AsyncReturnType<T>>>;
