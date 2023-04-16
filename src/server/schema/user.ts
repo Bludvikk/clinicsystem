@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const userDtoSchema = z.object({
-  id: z.string().min(1, { message: "Please enter a user id." }),
+  id: z.number().min(1, { message: "Please enter a user id." }),
   userName: z.string().min(1, { message: "Please enter a username." }),
   email: z.string().min(1, { message: "Please enter an email." }).email(),
   password: z
@@ -18,8 +18,16 @@ export const userDtoSchema = z.object({
     .optional(),
   roleId: z.coerce.number().min(1, { message: "Please select a role." }),
   statusId: z.coerce.number().min(1, { message: "Please select a status." }),
-  departmentId: z.coerce.number().nullable().optional(),
+  departmentId: z.coerce
+    .number()
+    .transform((value) => {
+      if (value === 0) return null;
+      return null;
+    })
+    .nullable()
+    .optional(),
 });
+// TODO: add refined: for dropdown data which has 0 value,
 
 export const loginUserDtoSchema = userDtoSchema.pick({
   email: true,

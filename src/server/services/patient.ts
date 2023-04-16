@@ -5,15 +5,20 @@ import { Prisma as prismaCli } from "@prisma/client";
 import type {
   IAddPatient,
   IAddPhysicalCheckup,
+  IAddVitalSign,
   IDeletePatient,
   IGetPatient,
   IGetPhysicalCheckup,
   IGetPhysicalCheckupsByPatientId,
+  IGetVitalSignsById,
+  IGetVitalSignsByPhysicianId,
   IUpdatePatient,
 } from "@/server/schema/patient";
+import moment from "moment";
 
-export type PatientsAsyncType = ReturnType<typeof getPatients>;
-export type PhysicalCheckupAsyncType = ReturnType<typeof getPhysicalCheckups>;
+export type PatientsAsyncType = typeof getPatients;
+export type PhysicalCheckupsAsyncType = typeof getPhysicalCheckups;
+export type VitalSignAsyncType = typeof getVitalSignsToday;
 
 export const getPatients = async (ctx: Context) => {
   try {
@@ -240,15 +245,151 @@ export const postPhysicalCheckup = async (
   }
 };
 
-export const getPhysicians = async (ctx: Context) => {
+export const getVitalSignsToday = async (ctx: Context) => {
   try {
-    return await ctx.prisma.physician.findMany({
+    const startOfDay = moment().startOf("day").toDate();
+    const endOfDay = moment().endOf("day").toDate();
+
+    return await ctx.prisma.vitalSign.findMany({
+      where: {
+        createdAt: {
+          gte: startOfDay,
+          lt: endOfDay,
+        },
+      },
       include: {
-        civilStatus: true,
-        gender: true,
+        patient: {
+          select: {
+            firstName: true,
+            lastName: true,
+            middleInitial: true,
+          },
+        },
+        physician: {
+          select: {
+            firstName: true,
+            lastName: true,
+            middleInitial: true,
+          },
+        },
+        receptionist: {
+          select: {
+            firstName: true,
+            lastName: true,
+            middleInitial: true,
+          },
+        },
       },
     });
   } catch (err) {
+    throw err;
+  }
+};
+
+export const getVitalSignsByPhysicianIdToday = async (
+  ctx: Context,
+  input: IGetVitalSignsByPhysicianId
+) => {
+  try {
+    const startOfDay = moment().startOf("day").toDate();
+    const endOfDay = moment().endOf("day").toDate();
+
+    return await ctx.prisma.vitalSign.findMany({
+      where: {
+        AND: [
+          { ...input },
+          {
+            createdAt: {
+              gte: startOfDay,
+              lt: endOfDay,
+            },
+          },
+        ],
+      },
+      include: {
+        patient: {
+          select: {
+            firstName: true,
+            lastName: true,
+            middleInitial: true,
+          },
+        },
+        physician: {
+          select: {
+            firstName: true,
+            lastName: true,
+            middleInitial: true,
+          },
+        },
+        receptionist: {
+          select: {
+            firstName: true,
+            lastName: true,
+            middleInitial: true,
+          },
+        },
+      },
+    });
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const getVitalSignsById = async (
+  ctx: Context,
+  input: IGetVitalSignsById
+) => {
+  try {
+    return await ctx.prisma.vitalSign.findUnique({
+      where: { ...input },
+      include: {
+        patient: {
+          select: {
+            firstName: true,
+            lastName: true,
+            middleInitial: true,
+          },
+        },
+        physician: {
+          select: {
+            firstName: true,
+            lastName: true,
+            middleInitial: true,
+          },
+        },
+        receptionist: {
+          select: {
+            firstName: true,
+            lastName: true,
+            middleInitial: true,
+          },
+        },
+      },
+    });
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const postVitalSign = async (ctx: Context, input: IAddVitalSign) => {
+  try {
+    return {
+      data: await ctx.prisma.vitalSign.create({
+        data: { ...input },
+      }),
+      message: "Vital Signs Added Successfully.",
+      status: "success",
+    };
+  } catch (err) {
+    if (err instanceof prismaCli.PrismaClientKnownRequestError) {
+      if (err.code === "P2002") {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "Record already exist.",
+          cause: err,
+        });
+      }
+    }
     throw err;
   }
 };
