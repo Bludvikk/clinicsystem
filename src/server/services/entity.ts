@@ -8,7 +8,7 @@ import {
   IUpdateEntity,
 } from "../schema/entity";
 
-export type EntitiesAsyncType = ReturnType<typeof getEntities>;
+export type EntitiesAsyncType = typeof getEntities;
 
 export const getEntities = async (ctx: Context) => {
   try {

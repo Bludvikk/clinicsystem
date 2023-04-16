@@ -1,5 +1,5 @@
+// @ts-nocheck
 import React, { FC, SyntheticEvent, useEffect, useState } from "react";
-
 import {
   Button,
   TextField,
@@ -32,7 +32,7 @@ import isDeepEqual from "fast-deep-equal/react";
 
 import Icon from "@/@core/components/icon";
 import IconifyIcon from "@/@core/components/icon";
-import { getPhysicians } from "@/server/hooks/patient";
+// import { getPhysicians } from "@/server/hooks/patient";
 import { getReferences } from "@/server/hooks/reference";
 import {
   addDiagnosisSchema,
@@ -45,24 +45,22 @@ import {
 import { useDiagnosisStore, useTreatmentStore } from "@/utils/store";
 import { postPhysicalCheckup } from "@/server/hooks/patient";
 
-const AddPhysicalCheckupDialog: FC<{ id: string }> = ({ id }) => {
+const AddPhysicalCheckupDialog: FC<{ id: number }> = ({ id }) => {
   const [open, setOpen] = useState<boolean>(false);
   const [tabsValue, setTabsValue] = useState<string>("1");
 
-  const { data: physiciansData, status: physiciansDataStatus } =
-    getPhysicians();
+  // const { data: physiciansData, status: physiciansDataStatus } =
+  //   getPhysicians();
 
   const { data: medicinesData, status: medicinesDataStatus } = getReferences({
-    entities: [14],
+    entities: [9],
   });
-
-  const { clearDiagnoses } = useDiagnosisStore();
-  const { clearTreatments } = useTreatmentStore();
 
   const {
     diagnoses,
     addDiagnosis,
     removeDiagnosis,
+    clearDiagnoses,
     onShow: diagnosisOnShow,
   } = useDiagnosisStore((state) => state);
 
@@ -70,6 +68,7 @@ const AddPhysicalCheckupDialog: FC<{ id: string }> = ({ id }) => {
     treatments,
     addTreatment,
     removeTreatment,
+    clearTreatments,
     onShow: treatmentOnShow,
   } = useTreatmentStore((state) => state);
 
@@ -81,21 +80,12 @@ const AddPhysicalCheckupDialog: FC<{ id: string }> = ({ id }) => {
     setValue,
     getValues,
     reset,
-    watch,
     formState: { errors },
   } = useForm<IAddPhysicalCheckup>({
     defaultValues: {
       patientId: id,
-      physicianId: "",
-      vitalSigns: {
-        t: 0,
-        p: 0,
-        r: 0,
-        bp: "",
-        wt: 0,
-        ht: 0,
-        cbg: 0,
-      },
+      physicianId: 0,
+      vitalSignId: 0,
       diagnoses: [],
       treatments: [],
       dietaryAdviseGiven: "N/A",
@@ -191,7 +181,7 @@ const AddPhysicalCheckupDialog: FC<{ id: string }> = ({ id }) => {
               render={({ field }) => (
                 <FormControl fullWidth>
                   <InputLabel id="physicianId-label">Physician</InputLabel>
-                  <Select
+                  {/* <Select
                     label="Physician"
                     defaultValue=""
                     labelId="physicianId-label"
@@ -207,7 +197,7 @@ const AddPhysicalCheckupDialog: FC<{ id: string }> = ({ id }) => {
                           {physician.lastName} {physician.firstName},
                         </MenuItem>
                       ))}
-                  </Select>
+                  </Select> */}
                   <FormHelperText sx={{ color: "error.main" }}>
                     {errors["physicianId"]?.message}
                   </FormHelperText>

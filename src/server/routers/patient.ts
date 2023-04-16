@@ -8,6 +8,9 @@ import {
   addPhysicalCheckupSchema,
   getPhysicalCheckupSchema,
   getPhysicalCheckupsByPatientIdSchema,
+  addVitalSignSchema,
+  getvitalSignsByPhysicianIdSchema,
+  getVitalSignsByIdSchema,
 } from "@/server/schema/patient";
 
 import {
@@ -19,7 +22,10 @@ import {
   getPhysicalCheckups,
   getPhysicalCheckup,
   postPhysicalCheckup,
-  getPhysicians,
+  getVitalSignsByPhysicianIdToday,
+  postVitalSign,
+  getVitalSignsToday,
+  getVitalSignsById,
 } from "../services/patient";
 
 const physicalCheckupRouter = router({
@@ -34,8 +40,17 @@ const physicalCheckupRouter = router({
     .mutation(({ ctx, input }) => postPhysicalCheckup(ctx, input)),
 });
 
-const physicianRouter = router({
-  list: protectedProcedure.query(({ ctx }) => getPhysicians(ctx)),
+const vitalSignsRouter = router({
+  listToday: protectedProcedure.query(({ ctx }) => getVitalSignsToday(ctx)),
+  listByPhysicianIdToday: protectedProcedure
+    .input(getvitalSignsByPhysicianIdSchema)
+    .query(({ ctx, input }) => getVitalSignsByPhysicianIdToday(ctx, input)),
+  record: protectedProcedure
+    .input(getVitalSignsByIdSchema)
+    .query(({ ctx, input }) => getVitalSignsById(ctx, input)),
+  post: protectedProcedure
+    .input(addVitalSignSchema)
+    .mutation(({ ctx, input }) => postVitalSign(ctx, input)),
 });
 
 export const patientRouter = router({
@@ -53,5 +68,5 @@ export const patientRouter = router({
     .input(deletePatientSchema)
     .mutation(({ ctx, input }) => deletePatient(ctx, input)),
   physicalCheckup: physicalCheckupRouter,
-  physicians: physicianRouter,
+  vitalSigns: vitalSignsRouter,
 });

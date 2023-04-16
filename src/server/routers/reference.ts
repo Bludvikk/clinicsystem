@@ -1,4 +1,4 @@
-import { router, protectedProcedure } from "@/server/trpc";
+import { router, protectedProcedure, publicProcedure } from "@/server/trpc";
 
 import {
   addReferenceSchema,
@@ -17,7 +17,7 @@ import {
 } from "@/server/services/reference";
 
 export const referenceRouter = router({
-  list: protectedProcedure
+  list: publicProcedure
     .input(getReferencesByEntityIdSchema)
     .query(({ ctx, input }) => getReferences(ctx, input)),
   record: protectedProcedure

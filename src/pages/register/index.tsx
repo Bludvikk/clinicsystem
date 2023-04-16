@@ -1,5 +1,12 @@
 // ** React Imports
-import { ReactNode, useState, Fragment, MouseEvent, useCallback } from "react";
+import {
+  ReactNode,
+  useState,
+  Fragment,
+  MouseEvent,
+  useCallback,
+  useEffect,
+} from "react";
 
 // ** Next Import
 import Link from "next/link";
@@ -20,6 +27,9 @@ import {
   Grid,
   Avatar,
   useMediaQuery,
+  FormGroup,
+  Select,
+  MenuItem,
 } from "@mui/material";
 
 import { styled, useTheme } from "@mui/material/styles";
@@ -32,12 +42,13 @@ import Box, { BoxProps } from "@mui/material/Box";
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, Controller } from "react-hook-form";
-import { ISignUp, signUpSchema } from "@/common/validation/auth";
-
+import { useForm, Controller, SubmitHandler } from "react-hook-form";
+import {
+  RegisterUserDtoSchemaType,
+  registerUserDtoSchema,
+} from "@/server/schema/user";
 
 import { trpc } from "@/utils/trpc";
-
 
 import { NextPage } from "next";
 import { useSession } from "next-auth/react";
@@ -55,6 +66,9 @@ import { useSettings } from "src/@core/hooks/useSettings";
 
 // ** Demo Imports
 import FooterIllustrationsV2 from "src/views/pages/auth/FooterIllustrationsV2";
+import { getReferences } from "@/server/hooks/reference";
+import { postUser } from "@/server/hooks/user";
+import { toast } from "react-hot-toast";
 
 const RegisterIllustrationWrapper = styled(Box)<BoxProps>(({ theme }) => ({
   padding: theme.spacing(20),
@@ -65,12 +79,12 @@ const RegisterIllustrationWrapper = styled(Box)<BoxProps>(({ theme }) => ({
 }));
 
 const RegisterIllustration = styled("img")(({ theme }) => ({
-  maxWidth: "48rem",
+  maxWidth: "38rem",
   [theme.breakpoints.down("xl")]: {
-    maxWidth: "38rem",
+    maxWidth: "35rem",
   },
   [theme.breakpoints.down("lg")]: {
-    maxWidth: "30rem",
+    maxWidth: "32rem",
   },
 }));
 
@@ -80,14 +94,14 @@ const RightWrapper = styled(Box)<BoxProps>(({ theme }) => ({
     maxWidth: 400,
   },
   [theme.breakpoints.up("lg")]: {
-    maxWidth: 450,
+    maxWidth: 700,
   },
 }));
 
 const BoxWrapper = styled(Box)<BoxProps>(({ theme }) => ({
   width: "100%",
   [theme.breakpoints.down("md")]: {
-    maxWidth: 400,
+    maxWidth: 600,
   },
 }));
 
@@ -108,50 +122,88 @@ const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(
   })
 );
 
-const RegisterPage: NextPage = (props) => {
+const RegisterPage: NextPage = () => {
   const theme = useTheme();
   const { settings } = useSettings();
-
   const { skin } = settings;
   const hidden = useMediaQuery(theme.breakpoints.down("md"));
 
-  const [showPassword, setShowPassword] = useState<boolean>(false);
-  const router = useRouter();
-  const { status } = useSession();
+  const { data: referencesData, status: referencesDataStatus } = getReferences({
+    entities: [6, 7, 8],
+  });
+  const { mutate: postUserData } = postUser();
 
   const {
     control,
-    setError,
     handleSubmit,
     reset,
+    watch,
+    getValues,
+    setValue,
     formState: { errors },
-  } = useForm({
+  } = useForm<RegisterUserDtoSchemaType>({
     defaultValues: {
-      username: "",
+      firstName: "",
+      lastName: "",
+      middleInitial: "",
+      userName: "",
       email: "",
       password: "",
+      departmentId: null,
+      roleId: 0,
+      statusId: 0,
       terms: false,
     },
-    mode: "onBlur",
-    resolver: zodResolver(signUpSchema),
+    mode: "onChange",
+    resolver: zodResolver(registerUserDtoSchema),
   });
 
-  const { mutateAsync } = trpc.signup.useMutation();
+  useEffect(() => {
+    if (referencesData && referencesData?.length > 0) {
+      setValue(
+        "roleId",
+        referencesData
+          .filter((ref) => ref.entityId === 6)
+          .filter((ref) => ref.isDefault)[0].id
+      );
+      setValue(
+        "statusId",
+        referencesData
+          .filter((ref) => ref.entityId === 8)
+          .filter((ref) => ref.isDefault)[0].id
+      );
+    }
+  }, [referencesData]);
 
-  const onSubmit = useCallback(
-    async (data: ISignUp) => {
-      try {
-        const result = await mutateAsync(data);
-        if (result.status === 201) {
-          reset();
-          router.push("/login/");
-        }
-      } catch (err) {
-        console.error(err);
+  const onSubmit: SubmitHandler<RegisterUserDtoSchemaType> = (
+    data: RegisterUserDtoSchemaType
+  ) => {
+    postUserData(
+      { ...data },
+      {
+        onSuccess: (data) => {
+          toast.success(data.message),
+            reset({
+              firstName: "",
+              lastName: "",
+              middleInitial: "",
+              userName: "",
+              email: "",
+              password: "",
+              departmentId: null,
+              roleId: referencesData!
+                .filter((ref) => ref.entityId === 6)
+                .filter((ref) => ref.isDefault)[0].id,
+              statusId: referencesData!
+                .filter((ref) => ref.entityId === 8)
+                .filter((ref) => ref.isDefault)[0].id,
+              terms: false,
+            });
+        },
+        onError: (err) => toast.error(err.message),
       }
-    },
-    [mutateAsync, router, reset]
-  );
+    );
+  };
 
   const imageSource =
     skin === "bordered"
@@ -297,12 +349,13 @@ const RegisterPage: NextPage = (props) => {
                 {themeConfig.templateName}
               </Typography>
             </Box>
+
             <Box sx={{ mb: 6 }}>
-              <TypographyStyled variant="h5">
-                Adventure starts here 🚀
+              <TypographyStyled variant="h5" textAlign="center">
+                Create an account
               </TypographyStyled>
-              <Typography variant="body2">
-                Make your app management easy and fun!
+              <Typography variant="body2" textAlign="center">
+                Get started using Well. Please enter your information below.
               </Typography>
             </Box>
             <form
@@ -310,154 +363,254 @@ const RegisterPage: NextPage = (props) => {
               autoComplete="off"
               onSubmit={handleSubmit(onSubmit)}
             >
-              <FormControl fullWidth sx={{ mb: 4 }}>
-                <Controller
-                  name="username"
-                  control={control}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange, onBlur } }) => (
-                    <TextField
-                      autoFocus
-                      value={value}
-                      onBlur={onBlur}
-                      label="Username"
-                      onChange={onChange}
-                      placeholder="johndoe"
-                      error={Boolean(errors.username)}
+              <Grid container>
+                <Grid item xs={6}>
+                  <FormControl fullWidth sx={{ mb: 4, pr: 4 }}>
+                    <Controller
+                      name="firstName"
+                      control={control}
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          name="firstName"
+                          label="First Name"
+                          error={Boolean(errors.firstName)}
+                          helperText={errors.firstName?.message}
+                        />
+                      )}
                     />
-                  )}
-                />
-                {errors.username && (
-                  <FormHelperText sx={{ color: "error.main" }}>
-                    {errors.username.message}
-                  </FormHelperText>
-                )}
-              </FormControl>
+                  </FormControl>
+                </Grid>
+
+                <Grid item xs={6}>
+                  <FormControl fullWidth sx={{ mb: 4 }}>
+                    <Controller
+                      name="lastName"
+                      control={control}
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          name="lastName"
+                          label="Last Name"
+                          error={Boolean(errors.lastName)}
+                          helperText={errors.lastName?.message}
+                        />
+                      )}
+                    />
+                  </FormControl>
+                </Grid>
+              </Grid>
+
+              <Grid container>
+                <Grid item xs={6}>
+                  <FormControl fullWidth sx={{ mb: 4, pr: 4 }}>
+                    <Controller
+                      name="middleInitial"
+                      control={control}
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          name="Middle Initial"
+                          label="Middle Initial"
+                          error={Boolean(errors.middleInitial)}
+                          helperText={errors.middleInitial?.message}
+                        />
+                      )}
+                    />
+                  </FormControl>
+                </Grid>
+
+                <Grid item xs={6}>
+                  <FormControl fullWidth sx={{ mb: 4 }}>
+                    <Controller
+                      name="userName"
+                      control={control}
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          name="userName"
+                          label="Username"
+                          error={Boolean(errors.userName)}
+                          helperText={errors.userName?.message}
+                        />
+                      )}
+                    />
+                  </FormControl>
+                </Grid>
+              </Grid>
+
               <FormControl fullWidth sx={{ mb: 4 }}>
                 <Controller
                   name="email"
                   control={control}
                   rules={{ required: true }}
-                  render={({ field: { value, onChange, onBlur } }) => (
+                  render={({ field }) => (
                     <TextField
-                      value={value}
+                      {...field}
+                      name="email"
                       label="Email"
-                      onBlur={onBlur}
-                      onChange={onChange}
                       error={Boolean(errors.email)}
-                      placeholder="user@email.com"
+                      helperText={errors.email?.message}
                     />
                   )}
                 />
-                {errors.email && (
-                  <FormHelperText sx={{ color: "error.main" }}>
-                    {errors.email.message}
-                  </FormHelperText>
-                )}
               </FormControl>
 
-              <FormControl fullWidth>
-                <InputLabel
-                  htmlFor="auth-login-v2-password"
-                  error={Boolean(errors.password)}
-                >
-                  Password
-                </InputLabel>
+              <FormControl fullWidth sx={{ mb: 4 }}>
                 <Controller
                   name="password"
                   control={control}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange, onBlur } }) => (
-                    <OutlinedInput
-                      value={value}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      type="password"
+                      name="password"
                       label="Password"
-                      onBlur={onBlur}
-                      onChange={onChange}
-                      id="auth-login-v2-password"
                       error={Boolean(errors.password)}
-                      type={showPassword ? "text" : "password"}
-                      endAdornment={
-                        <InputAdornment position="end">
-                          <IconButton
-                            edge="end"
-                            onMouseDown={(e) => e.preventDefault()}
-                            onClick={() => setShowPassword(!showPassword)}
-                          >
-                            <Icon
-                              icon={
-                                showPassword
-                                  ? "mdi:eye-outline"
-                                  : "mdi:eye-off-outline"
-                              }
-                            />
-                          </IconButton>
-                        </InputAdornment>
-                      }
+                      helperText={errors.password?.message}
                     />
                   )}
                 />
-                {errors.password && (
-                  <FormHelperText sx={{ color: "error.main" }}>
-                    {errors.password.message}
-                  </FormHelperText>
-                )}
               </FormControl>
 
-              <FormControl sx={{ my: 0 }} error={Boolean(errors.terms)}>
+              <Grid container>
+                <Grid item xs={6}>
+                  <FormControl fullWidth>
+                    <Controller
+                      name="roleId"
+                      control={control}
+                      render={({ field }) => (
+                        <FormControl fullWidth sx={{ mb: 4, pr: 4 }}>
+                          <InputLabel id="roleId-label">Role</InputLabel>
+                          <Select
+                            {...field}
+                            label="Role"
+                            labelId="roleId-label"
+                            disabled={referencesDataStatus === "loading"}
+                            error={Boolean(errors.roleId)}
+                          >
+                            <MenuItem value={0}>Select Role</MenuItem>
+                            {referencesData &&
+                              referencesData?.length > 0 &&
+                              referencesData
+                                ?.filter(
+                                  (ref) => ref.isShow && ref.entityId === 6
+                                )
+                                .map((role) => (
+                                  <MenuItem key={role.id} value={role.id}>
+                                    {role.name}
+                                  </MenuItem>
+                                ))}
+                          </Select>
+                          <FormHelperText sx={{ color: "error.main" }}>
+                            {errors.roleId?.message}
+                          </FormHelperText>
+                        </FormControl>
+                      )}
+                    />
+                  </FormControl>
+                </Grid>
+
+                <Grid item xs={6}>
+                  <FormControl fullWidth>
+                    <Controller
+                      name="departmentId"
+                      control={control}
+                      render={({ field }) => (
+                        <FormControl fullWidth sx={{ mb: 4 }}>
+                          <InputLabel id="departmentId-label">
+                            Department
+                          </InputLabel>
+                          <Select
+                            {...field}
+                            label="Department"
+                            labelId="departmentId-label"
+                            disabled={referencesDataStatus === "loading"}
+                            error={Boolean(errors.departmentId)}
+                          >
+                            <MenuItem value="">Select Department</MenuItem>
+                            {referencesData &&
+                              referencesData?.length > 0 &&
+                              referencesData
+                                ?.filter((ref) => ref.entityId === 7)
+                                .map((department) => (
+                                  <MenuItem
+                                    key={department.id}
+                                    value={department.id}
+                                  >
+                                    {department.name}
+                                  </MenuItem>
+                                ))}
+                          </Select>
+                          <FormHelperText sx={{ color: "error.main" }}>
+                            {errors.departmentId?.message}
+                          </FormHelperText>
+                        </FormControl>
+                      )}
+                    />
+                  </FormControl>
+                </Grid>
+              </Grid>
+
+              <FormControl sx={{ mb: 4 }} error={Boolean(errors.terms)}>
                 <Controller
                   name="terms"
                   control={control}
                   rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => {
+                  render={({ field }) => {
                     return (
-                      <FormControlLabel
-                        sx={{
-                          ...(errors.terms ? { color: "error.main" } : null),
-                          "& .MuiFormControlLabel-label": {
-                            fontSize: "0.875rem",
-                          },
-                        }}
-                        control={
-                          <Checkbox
-                            checked={value}
-                            onChange={onChange}
-                            sx={errors.terms ? { color: "error.main" } : null}
-                          />
-                        }
-                        label={
-                          <Fragment>
-                            <Typography
-                              variant="body2"
-                              component="span"
-                              sx={{ color: errors.terms ? "error.main" : "" }}
-                            >
-                              I agree to{" "}
-                            </Typography>
-                            <Typography
-                              href="/"
-                              variant="body2"
-                              component={Link}
-                              sx={{
-                                color: "primary.main",
-                                textDecoration: "none",
-                              }}
-                              onClick={(e: MouseEvent<HTMLElement>) =>
-                                e.preventDefault()
-                              }
-                            >
-                              privacy policy & terms
-                            </Typography>
-                          </Fragment>
-                        }
-                      />
+                      <FormGroup>
+                        <FormControlLabel
+                          sx={{
+                            marginBottom: 0,
+                            ...(errors.terms ? { color: "error.main" } : null),
+                            "& .MuiFormControlLabel-label": {
+                              fontSize: "0.875rem",
+                            },
+                          }}
+                          control={
+                            <Checkbox
+                              {...field}
+                              checked={Boolean(getValues("terms"))}
+                              sx={errors.terms ? { color: "error.main" } : null}
+                            />
+                          }
+                          label={
+                            <Fragment>
+                              <Typography
+                                variant="body2"
+                                component="span"
+                                sx={{ color: errors.terms ? "error.main" : "" }}
+                              >
+                                I have read and agree to the{" "}
+                              </Typography>
+                              <Typography
+                                href="/"
+                                variant="body2"
+                                component={Link}
+                                sx={{
+                                  color: "primary.main",
+                                  textDecoration: "none",
+                                }}
+                                onClick={(e: MouseEvent<HTMLElement>) =>
+                                  e.preventDefault()
+                                }
+                              >
+                                privacy policy & terms
+                              </Typography>
+                            </Fragment>
+                          }
+                        />
+
+                        {errors.terms && (
+                          <FormHelperText sx={{ color: "error.main" }}>
+                            {errors.terms.message}
+                          </FormHelperText>
+                        )}
+                      </FormGroup>
                     );
                   }}
                 />
-                {errors.terms && (
-                  <FormHelperText sx={{ mt: 0, color: "error.main" }}>
-                    {errors.terms.message}
-                  </FormHelperText>
-                )}
               </FormControl>
               <Button
                 fullWidth
@@ -466,7 +619,7 @@ const RegisterPage: NextPage = (props) => {
                 variant="contained"
                 sx={{ mb: 7 }}
               >
-                Sign up
+                Register
               </Button>
               <Box
                 sx={{
@@ -487,60 +640,6 @@ const RegisterPage: NextPage = (props) => {
                   Sign in instead
                 </Typography>
               </Box>
-
-              <Divider
-                sx={{
-                  "& .MuiDivider-wrapper": { px: 4 },
-                  mt: (theme) => `${theme.spacing(5)} !important`,
-                  mb: (theme) => `${theme.spacing(7.5)} !important`,
-                }}
-              >
-                or
-              </Divider>
-
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <IconButton
-                  href="/"
-                  component={Link}
-                  sx={{ color: "#497ce2" }}
-                  onClick={(e: MouseEvent<HTMLElement>) => e.preventDefault()}
-                >
-                  <Icon icon="mdi:facebook" />
-                </IconButton>
-                <IconButton
-                  href="/"
-                  component={Link}
-                  sx={{ color: "#1da1f2" }}
-                  onClick={(e: MouseEvent<HTMLElement>) => e.preventDefault()}
-                >
-                  <Icon icon="mdi:twitter" />
-                </IconButton>
-                <IconButton
-                  href="/"
-                  component={Link}
-                  onClick={(e: MouseEvent<HTMLElement>) => e.preventDefault()}
-                  sx={{
-                    color: (theme) =>
-                      theme.palette.mode === "light" ? "#272727" : "grey.300",
-                  }}
-                >
-                  <Icon icon="mdi:github" />
-                </IconButton>
-                <IconButton
-                  href="/"
-                  component={Link}
-                  sx={{ color: "#db4437" }}
-                  onClick={(e: MouseEvent<HTMLElement>) => e.preventDefault()}
-                >
-                  <Icon icon="mdi:google" />
-                </IconButton>
-              </Box>
             </form>
           </BoxWrapper>
         </Box>
@@ -549,7 +648,11 @@ const RegisterPage: NextPage = (props) => {
   );
 };
 
-RegisterPage.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
+RegisterPage.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>;
 
+RegisterPage.acl = {
+  action: "read",
+  subject: "register",
+};
 
 export default RegisterPage;

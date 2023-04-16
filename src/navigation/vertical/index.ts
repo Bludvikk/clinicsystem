@@ -1,4 +1,3 @@
-// ** Type import
 import { VerticalNavItemsType } from "src/@core/layouts/types";
 
 const navigation = (): VerticalNavItemsType => {
@@ -6,57 +5,52 @@ const navigation = (): VerticalNavItemsType => {
     {
       title: "Dashboard",
       path: "/dashboard",
+      action: "read",
+      subject: "dashboard",
       icon: "mdi:home-outline",
     },
     {
       title: "Patient",
       path: "/patient",
+      action: "read",
+      subject: "patient",
       icon: "mdi:patient-outline",
     },
-
-    // {
-    //   path: "/acl",
-    //   action: "read",
-    //   subject: "acl-page",
-    //   title: "Access Control",
-    //   icon: "mdi:shield-outline",
-    // }
-
-    // {
-    //   title: 'User',
-    //   icon: 'mdi:account-outline',
-    //   children: [
-    //     {
-    //       title: 'List',
-    //       path: '/apps/user/list'
-    //     },
-    //     {
-    //       title: 'View',
-    //       children: [
-    //         {
-    //           title: 'Overview',
-    //           path: '/apps/user/view/overview'
-    //         },
-    //         {
-    //           title: 'Security',
-    //           path: '/apps/user/view/security'
-    //         },
-    //         {
-    //           title: 'Billing & Plans',
-    //           path: '/apps/user/view/billing-plan'
-    //         },
-    //         {
-    //           title: 'Notifications',
-    //           path: '/apps/user/view/notification'
-    //         },
-    //         {
-    //           title: 'Connection',
-    //           path: '/apps/user/view/connection'
-    //         }
-    //       ]
-    //     }
-    //   ]
-    // }
+    {
+      title: "Upcoming Checkup",
+      path: "/upcoming-checkup",
+      action: "read",
+      subject: "upcoming checkup",
+      icon: "tabler:checkup-list",
+    },
+    {
+      title: "Physician",
+      path: "/physician",
+      action: "read",
+      subject: "physician",
+      icon: "mdi:account-outline",
+      children: [
+        {
+          title: "Today's Checkup",
+          path: "/physician/todays-checkup",
+          action: "read",
+          subject: "today's checkup",
+        },
+        {
+          title: "My Patient",
+          path: "/physician/my-patient",
+          action: "read",
+          subject: "my patient",
+        },
+      ],
+    },
+    {
+      title: "Appointment",
+      path: "/appointment",
+      action: "read",
+      subject: "appointment",
+      icon: "mdi:calendar-today-outline",
+    },
   ];
 };
 

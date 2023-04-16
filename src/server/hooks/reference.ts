@@ -1,14 +1,26 @@
 import { trpc, queryClient } from "@/utils/trpc";
 import { IGetReference, IGetReferencesByEntityId } from "../schema/reference";
 import { getQueryKey } from "@trpc/react-query";
+import { FilterQueryInputType } from "@/utils/common.type";
+import { getEntities } from "./entity";
+import { FilterData } from "@/utils/rq.context";
 
-export const getReferences = ({ entities }: IGetReferencesByEntityId) => {
-  const result = trpc.reference.list.useQuery(
-    { entities },
-    {
-      staleTime: Infinity,
-    }
-  );
+export const getDependencyData = (filterQuery: FilterQueryInputType) => {
+  const entities = getEntities();
+  const references = getReferences(filterQuery);
+
+  return { entities, references };
+};
+
+export const getReferences = ({
+  entities,
+  ...filterQuery
+}: FilterQueryInputType) => {
+  const result = trpc.reference.list.useQuery(entities ? { entities } : {}, {
+    select: (data) => new FilterData(data, filterQuery).filter(),
+    enabled: !!entities,
+    staleTime: Infinity,
+  });
   return result;
 };
 
@@ -26,19 +38,13 @@ export const getReference = ({ id }: IGetReference) => {
 export const postReference = ({ entities }: IGetReferencesByEntityId) => {
   const mutation = trpc.reference.post.useMutation({
     onSuccess: ({ data }) => {
-      const referenceListQueryKey = getQueryKey(
-        trpc.reference.list,
-        { entities },
-        "query"
-      );
-      const referenceRecordQueryKey = getQueryKey(
-        trpc.reference.record,
-        { id: data.id },
-        "query"
-      );
-
-      queryClient.setQueryData(referenceRecordQueryKey, data); // manually updating the cache
-      queryClient.invalidateQueries({ queryKey: referenceListQueryKey }); // invalidate query
+      queryClient.setQueryData(
+        getQueryKey(trpc.reference.record, { id: data.id }, "query"),
+        data
+      ); // manually updating the cache
+      queryClient.invalidateQueries({
+        queryKey: getQueryKey(trpc.reference.list, { entities }, "query"),
+      }); // invalidate query
     },
   });
   return mutation;
@@ -47,19 +53,13 @@ export const postReference = ({ entities }: IGetReferencesByEntityId) => {
 export const putReference = ({ entities }: IGetReferencesByEntityId) => {
   const mutation = trpc.reference.put.useMutation({
     onSuccess: ({ data }) => {
-      const referenceListQueryKey = getQueryKey(
-        trpc.reference.list,
-        { entities },
-        "query"
-      );
-      const referenceRecordQueryKey = getQueryKey(
-        trpc.reference.record,
-        { id: data.id },
-        "query"
-      );
-
-      queryClient.setQueryData(referenceRecordQueryKey, data); // manually updating the cache
-      queryClient.invalidateQueries({ queryKey: referenceListQueryKey }); // invalidate query
+      queryClient.setQueryData(
+        getQueryKey(trpc.reference.record, { id: data.id }, "query"),
+        data
+      ); // manually updating the cache
+      queryClient.invalidateQueries({
+        queryKey: getQueryKey(trpc.reference.list, { entities }, "query"),
+      }); // invalidate query
     },
   });
   return mutation;
@@ -68,13 +68,9 @@ export const putReference = ({ entities }: IGetReferencesByEntityId) => {
 export const deleteReference = ({ entities }: IGetReferencesByEntityId) => {
   const mutation = trpc.reference.delete.useMutation({
     onSuccess: () => {
-      const referenceListQueryKey = getQueryKey(
-        trpc.reference.list,
-        { entities },
-        "query"
-      );
-
-      queryClient.invalidateQueries({ queryKey: referenceListQueryKey }); // invalidate query
+      queryClient.invalidateQueries({
+        queryKey: getQueryKey(trpc.reference.list, { entities }, "query"),
+      }); // invalidate query
     },
   });
   return mutation;

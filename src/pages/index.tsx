@@ -5,17 +5,43 @@ import { useRouter } from "next/router";
 import { ReactNode, useEffect } from "react";
 import Spinner from "src/@core/components/spinner";
 
+export const getHomeRoute = (role: String) => {
+  let homeRoute = "";
+
+  switch (role) {
+    case "admin":
+      homeRoute = "/dashboard";
+      break;
+    case "user":
+      homeRoute = "/dashboard";
+      break;
+    case "receptionist":
+      homeRoute = "/patient";
+      break;
+    case "physician":
+      homeRoute = "/physician/todays-checkup";
+      break;
+    default:
+      homeRoute = "/dashboard";
+      break;
+  }
+
+  return homeRoute;
+};
+
 const IndexPage: NextPage = () => {
   const router = useRouter();
-  const { status } = useSession();
-
-  const redirect = () => {
-    if (status === "authenticated") return router.push("/dashboard");
-    else return router.push("/login");
-  };
+  const { data: session } = useSession();
 
   useEffect(() => {
-    redirect();
+    if (!router.isReady) {
+      return;
+    }
+
+    if (session?.user && session?.user.role) {
+      // Redirect user to Home URL
+      router.replace(getHomeRoute(session.user.role.code));
+    } else router.push("/login");
   }, []);
 
   return <Spinner />;

@@ -4,7 +4,7 @@ import { useState, MouseEvent } from "react";
 // ** Next Imports
 import Link from "next/link";
 import { NextPage } from "next";
-import { useSession, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { requireAuth } from "@/common/requireAuth";
 import { deletePatient, getPatients } from "@/server/hooks/patient";
 
@@ -28,7 +28,7 @@ import Icon from "src/@core/components/icon";
 import toast from "react-hot-toast";
 
 // ** Types Imports
-import type { PatientsAsyncType } from "@/server/services/patient";
+import { PatientsType } from "@/utils/db.type";
 
 // ** 3rd Party Libraries
 import moment from "moment";
@@ -36,19 +36,29 @@ import moment from "moment";
 // ** Custom Table Components Imports
 import TableHeader from "@/views/pages/patient/TableHeader";
 import AddPhysicalCheckupDialog from "@/views/pages/patient/AddPhysicalCheckupDialog";
+import {
+  usePatientFormStore,
+  usePhysicalCheckupFormStore,
+} from "@/utils/patient.store";
+import PatientHealthRecordDialog from "@/views/pages/patient/PatientHealthRecordDialog";
+import CanView from "@/layouts/components/acl/CanView";
+import PhysicalCheckupDialog from "@/views/pages/patient/PhysicalCheckupDialog";
 
 interface CellType {
-  row: Awaited<PatientsAsyncType>[number];
+  row: PatientsType;
 }
 
 export const getServerSideProps = requireAuth(async () => {
   return { props: {} };
 });
 
-const RowOptions = ({ id }: { id: string }) => {
+const RowOptions = ({ id }: { id: number }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const rowOptionsOpen = Boolean(anchorEl);
-  const { mutateAsync: deletePatientMutateAsync } = deletePatient();
+
+  const { mutate: deletePatientMutate } = deletePatient();
+
+  const { onEdit } = usePatientFormStore((state) => state);
+  const { onAddVitalSigns } = usePhysicalCheckupFormStore((state) => state);
 
   const handleRowOptionsClick = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -57,13 +67,14 @@ const RowOptions = ({ id }: { id: string }) => {
     setAnchorEl(null);
   };
 
-  const handleDelete = async (id: string) => {
-    try {
-      const result = await deletePatientMutateAsync({ id });
-      if (result.data) toast.success(result.message);
-    } catch (err: any) {
-      toast.error(err.message);
-    }
+  const handleDelete = (id: number) => {
+    deletePatientMutate(
+      { id },
+      {
+        onSuccess: (data) => toast.success(data.message),
+        onError: (err) => toast.error(err.message),
+      }
+    );
   };
 
   return (
@@ -74,7 +85,7 @@ const RowOptions = ({ id }: { id: string }) => {
       <Menu
         keepMounted
         anchorEl={anchorEl}
-        open={rowOptionsOpen}
+        open={Boolean(anchorEl)}
         onClose={handleRowOptionsClose}
         anchorOrigin={{
           vertical: "bottom",
@@ -86,20 +97,39 @@ const RowOptions = ({ id }: { id: string }) => {
         }}
         PaperProps={{ style: { minWidth: "8rem" } }}
       >
+        <CanView action="read" subject="patient">
+          <MenuItem
+            component={Link}
+            sx={{ "& svg": { mr: 2 } }}
+            onClick={handleRowOptionsClose}
+            href="/"
+          >
+            <Icon icon="mdi:eye-outline" fontSize={20} />
+            View
+          </MenuItem>
+        </CanView>
+        <CanView action="update" subject="patient">
+          <MenuItem onClick={() => onEdit(id)} sx={{ "& svg": { mr: 2 } }}>
+            <Icon icon="mdi:pencil-outline" fontSize={20} />
+            Edit
+          </MenuItem>
+        </CanView>
+        <CanView action="delete" subject="patient">
+          <MenuItem
+            onClick={() => handleDelete(id)}
+            sx={{ "& svg": { mr: 2 } }}
+          >
+            <Icon icon="mdi:delete-outline" fontSize={20} />
+            Delete
+          </MenuItem>
+        </CanView>
         <MenuItem
-          component={Link}
           sx={{ "& svg": { mr: 2 } }}
-          onClick={handleRowOptionsClose}
-          href="/apps/user/view/overview/"
+          onClick={() => onAddVitalSigns(id)}
         >
-          <Icon icon="mdi:eye-outline" fontSize={20} />
-          View
+          <Icon icon="tabler:checkup-list" fontSize={20} />
+          CheckUp
         </MenuItem>
-        <MenuItem onClick={handleRowOptionsClose} sx={{ "& svg": { mr: 2 } }}>
-          <Icon icon="mdi:pencil-outline" fontSize={20} />
-          Edit
-        </MenuItem>
-        <AddPhysicalCheckupDialog id={id} />
       </Menu>
     </>
   );
@@ -231,11 +261,11 @@ const columns: GridColDef[] = [
   },
 ];
 
-const PatientList: NextPage = () => {
+const Patient: NextPage = () => {
   const { data } = useSession();
   const { data: patientsData, status: patientDataStatus } = getPatients();
   const [searchValue, setSearchValue] = useState<string>("");
-  const [addPatientOpen, setAddPatientOpen] = useState<boolean>(false);
+  // const [addPatientOpen, setAddPatientOpen] = useState<boolean>(false);
 
   const [paginationModel, setPaginationModel] = useState<{
     pageSize: number;
@@ -245,8 +275,15 @@ const PatientList: NextPage = () => {
     page: 0,
   });
 
+  const { onAdd, showDialog: patientFormShowDialog } = usePatientFormStore(
+    (state) => state
+  );
+  const { showDialog: physicalCheckupShowDialog } = usePhysicalCheckupFormStore(
+    (state) => state
+  );
+
   const handleFilter = () => {};
-  const toggleAddPatientDialog = () => setAddPatientOpen((prev) => !prev);
+  // const toggleAddPatientDialog = () => setAddPatientOpen((prev) => !prev);
 
   return (
     <Box width="100%">
@@ -255,7 +292,7 @@ const PatientList: NextPage = () => {
           <TableHeader
             value={searchValue}
             handleFilter={handleFilter}
-            toggle={toggleAddPatientDialog}
+            toggle={onAdd}
           />
         </Grid>
         <CardContent sx={{ width: "100%", pt: 3 }}>
@@ -281,8 +318,16 @@ const PatientList: NextPage = () => {
           </Box>
         </CardContent>
       </Card>
+
+      {patientFormShowDialog ? <PatientHealthRecordDialog /> : null}
+      {physicalCheckupShowDialog ? <PhysicalCheckupDialog /> : null}
     </Box>
   );
 };
 
-export default PatientList;
+export default Patient;
+
+Patient.acl = {
+  action: "read",
+  subject: "patient",
+};

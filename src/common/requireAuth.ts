@@ -10,7 +10,7 @@ export const requireAuth =
     if (!session) {
       return {
         redirect: {
-          destination: "/", // login path
+          destination: "/login", // redirect to login page
           permanent: false,
         },
       };

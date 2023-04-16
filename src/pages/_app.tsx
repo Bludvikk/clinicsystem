@@ -1,6 +1,3 @@
-// ** React Imports
-import { ReactNode } from "react";
-
 // ** Next Imports
 import Head from "next/head";
 import { Router } from "next/router";
@@ -10,6 +7,7 @@ import type { AppProps } from "next/app";
 import { queryClient, trpc } from "@/utils/trpc";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClientProvider } from "@tanstack/react-query";
+
 // ** Loader Import
 import Nprogress from "nprogress";
 
@@ -18,6 +16,7 @@ import { CacheProvider } from "@emotion/react";
 import type { EmotionCache } from "@emotion/cache";
 
 // ** Config Imports
+import { defaultACLObj } from "src/configs/acl";
 import themeConfig from "src/configs/themeConfig";
 
 // ** Third Party Import
@@ -27,9 +26,6 @@ import { Toaster } from "react-hot-toast";
 import UserLayout from "src/layouts/UserLayout";
 import ThemeComponent from "src/@core/theme/ThemeComponent";
 import WindowWrapper from "src/@core/components/window-wrapper";
-
-// ** Spinner Import
-import Spinner from "src/@core/components/spinner";
 
 // ** Contexts
 import {
@@ -43,12 +39,6 @@ import ReactHotToast from "src/@core/styles/libs/react-hot-toast";
 // ** Utils Imports
 import { createEmotionCache } from "src/@core/utils/create-emotion-cache";
 
-// ** Prismjs Styles
-import "prismjs";
-import "prismjs/themes/prism-tomorrow.css";
-import "prismjs/components/prism-jsx";
-import "prismjs/components/prism-tsx";
-
 // ** React Perfect Scrollbar Style
 import "react-perfect-scrollbar/dist/css/styles.css";
 
@@ -59,6 +49,7 @@ import type { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import AclGuard from "@/@core/components/auth/AclGuard";
 
 // ** Extend App Props with Emotion
 type ExtendedAppProps = CustomAppProps & {
@@ -103,6 +94,7 @@ const CustomApp = ({
     ));
 
   const setConfig = Component.setConfig ?? undefined;
+  const aclAbilities = Component.acl ?? defaultACLObj;
 
   return (
     <CacheProvider value={emotionCache}>
@@ -125,14 +117,16 @@ const CustomApp = ({
             return (
               <ThemeComponent settings={settings}>
                 <WindowWrapper>
-                <QueryClientProvider client={queryClient}>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                      <SessionProvider session={pageProps.session}>
-                        {getLayout(<Component {...pageProps} />)}
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <SessionProvider session={pageProps.session}>
+                      <QueryClientProvider client={queryClient}>
+                        <AclGuard aclAbilities={aclAbilities}>
+                          {getLayout(<Component {...pageProps} />)}
+                        </AclGuard>
                         <ReactQueryDevtools initialIsOpen={false} />
-                      </SessionProvider>
-                    </LocalizationProvider>
-                  </QueryClientProvider>
+                      </QueryClientProvider>
+                    </SessionProvider>
+                  </LocalizationProvider>
                 </WindowWrapper>
                 <ReactHotToast>
                   <Toaster

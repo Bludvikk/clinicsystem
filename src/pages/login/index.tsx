@@ -52,8 +52,13 @@ import { signIn, useSession } from "next-auth/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/router";
 
-import { loginSchema, ILogin } from "@/common/validation/auth";
+import {
+  LoginUserDtoSchemaType,
+  loginUserDtoSchema,
+} from "@/server/schema/user";
 import { useSettings } from "../../@core/hooks/useSettings";
+import { toast } from "react-hot-toast";
+import { getHomeRoute } from "..";
 
 const LoginIllustrationWrapper = styled(Box)<BoxProps>(({ theme }) => ({
   padding: theme.spacing(20),
@@ -64,12 +69,12 @@ const LoginIllustrationWrapper = styled(Box)<BoxProps>(({ theme }) => ({
 }));
 
 const LoginIllustration = styled("img")(({ theme }) => ({
-  maxWidth: "48rem",
+  maxWidth: "38rem",
   [theme.breakpoints.down("xl")]: {
-    maxWidth: "38rem",
+    maxWidth: "35rem",
   },
   [theme.breakpoints.down("lg")]: {
-    maxWidth: "30rem",
+    maxWidth: "32rem",
   },
 }));
 
@@ -107,30 +112,27 @@ const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(
 );
 
 const LoginPage: NextPage = () => {
-  // const [rememberMe, setRememberMe] = useState<boolean>(true);
-  const [showPassword, setShowPassword] = useState<boolean>(false);
-  const router = useRouter();
-  const { status } = useSession();
-
   const theme = useTheme();
   const { settings } = useSettings();
-
   const { skin } = settings;
-
   const hidden = useMediaQuery(theme.breakpoints.down("md"));
+
+  const [rememberMe, setRememberMe] = useState<boolean>(true);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const router = useRouter();
+  const { data: session, status } = useSession();
 
   const {
     handleSubmit,
     control,
-    setError,
     formState: { errors },
-  } = useForm<ILogin>({
+  } = useForm<LoginUserDtoSchemaType>({
     defaultValues: {
       email: "",
       password: "",
     },
     mode: "onBlur",
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(loginUserDtoSchema),
   });
 
   const imageSource =
@@ -138,14 +140,22 @@ const LoginPage: NextPage = () => {
       ? "auth-v2-login-illustration-bordered"
       : "auth-v2-login-illustration";
 
-  const onSubmit = async (data: ILogin) => {
-    await signIn("credentials", {
-      ...data,
-      callbackUrl: "/dashboard",
-    });
+  const onSubmit = async (data: LoginUserDtoSchemaType) => {
+    try {
+      const res = await signIn("credentials", {
+        ...data,
+        redirect: false,
+      });
+
+      if (!res?.error) toast.success("Login successfully.");
+      else toast.error(res.error);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  if (status === "authenticated") router.push("/dashboard");
+  if (status === "authenticated")
+    router.replace(getHomeRoute(session.user.role.code));
 
   return (
     <Box className="content-right">
@@ -285,9 +295,12 @@ const LoginPage: NextPage = () => {
               </Typography>
             </Box>
             <Box sx={{ mb: 6 }}>
-              <TypographyStyled variant="h5">{`Welcome to ${themeConfig.templateName}! 👋🏻`}</TypographyStyled>
-              <Typography variant="body2">
-                Please sign-in to your account and start the adventure
+              <TypographyStyled
+                variant="h5"
+                textAlign="center"
+              >{`Welcome to ${themeConfig.templateName}! 👋🏻`}</TypographyStyled>
+              <Typography variant="body2" textAlign="center">
+                Please enter your credentials.
               </Typography>
             </Box>
 
@@ -301,71 +314,35 @@ const LoginPage: NextPage = () => {
                   name="email"
                   control={control}
                   rules={{ required: true }}
-                  render={({ field: { value, onChange, onBlur } }) => (
+                  render={({ field }) => (
                     <TextField
-                      autoFocus
+                      {...field}
+                      name="email"
                       label="Email"
-                      value={value}
-                      onBlur={onBlur}
-                      onChange={onChange}
                       error={Boolean(errors.email)}
-                      placeholder="admin@materialize.com"
+                      helperText={errors.email?.message}
                     />
                   )}
                 />
-                {errors.email && (
-                  <FormHelperText sx={{ color: "error.main" }}>
-                    {errors.email.message}
-                  </FormHelperText>
-                )}
               </FormControl>
+
               <FormControl fullWidth sx={{ mb: 4 }}>
-                <InputLabel
-                  htmlFor="auth-login-v2-password"
-                  error={Boolean(errors.password)}
-                >
-                  Password
-                </InputLabel>
                 <Controller
                   name="password"
                   control={control}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange, onBlur } }) => (
-                    <OutlinedInput
-                      value={value}
-                      onBlur={onBlur}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      type="password"
+                      name="password"
                       label="Password"
-                      onChange={onChange}
-                      id="auth-login-v2-password"
                       error={Boolean(errors.password)}
-                      type={showPassword ? "text" : "password"}
-                      endAdornment={
-                        <InputAdornment position="end">
-                          <IconButton
-                            edge="end"
-                            onMouseDown={(e) => e.preventDefault()}
-                            onClick={() => setShowPassword(!showPassword)}
-                          >
-                            <Icon
-                              icon={
-                                showPassword
-                                  ? "mdi:eye-outline"
-                                  : "mdi:eye-off-outline"
-                              }
-                              fontSize={20}
-                            />
-                          </IconButton>
-                        </InputAdornment>
-                      }
+                      helperText={errors.password?.message}
                     />
                   )}
                 />
-                {errors.password && (
-                  <FormHelperText sx={{ color: "error.main" }} id="">
-                    {errors.password.message}
-                  </FormHelperText>
-                )}
               </FormControl>
+
               <Box
                 sx={{
                   mb: 4,
@@ -419,58 +396,6 @@ const LoginPage: NextPage = () => {
                   Create an account
                 </Typography>
               </Box>
-              <Divider
-                sx={{
-                  "& .MuiDivider-wrapper": { px: 4 },
-                  mt: (theme) => `${theme.spacing(5)} !important`,
-                  mb: (theme) => `${theme.spacing(7.5)} !important`,
-                }}
-              >
-                or
-              </Divider>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <IconButton
-                  href="/"
-                  component={Link}
-                  sx={{ color: "#497ce2" }}
-                  onClick={(e: MouseEvent<HTMLElement>) => e.preventDefault()}
-                >
-                  <Icon icon="mdi:facebook" />
-                </IconButton>
-                <IconButton
-                  href="/"
-                  component={Link}
-                  sx={{ color: "#1da1f2" }}
-                  onClick={(e: MouseEvent<HTMLElement>) => e.preventDefault()}
-                >
-                  <Icon icon="mdi:twitter" />
-                </IconButton>
-                <IconButton
-                  href="/"
-                  component={Link}
-                  onClick={(e: MouseEvent<HTMLElement>) => e.preventDefault()}
-                  sx={{
-                    color: (theme) =>
-                      theme.palette.mode === "light" ? "#272727" : "grey.300",
-                  }}
-                >
-                  <Icon icon="mdi:github" />
-                </IconButton>
-                <IconButton
-                  href="/"
-                  component={Link}
-                  sx={{ color: "#db4437" }}
-                  onClick={(e: MouseEvent<HTMLElement>) => e.preventDefault()}
-                >
-                  <Icon icon="mdi:google" />
-                </IconButton>
-              </Box>
             </form>
           </BoxWrapper>
         </Box>
@@ -480,5 +405,10 @@ const LoginPage: NextPage = () => {
 };
 
 LoginPage.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>;
+
+LoginPage.acl = {
+  action: "read",
+  subject: "login",
+};
 
 export default LoginPage;
