@@ -1,63 +1,85 @@
-import { requireAuth } from "@/common/requireAuth";
-import {
-  deleteEntity,
-  getEntities,
-  postEntity,
-  putEntity,
-} from "@/server/hooks/entity";
-import {
-  deletePatient,
-  getPatient,
-  getPatients,
-  getPhysicalCheckup,
-  getPhysicalCheckups,
-  getVitalSignsToday,
-  getVitalSignsByPhysicianIdToday,
-  postPatient,
-  postPhysicalCheckup,
-  postVitalSign,
-  putPatient,
-} from "@/server/hooks/patient";
-import {
-  getReferences,
-  postReference,
-  putReference,
-  deleteReference,
-} from "@/server/hooks/reference";
-import { usePhysicalCheckupFormStore } from "@/utils/patient.store";
+// import { requireAuth } from "@/common/requireAuth";
+// import {
+//   deleteEntity,
+//   getEntities,
+//   postEntity,
+//   putEntity,
+// } from "@/server/hooks/entity";
+// import {
+//   deletePatient,
+//   getPatient,
+//   getPatients,
+//   getPhysicalCheckup,
+//   getPhysicalCheckups,
+//   getVitalSignsToday,
+//   getVitalSignsByPhysicianIdToday,
+//   postPatient,
+//   postPhysicalCheckup,
+//   postVitalSign,
+//   putPatient,
+// } from "@/server/hooks/patient";
+// import {
+//   getReferences,
+//   postReference,
+//   putReference,
+//   deleteReference,
+// } from "@/server/hooks/reference";
+import { checkDate, checkDateRange } from '@/utils/helper';
+import { usePhysicalCheckupFormStore } from '@/utils/patient.store';
 // import AddUserWizard from "@/views/AddUserDialogWizard";
-import AddPhysicalCheckupDialog from "@/views/pages/patient/AddPhysicalCheckupDialog";
-import PatientForm from "@/views/pages/patient/PatientForm";
-import PhysicalCheckupDialog from "@/views/pages/patient/PhysicalCheckupDialog";
-import {
-  Box,
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  TextField,
-} from "@mui/material";
-import { NextPage } from "next";
-import { useSession } from "next-auth/react";
-import { ChangeEvent, useState } from "react";
+import AddPhysicalCheckupDialog from '@/views/pages/patient/AddPhysicalCheckupDialog';
+import PatientForm from '@/views/pages/patient/PatientForm';
+import PhysicalCheckupDialog from '@/views/pages/patient/PhysicalCheckupDialog';
+import { Box, Button, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
+import moment from 'moment';
+import { NextPage } from 'next';
+import { useSession } from 'next-auth/react';
+import { ChangeEvent, MouseEventHandler, forwardRef, useEffect, useState } from 'react';
+import { DateRange, DateRangePicker } from '@mui/lab';
+import DatePicker, { ReactDatePickerProps } from 'react-datepicker';
+import CustomInput from '@/views/forms/form-elements/pickers/PickersCustomInput';
+import { useTheme } from '@mui/material/styles';
+
+import PickersBasic from '@/views/forms/form-elements/pickers/PickersBasic';
+import DatePickerWrapper from '@/@core/styles/libs/react-datepicker';
+import { Controller, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import PickersRange from '@/views/forms/form-elements/pickers/PickersRange';
+import PrescriptionPDF from '@/views/apps/checkup/PrescriptionPDF';
 
 // export const getServerSideProps = requireAuth(async () => {
 //   return { props: {} };
 // });
 
 const Test: NextPage = () => {
-  const [age, setAge] = useState("");
+  const [age, setAge] = useState('');
+  const [date, setDate] = useState<Date>(new Date());
 
-  const handleChange = (event: SelectChangeEvent) => {
-    console.dir(event);
-    setAge(event.target.value as string);
-  };
+  const {
+    control,
+    handleSubmit,
+    watch,
+    formState: { errors }
+  } = useForm<{ date: Date | null }>({
+    defaultValues: {
+      date: null
+    },
+    mode: 'onChange'
+    // resolver: zodResolver()
+  });
 
-  const handleChange2 = (event: ChangeEvent<HTMLInputElement>) => {
-    console.dir(event);
-  };
+  const theme = useTheme();
+  const { direction } = theme;
+  const popperPlacement: ReactDatePickerProps['popperPlacement'] = direction === 'ltr' ? 'bottom-start' : 'bottom-end';
+
+  // const handleChange = (event: SelectChangeEvent) => {
+  //   console.dir(event);
+  //   setAge(event.target.value as string);
+  // };
+
+  // const handleChange2 = (event: ChangeEvent<HTMLInputElement>) => {
+  //   console.dir(event);
+  // };
 
   // const {
   //   mutateAsync: postPatientMutateAsync,
@@ -96,18 +118,16 @@ const Test: NextPage = () => {
   // const { mutateAsync: putEntityMutateAsync } = putEntity();
   // const { mutateAsync: deleteEntityMutateAsync } = deleteEntity();
 
-  const { mutate: postVitalSignMutate } = postVitalSign();
-  const { data: vitalSignsData } = getVitalSignsToday();
-  const { data: vitalSignsDataByPhysicianId } = getVitalSignsByPhysicianIdToday(
-    {
-      physicianId: 12,
-    }
-  );
+  // const { mutate: postVitalSignMutate } = postVitalSign();
+  // const { data: vitalSignsData } = getVitalSignsToday();
+  // const { data: vitalSignsDataByPhysicianId } = getVitalSignsByPhysicianIdToday({
+  //   physicianId: 12
+  // });
 
-  const { showDialog, onAdd } = usePhysicalCheckupFormStore((state) => state);
+  // const { showDialog, onAdd } = usePhysicalCheckupFormStore(state => state);
 
-  const log1 = () => console.log(vitalSignsData);
-  const log2 = () => console.log(vitalSignsDataByPhysicianId);
+  // const log1 = () => console.log(vitalSignsData);
+  // const log2 = () => console.log(vitalSignsDataByPhysicianId);
 
   // const { mutate: physicalCheckupMutate } = postPhysicalCheckup();
   // const { data: PhysicalCheckupsData } = getPhysicalCheckups({
@@ -339,111 +359,152 @@ const Test: NextPage = () => {
   //   console.log(PhysicalCheckupData);
   // };
 
-  const addVitalSign = () => {
-    postVitalSignMutate(
-      {
-        t: 20,
-        p: 20,
-        r: 20,
-        bp: "100/120",
-        wt: 190,
-        ht: 171,
-        cbg: 110,
-        patientId: 4,
-        physicianId: 12,
-        receptionistId: 1,
-      },
-      {
-        onSuccess: (data) => {
-          console.log(data);
-        },
-      }
+  const handleCheckDate = () => {
+    console.log('is Today:', checkDate(new Date('04/23/2023')).isToday());
+    console.log('is Yesterday:', checkDate(new Date('04/22/2023')).isYesterday());
+    console.log('is With in this week:', checkDate(new Date('04/22/2023')).isWithinThisWeek());
+    console.log('is With in this Month:', checkDate(new Date('04/22/2023')).isWithinThisMonth());
+    console.log('is With in this Year:', checkDate(new Date('04/22/2023')).isWithinThisYear());
+  };
+
+  const handleCheckDateRange = () => {
+    console.log(
+      'Is Between: ',
+      checkDateRange(new Date('04/22/2023'), new Date('04/22/2023'), new Date('04/23/2023')).isBetweenOrEqual()
     );
   };
+
+  const [startDateRange, setStartDateRange] = useState<Date>(new Date());
+  const [endDateRange, setEndDateRange] = useState<Date>(moment(new Date()).add(45).toDate());
+
+  interface PickerProps {
+    label?: string;
+    end: Date | number;
+    start: Date | number;
+  }
+
+  const handleOnChangeRange = (dates: any) => {
+    const [start, end] = dates;
+    setStartDateRange(start);
+    setEndDateRange(end);
+  };
+
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [selectValue, setSelectValue] = useState('0');
+
+  const handleChange = (event: SelectChangeEvent) => {
+    setSelectValue(event.target.value as string);
+  };
+
+  const handleClick = () => {
+    setIsOpen(prev => !prev);
+  };
+
+  const CustomInput = forwardRef((props: PickerProps, ref) => {
+    const { start, end, label } = props;
+
+    const startDate = moment(start).format('L');
+    const endDate = end !== null ? ` - ${moment(end).format('L')}` : null;
+
+    const value = `${startDate}${endDate !== null ? endDate : ''}`;
+
+    return <TextField inputRef={ref} label={label || ''} value={value} />;
+  });
+
   return (
     <div>
-      <button onClick={() => addVitalSign()}>Add Vital Signs</button>
-      <button onClick={() => log1()}>log all vital signs</button>
-      <button onClick={() => log2()}>log all vital signs by physicianId</button>
-      {/* <button onClick={() => add()}>Add Patient</button>
-      <button onClick={() => update()}>Update Patient</button>
-      {!patientsDataIsLoading ? (
-        <button onClick={() => logPatientsData()}>Log Patients Data</button>
-      ) : (
-        "loading..."
-      )}
-      {!patientDataIsLoading ? (
-        <button onClick={() => logPatientData()}>Log Patient Data</button>
-      ) : (
-        "loading"
-      )}
-      <button onClick={() => deletedPatientData()}>Delete</button>
+      <Button onClick={() => handleCheckDate()}>Check Date</Button>
+      <Button onClick={() => handleCheckDateRange()}>Check Date Range</Button>
+      {JSON.stringify(watch(), null, 2)}
 
+      <Button onClick={handleClick}>Show Date Range</Button>
       <div>
-        <button onClick={() => logReferencesData()}>Log References Data</button>
-        <button onClick={() => addReference()}>Add Reference</button>
-        <button onClick={() => updateReference()}>update Reference</button>
-        <button onClick={() => deleteReferenceFunc()}>delete Reference</button>
+        <Controller
+          control={control}
+          name='date'
+          render={({ field }) => (
+            <DatePickerWrapper>
+              <DatePicker
+                showYearDropdown
+                showMonthDropdown
+                name='date'
+                id='basic-input'
+                selected={field.value}
+                onChange={field.onChange}
+                placeholderText='Date'
+                customInput={<TextField label='Sample Date' />}
+              />
+            </DatePickerWrapper>
+          )}
+        />
       </div>
 
       <div>
-        <button onClick={() => logEntitiesData()}>Log entities</button>
-        <button onClick={() => addEntity()}>add entity</button>
-        <button onClick={() => updateEntity()}>update entity</button>
-        <button onClick={() => deleteEntityFunc()}>delete entity</button>
-      </div> */}
-      {/* 
-      <div>
-        <button onClick={() => addPhysicalCheckup()}>
-          Add Physical Checkup
-        </button>
-        <button onClick={() => logPhysicalCheckupByPatietId()}>
-          Log Physical Checkups by Patient Id
-        </button>
-        <button onClick={() => logPhysicalCheckup()}>
-          Log Physical Checkup
-        </button>
-      </div> */}
+        {/* <DatePickerWrapper>
+          <DatePicker
+            selectsRange
+            monthsShown={2}
+            endDate={endDateRange}
+            selected={startDateRange}
+            startDate={startDateRange}
+            shouldCloseOnSelect={false}
+            id='date-range-picker-months'
+            onChange={handleOnChangeRange}
+            popperPlacement={popperPlacement}
+            customInput={
+              <CustomInput
+                label='Date Range'
+                end={endDateRange as Date | number}
+                start={startDateRange as Date | number}
+              />
+            }
+          />
+        </DatePickerWrapper>
 
-      {/* <div style={{ marginTop: 20 }}>
-        <PatientForm />
+        <DatePickerWrapper>
+          <PickersRange popperPlacement={popperPlacement} />
+        </DatePickerWrapper> */}
+
+        <div>{JSON.stringify(startDateRange, null, 2)}</div>
+        <div>{JSON.stringify(endDateRange, null, 2)}</div>
+
+        <div>{JSON.stringify(selectValue, null, 2)}</div>
+        <Select value={selectValue} onChange={handleChange}>
+          <MenuItem value={'0'}>Select Value</MenuItem>
+          <MenuItem value={'1'}>Value 1</MenuItem>
+          <MenuItem value={'2'}>Value 2</MenuItem>
+          <MenuItem value={'3'}>Value 3</MenuItem>
+          <DatePickerWrapper onClick={() => setSelectValue('4')}>
+            <DatePicker
+              selectsRange
+              monthsShown={2}
+              endDate={endDateRange}
+              selected={startDateRange}
+              startDate={startDateRange}
+              shouldCloseOnSelect={false}
+              id='date-range-picker-months'
+              onChange={handleOnChangeRange}
+              popperPlacement={popperPlacement}
+              customInput={<MenuItem value={'4'}>Value 4</MenuItem>}
+            />
+          </DatePickerWrapper>
+        </Select>
+
+        {/* <DatePickerWrapper>
+          <DatePicker
+            selectsRange
+            monthsShown={2}
+            name='dateRangeInputValue'
+            placeholderText='MM/DD/YYYY - MM/DD/YYYY'
+            startDate={startDateRange}
+            endDate={endDateRange}
+            selected={moment(startDateRange).isValid() ? startDateRange : null}
+            shouldCloseOnSelect={false}
+            onChange={(date: Date) => setStartDateRange(new Date(date))}
+            popperPlacement='bottom-start'
+          />
+        </DatePickerWrapper> */}
       </div>
-
-       */}
-
-      {/* <Button onClick={() => onAdd(1)}>Show Physical Checkup</Button> */}
-
-      <Box mt={2}>
-        <AddPhysicalCheckupDialog id={1} />
-        {showDialog ? <PhysicalCheckupDialog /> : null}
-      </Box>
-
-      <label htmlFor="subject"></label>
-      <select id="subject" onChange={(e) => console.dir(e)}>
-        <option value="English">English</option>
-        <option value="Filipino">Filipino</option>
-        <option value="Math">Math</option>
-        <option value="Science">Science</option>
-      </select>
-
-      <Box sx={{ minWidth: 120 }}>
-        <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">Age</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={age}
-            label="Age"
-            onChange={handleChange}
-          >
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
-          </Select>
-        </FormControl>
-      </Box>
-
-      <TextField label="test" onChange={handleChange2} />
     </div>
   );
 };
@@ -451,6 +512,6 @@ const Test: NextPage = () => {
 export default Test;
 
 Test.acl = {
-  action: "read",
-  subject: "patient",
+  action: 'read',
+  subject: 'patient'
 };

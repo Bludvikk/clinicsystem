@@ -1,14 +1,16 @@
+import { router, publicProcedure } from "../trpc";
 import { patientRouter } from "./patient";
-import { router } from "../trpc";
 import { referenceRouter } from "./reference";
 import { entityRouter } from "./entity";
 import { userRouter } from "./user";
+import { checkupRouter } from "./checkup";
 
 export const ServerRouter = router({
+  entity: entityRouter,
+  reference: referenceRouter,
   user: userRouter,
   patient: patientRouter,
-  reference: referenceRouter,
-  entity: entityRouter,
+  checkup: checkupRouter,
 });
 
 export type ServerRouter = typeof ServerRouter;

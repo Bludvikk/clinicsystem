@@ -1,23 +1,18 @@
 import { TRPCError } from "@trpc/server";
 import { Context } from "@/server/context";
 import { Prisma as prismaCli } from "@prisma/client";
-
-import {
-  IAddReference,
-  IGetReference,
-  IGetReferencesByEntityId,
-  IDeleteReferenceSchema,
-  IUpdateReference,
-} from "@/server/schema/reference";
+import { FilterQueryInputType, ParamsInput } from "@/utils/common.type";
+import { PostReferenceDtoType } from "../schema/reference";
+import { RecordDoesExist } from "@/utils/http.message";
 
 export type ReferencesAsyncType = typeof getReferences;
 
 export const getReferences = async (
   ctx: Context,
-  input: IGetReferencesByEntityId
+  filterQuery: FilterQueryInputType
 ) => {
   try {
-    const { entities } = input;
+    const entities = filterQuery?.entities;
 
     return await ctx.prisma.reference.findMany({
       where: {
@@ -29,37 +24,36 @@ export const getReferences = async (
   }
 };
 
-export const getReference = async (ctx: Context, input: IGetReference) => {
+export const postReference = async (
+  ctx: Context,
+  postReferenceDto: PostReferenceDtoType
+) => {
   try {
-    return await ctx.prisma.reference.findUnique({ where: { ...input } });
-  } catch (err) {
-    if (err instanceof prismaCli.PrismaClientKnownRequestError) {
-      if (err.code === "P2025") {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Record not found.",
-          cause: err,
-        });
-      }
-    }
-    throw err;
-  }
-};
+    const { params, body } = postReferenceDto;
 
-export const postReference = async (ctx: Context, input: IAddReference) => {
-  try {
+    // ** UPDATE data
+    if (params.id) {
+      return {
+        data: await ctx.prisma.reference.update({
+          where: { id: params.id },
+          data: body,
+        }),
+        message: "Reference updated successfully.",
+        status: "success",
+      };
+    }
+
     return {
-      data: await ctx.prisma.reference.create({ data: { ...input } }),
-      message: "Reference added successfully.",
+      data: await ctx.prisma.reference.create({ data: body }),
+      message: "Reference created successfully.",
       status: "success",
     };
   } catch (err) {
     if (err instanceof prismaCli.PrismaClientKnownRequestError) {
       if (err.code === "P2002") {
-        throw new TRPCError({
-          code: "CONFLICT",
-          message: "Record already exist.",
-          cause: err,
+        throw new RecordDoesExist({
+          module: postReferenceDto.params.module,
+          code: postReferenceDto.body.code,
         });
       }
     }
@@ -67,13 +61,13 @@ export const postReference = async (ctx: Context, input: IAddReference) => {
   }
 };
 
-export const putReference = async (ctx: Context, input: IUpdateReference) => {
+export const deleteReference = async (ctx: Context, params: ParamsInput) => {
   try {
-    const { id, ...data } = input;
+    await ctx.prisma.reference.delete({ where: { id: params.id } });
 
     return {
-      data: await ctx.prisma.reference.update({ where: { id }, data }),
-      message: "Reference updated successfully.",
+      id: params.id,
+      message: "Reference deleted successfully.",
       status: "success",
     };
   } catch (err) {
@@ -81,32 +75,7 @@ export const putReference = async (ctx: Context, input: IUpdateReference) => {
       if (err.code === "P2025") {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Record not found.",
-          cause: err,
-        });
-      }
-    }
-    throw err;
-  }
-};
-
-export const deleteReference = async (
-  ctx: Context,
-  input: IDeleteReferenceSchema
-) => {
-  try {
-    return {
-      data: await ctx.prisma.reference.delete({ where: { ...input } }),
-      message: "Reference removed successfully.",
-      status: "success",
-    };
-  } catch (err) {
-    if (err instanceof prismaCli.PrismaClientKnownRequestError) {
-      if (err.code === "P2025") {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Record not found.",
-          cause: err,
+          message: `Record ID <<${params.id}>> not found.`,
         });
       }
     }
