@@ -1,31 +1,19 @@
-import { UsersAsyncType } from "@/server/services/user";
-import { ReferencesAsyncType } from "@/server/services/reference";
-import { EntitiesAsyncType } from "@/server/services/entity";
-import { ThemeColor } from "src/@core/layouts/types";
-import {
-  PatientsAsyncType,
-  PhysicalCheckupsAsyncType,
-  VitalSignAsyncType,
-} from "@/server/services/patient";
+import { UsersAsyncType } from '@/server/services/user';
+import { ReferencesAsyncType } from '@/server/services/reference';
+import { EntitiesAsyncType } from '@/server/services/entity';
+import { ThemeColor } from 'src/@core/layouts/types';
+import { PatientsAsyncType } from '@/server/services/patient';
+import { CheckupsAsyncType } from '@/server/services/checkup';
 
-export type EntitiesType = TGenerics<EntitiesAsyncType>;
-export type ReferencesEntityType = TGenerics<ReferencesAsyncType>;
-export type UsersType = TGenerics<UsersAsyncType> & {
-  avatars?: string | null;
-  avatarColor?: ThemeColor;
-};
-export type PatientsType = TGenerics<PatientsAsyncType>;
-export type PhysicalCheckupsType = TGenerics<PhysicalCheckupsAsyncType>;
-export type VitalSignsType = TGenerics<VitalSignAsyncType>;
+export type TGenerics<T extends (..._args: any) => Promise<any>> = RecursivelyConvertDatesToStrings<
+  ArrayElement<AsyncReturnType<T>>
+>;
 
-export type TGenerics<T extends (..._args: any) => Promise<any>> =
-  RecursivelyConvertDatesToStrings<ArrayElement<AsyncReturnType<T>>>;
+export type AsyncReturnType<T extends (..._args: any) => Promise<any>> = Awaited<ReturnType<T>>;
 
-export type AsyncReturnType<T extends (..._args: any) => Promise<any>> =
-  Awaited<ReturnType<T>>;
-
-export type ArrayElement<ArrayType extends readonly unknown[]> =
-  ArrayType extends readonly (infer ElementType)[] ? ElementType : never;
+export type ArrayElement<ArrayType extends readonly unknown[]> = ArrayType extends readonly (infer ElementType)[]
+  ? ElementType
+  : never;
 
 export type RecursivelyConvertDatesToStrings<T> = T extends Date
   ? string
@@ -36,9 +24,14 @@ export type RecursivelyConvertDatesToStrings<T> = T extends Date
   : T;
 
 export type KnownKeys<T> = keyof {
-  [K in keyof T as string extends K
-    ? never
-    : number extends K
-    ? never
-    : K]: never;
+  [K in keyof T as string extends K ? never : number extends K ? never : K]: never;
 };
+
+export type EntitiesType = TGenerics<EntitiesAsyncType>;
+export type ReferencesEntityType = TGenerics<ReferencesAsyncType>;
+export type UsersType = TGenerics<UsersAsyncType> & {
+  avatars?: string | null;
+  avatarColor?: ThemeColor;
+};
+export type PatientsType = TGenerics<PatientsAsyncType>;
+export type CheckupsType = TGenerics<CheckupsAsyncType>;

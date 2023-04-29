@@ -1,56 +1,91 @@
-import { VerticalNavItemsType } from "src/@core/layouts/types";
+import { VerticalNavItemsType } from 'src/@core/layouts/types';
 
 const navigation = (): VerticalNavItemsType => {
   return [
     {
-      title: "Dashboard",
-      path: "/dashboard",
-      action: "read",
-      subject: "dashboard",
-      icon: "mdi:home-outline",
+      title: 'Dashboard',
+      path: '/dashboard',
+      icon: 'mdi:home-outline',
+      action: 'read',
+      subject: 'dashboard'
     },
     {
-      title: "Patient",
-      path: "/patient",
-      action: "read",
-      subject: "patient",
-      icon: "mdi:patient-outline",
+      title: 'Reference',
+      path: '/apps/reference',
+      icon: 'mdi:list-box-outline',
+      action: 'read',
+      subject: 'reference'
     },
     {
-      title: "Upcoming Checkup",
-      path: "/upcoming-checkup",
-      action: "read",
-      subject: "upcoming checkup",
-      icon: "tabler:checkup-list",
-    },
-    {
-      title: "Physician",
-      path: "/physician",
-      action: "read",
-      subject: "physician",
-      icon: "mdi:account-outline",
+      title: 'User',
+      icon: 'mdi:account-outline',
+      action: 'read',
+      subject: 'user',
       children: [
         {
-          title: "Today's Checkup",
-          path: "/physician/todays-checkup",
-          action: "read",
-          subject: "today's checkup",
-        },
-        {
-          title: "My Patient",
-          path: "/physician/my-patient",
-          action: "read",
-          subject: "my patient",
-        },
-      ],
+          title: 'List',
+          path: '/apps/user/list',
+          action: 'read',
+          subject: 'user'
+        }
+      ]
     },
     {
-      title: "Appointment",
-      path: "/appointment",
-      action: "read",
-      subject: "appointment",
-      icon: "mdi:calendar-today-outline",
+      title: 'Patient',
+      icon: 'mdi:patient-outline',
+      action: 'read',
+      subject: 'patient',
+      children: [
+        {
+          title: 'List',
+          path: '/apps/patient/list',
+          action: 'read',
+          subject: 'patient'
+        }
+      ]
     },
+    {
+      title: 'Checkup',
+      icon: 'tabler:checkup-list',
+      action: 'read',
+      subject: 'checkup-vital-signs',
+      children: [
+        {
+          title: 'List',
+          path: '/apps/checkup/list',
+          action: 'read',
+          subject: 'checkup-vital-signs'
+        }
+      ]
+    },
+    {
+      title: 'Physician',
+      icon: 'mdi:account-outline',
+      action: 'read',
+      subject: 'physician',
+      children: [
+        {
+          title: 'checkup',
+          action: 'read',
+          subject: 'checkup',
+          children: [
+            {
+              title: 'List',
+              path: '/apps/physician/checkup/list',
+              action: 'read',
+              subject: 'checkup'
+            }
+          ]
+        }
+      ]
+    },
+    {
+      title: 'Appointment',
+      path: '/appointment',
+      action: 'read',
+      subject: 'appointment',
+      icon: 'mdi:calendar-today-outline'
+    }
   ];
 };
 

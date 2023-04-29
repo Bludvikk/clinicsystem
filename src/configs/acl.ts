@@ -1,7 +1,7 @@
-import { AbilityBuilder, Ability } from "@casl/ability";
+import { AbilityBuilder, Ability } from '@casl/ability';
 
 export type Subjects = string;
-export type Actions = "manage" | "create" | "read" | "update" | "delete";
+export type Actions = 'manage' | 'create' | 'read' | 'update' | 'delete';
 export type AppAbility = Ability<[Actions, Subjects]> | undefined;
 
 export const AppAbility = Ability as any;
@@ -20,24 +20,23 @@ const defineRulesFor = (role: string, subject: string) => {
    */
 
   switch (role) {
-    case "admin":
-      can("manage", "all");
+    case 'admin':
+      can('manage', 'all');
       break;
-    case "user":
-      can("read", "dashboard");
+    case 'user':
+      can('read', 'dashboard');
       break;
-    case "receptionist":
-      can("read", "upcoming checkup");
-      can(["read", "create", "update"], ["patient", "vital signs"]);
+    case 'receptionist':
+      can(['read', 'create', 'update'], ['patient', 'checkup-vital-signs']);
       break;
-    case "physician":
-      can("read", ["physician", "my patient", "today's checkup"]);
-      can(["read", "create", "update"], ["physical checkup"]);
-      can(["read", "update"], "appointment");
+    case 'physician':
+      can('read', ['physician', 'checkup']);
+      can(['read', 'create', 'update'], ['checkup']);
+      can(['read', 'update'], 'appointment');
 
       break;
     default:
-      can(["read", "create", "update", "delete"], subject);
+      can(['read', 'create', 'update', 'delete'], subject);
       break;
   }
 
@@ -47,13 +46,13 @@ const defineRulesFor = (role: string, subject: string) => {
 export const buildAbilityFor = (role: string, subject: string): AppAbility => {
   return new AppAbility(defineRulesFor(role, subject), {
     //@ts-ignore
-    detectSubjectType: (object) => object!.type,
+    detectSubjectType: object => object!.type
   });
 };
 
 export const defaultACLObj: ACLObj = {
-  action: "manage",
-  subject: "all",
+  action: 'manage',
+  subject: 'all'
 };
 
 export default defineRulesFor;

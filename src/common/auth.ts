@@ -1,22 +1,20 @@
-import { NextAuthOptions } from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
-import { verify } from "argon2";
+import { NextAuthOptions } from 'next-auth';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import { verify } from 'argon2';
 
-import { prisma } from "./prisma";
-import { loginUserDtoSchema } from "../server/schema/user";
-import { AuthenticatedUserType } from "types/next-auth";
+import { prisma } from './prisma';
+import { loginUserDtoSchema } from '../server/schema/user';
+import { AuthenticatedUserType } from 'types/next-auth';
 
 export const nextAuthOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
-      name: "Credentials-auth",
-      type: "credentials",
+      name: 'Credentials-auth',
+      type: 'credentials',
       credentials: {},
-      authorize: async (credentials) => {
+      authorize: async credentials => {
         try {
-          const { email, password } = await loginUserDtoSchema.parseAsync(
-            credentials
-          );
+          const { email, password } = await loginUserDtoSchema.parseAsync(credentials);
 
           const user = await prisma.user.findUnique({
             where: { email },
@@ -25,29 +23,29 @@ export const nextAuthOptions: NextAuthOptions = {
                 select: {
                   id: true,
                   code: true,
-                  name: true,
-                },
+                  name: true
+                }
               },
               department: {
                 select: {
                   id: true,
                   code: true,
-                  name: true,
-                },
+                  name: true
+                }
               },
               status: {
                 select: {
                   id: true,
                   code: true,
-                  name: true,
-                },
-              },
-            },
+                  name: true
+                }
+              }
+            }
           });
-          if (!user) throw new Error("Invalid credentials.");
+          if (!user) throw new Error('Invalid credentials.');
 
           const isValidPassword = await verify(user.password, password);
-          if (!isValidPassword) throw new Error("Invalid credentials.");
+          if (!isValidPassword) throw new Error('Invalid credentials.');
 
           return {
             id: user.id,
@@ -55,13 +53,13 @@ export const nextAuthOptions: NextAuthOptions = {
             userName: user.userName,
             role: user.role,
             department: user.department,
-            status: user.status,
+            status: user.status
           };
         } catch (err) {
           throw err;
         }
-      },
-    }),
+      }
+    })
   ],
   callbacks: {
     jwt: async ({ token, user }) => {
@@ -71,17 +69,17 @@ export const nextAuthOptions: NextAuthOptions = {
     session: async ({ session, token }) => {
       if (token) session.user = token.user;
       return session;
-    },
+    }
   },
   jwt: {
-    maxAge: 24 * 60 * 60, // 24 hours
+    maxAge: 24 * 60 * 60 // 24 hours
   },
   pages: {
-    signIn: "/login",
-    newUser: "/register",
+    signIn: '/login',
+    signOut: '/login'
   },
   session: {
-    strategy: "jwt",
+    strategy: 'jwt'
   },
-  secret: process.env.JWT_SECRET,
+  secret: process.env.JWT_SECRET
 };

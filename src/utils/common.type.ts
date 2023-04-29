@@ -1,10 +1,6 @@
-import { z } from "zod";
-import { RouterKeyType } from "@/server/routers";
-import {
-  commonDataDtoSchema,
-  filterQuery,
-  params,
-} from "@/server/schema/common";
+import { z } from 'zod';
+import { RouterKeyType } from '@/server/routers';
+import { commonDataDtoSchema, filterQuery, params } from '@/server/schema/common';
 import {
   Breakpoint,
   FormControlProps,
@@ -14,8 +10,9 @@ import {
   GridProps,
   CheckboxProps,
   FormControlLabelProps,
-} from "@mui/material";
-import { DatePickerProps } from "@mui/x-date-pickers";
+  BoxProps
+} from '@mui/material';
+import { ReactDatePickerProps } from 'react-datepicker';
 
 export type ParamsInput = z.TypeOf<typeof params>;
 export type CommonDataInputType = z.TypeOf<typeof commonDataDtoSchema>;
@@ -25,7 +22,7 @@ export type DynamicType = {
   [key: string]: any | undefined;
 };
 
-export type FormDisplayType = "normal" | "dialog";
+export type FormDisplayType = 'normal' | 'dialog';
 export type FormUIType = `${RouterKeyType}-form-${FormDisplayType}`;
 
 export type FormPropsType = {
@@ -38,22 +35,18 @@ export type TableHeaderPropsType = {
   handleSearchFilter: (...event: any[]) => void;
 };
 
-export type FormInputType =
-  | "textField"
-  | "dropDown"
-  | "datePicker"
-  | "checkbox"
-  | "multi-checkbox";
+export type FormInputType = 'textField' | 'dropDown' | 'datePicker' | 'checkbox' | 'multi-checkbox';
 
 export type ExtendedPropsType = {
   formControlAttribute?: FormControlProps;
   formControlLabelAttribute?: FormControlLabelProps;
   textFieldAttribute?: TextFieldProps;
   dropDownAttribute?: SelectProps;
-  datePickerAttribute?: DatePickerProps<Date>;
   gridAttribute?: GridProps;
   checkboxAttribute?: CheckboxProps;
   listItemTextAttribute?: ListItemTextProps;
+  reactDatePickerAttribute?: Omit<ReactDatePickerProps, 'onChange'>;
+  boxAttribute?: BoxProps;
 };
 
 export type FormControlPropsType<TUnionField> = {
