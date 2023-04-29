@@ -1,49 +1,44 @@
-import { z } from "zod";
+import _ from 'lodash';
+import { z } from 'zod';
+import { params } from './common';
 
-export const userDtoSchema = z.object({
-  id: z.number().min(1, { message: "Please enter a user id." }),
-  userName: z.string().min(1, { message: "Please enter a username." }),
-  email: z.string().min(1, { message: "Please enter an email." }).email(),
-  password: z
-    .string()
-    .min(4, { message: "Password must contain atleast 4 characters" })
-    .max(12, {
-      message: "Password must not exceed 12 characters",
-    }),
-  firstName: z.string().min(1, { message: "Please enter a first name." }),
-  lastName: z.string().min(1, { message: "Please enter a last name." }),
-  middleInitial: z
-    .string()
-    .max(1, { message: "Middle initial must be a single character." })
-    .optional(),
-  roleId: z.coerce.number().min(1, { message: "Please select a role." }),
-  statusId: z.coerce.number().min(1, { message: "Please select a status." }),
-  departmentId: z.coerce
-    .number()
-    .transform((value) => {
-      if (value === 0) return null;
-      return null;
-    })
-    .nullable()
-    .optional(),
-});
-// TODO: add refined: for dropdown data which has 0 value,
-
-export const loginUserDtoSchema = userDtoSchema.pick({
-  email: true,
-  password: true,
+export const loginUserDtoSchema = z.object({
+  email: z.string().min(1, { message: 'Please enter an email.' }).email(),
+  password: z.string().min(1, { message: 'Please enter a password' })
 });
 
-export const registerUserDtoSchema = userDtoSchema.omit({ id: true }).extend({
-  terms: z.literal<boolean>(true, {
-    errorMap: (issue, ctx) => {
-      if (issue.code === "invalid_literal")
-        return { message: "You need to accept our privacy policy & terms." };
-      return { message: ctx.defaultError };
-    },
-  }),
+export const userDtoSchema = z
+  .object({
+    userName: z.string().min(1, { message: 'Please enter a username.' }),
+    email: z.string().min(1, { message: 'Please enter an email.' }).email(),
+    password: z.string().min(1, { message: 'Please enter a password' }),
+    firstName: z.string().min(1, { message: 'Please enter a first name.' }),
+    lastName: z.string().min(1, { message: 'Please enter a last name.' }),
+    middleInitial: z.string().max(1, { message: 'Middle initial must be a single character.' }).nullable().optional(),
+    roleId: z.coerce.number().min(1, { message: 'Please select a role.' }),
+    statusId: z.coerce.number().min(1, { message: 'Please select a status.' }),
+    departmentId: z.coerce.number().nullable().optional()
+  })
+  .refine(formObj => {
+    for (const key in formObj) {
+      const val = _.get(formObj, key);
+
+      //dropdown data which has 0 value
+      if (!val && val === 0 && key.includes('Id')) {
+        _.set(formObj, key, null);
+      }
+    }
+
+    return formObj;
+  });
+
+export const postUserDtoSchema = z.object({
+  params,
+  body: userDtoSchema
 });
 
 export type UserDtoSchemaType = z.infer<typeof userDtoSchema>;
 export type LoginUserDtoSchemaType = z.infer<typeof loginUserDtoSchema>;
-export type RegisterUserDtoSchemaType = z.infer<typeof registerUserDtoSchema>;
+export type PostUserDtoType = z.infer<typeof postUserDtoSchema>;
+
+export type UserUnionFieldType = keyof UserDtoSchemaType;
