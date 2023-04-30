@@ -1,13 +1,13 @@
 // ** React Imports
-import { useState } from 'react'
+import { useState } from 'react';
 
 // ** MUI Imports
-import MenuItem from '@mui/material/MenuItem'
-import { styled } from '@mui/material/styles'
-import InputBase from '@mui/material/InputBase'
-import InputLabel from '@mui/material/InputLabel'
-import Select, { SelectChangeEvent } from '@mui/material/Select'
-import MuiFormControl, { FormControlProps } from '@mui/material/FormControl'
+import MenuItem from '@mui/material/MenuItem';
+import { styled } from '@mui/material/styles';
+import InputBase from '@mui/material/InputBase';
+import InputLabel from '@mui/material/InputLabel';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import MuiFormControl, { FormControlProps } from '@mui/material/FormControl';
 
 // Styled FormControl component
 const FormControl = styled(MuiFormControl)<FormControlProps>(({ theme }) => ({
@@ -50,15 +50,15 @@ const FormControl = styled(MuiFormControl)<FormControlProps>(({ theme }) => ({
       boxShadow: '0 0 0 0.2rem rgba(0,123,255,0.25)'
     }
   }
-}))
+}));
 
 const SelectCustomized = () => {
   // ** State
-  const [value, setValue] = useState<string>('')
+  const [value, setValue] = useState<string>('');
 
   const handleChange = (event: SelectChangeEvent) => {
-    setValue(event.target.value as string)
-  }
+    setValue(event.target.value as string);
+  };
 
   return (
     <div className='demo-space-x'>
@@ -89,7 +89,7 @@ const SelectCustomized = () => {
         </Select>
       </FormControl>
     </div>
-  )
-}
+  );
+};
 
-export default SelectCustomized
+export default SelectCustomized;

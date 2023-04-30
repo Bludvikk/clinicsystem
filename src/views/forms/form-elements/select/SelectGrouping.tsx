@@ -1,9 +1,9 @@
 // ** MUI Imports
-import Select from '@mui/material/Select'
-import MenuItem from '@mui/material/MenuItem'
-import InputLabel from '@mui/material/InputLabel'
-import FormControl from '@mui/material/FormControl'
-import ListSubheader from '@mui/material/ListSubheader'
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import ListSubheader from '@mui/material/ListSubheader';
 
 const SelectGrouping = () => {
   return (
@@ -37,7 +37,7 @@ const SelectGrouping = () => {
         </Select>
       </FormControl>
     </div>
-  )
-}
+  );
+};
 
-export default SelectGrouping
+export default SelectGrouping;

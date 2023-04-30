@@ -1,19 +1,19 @@
 // ** React Imports
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useState } from 'react';
 
 // ** MUI Imports
-import Radio from '@mui/material/Radio'
-import RadioGroup from '@mui/material/RadioGroup'
-import FormControl from '@mui/material/FormControl'
-import FormControlLabel from '@mui/material/FormControlLabel'
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControl from '@mui/material/FormControl';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 const RadioGroupComponent = () => {
   // ** State
-  const [value, setValue] = useState<string>('checked')
+  const [value, setValue] = useState<string>('checked');
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setValue((event.target as HTMLInputElement).value)
-  }
+    setValue((event.target as HTMLInputElement).value);
+  };
 
   return (
     <FormControl sx={{ flexWrap: 'wrap', flexDirection: 'row' }}>
@@ -27,7 +27,7 @@ const RadioGroupComponent = () => {
         <FormControlLabel disabled value='disabled-unchecked' label='Disabled Unchecked' control={<Radio />} />
       </RadioGroup>
     </FormControl>
-  )
-}
+  );
+};
 
-export default RadioGroupComponent
+export default RadioGroupComponent;

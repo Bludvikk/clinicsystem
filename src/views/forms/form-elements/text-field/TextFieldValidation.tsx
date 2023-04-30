@@ -1,5 +1,5 @@
 // ** MUI Imports
-import TextField from '@mui/material/TextField'
+import TextField from '@mui/material/TextField';
 
 const TextFieldValidation = () => {
   return (
@@ -13,7 +13,7 @@ const TextFieldValidation = () => {
         id='validation-error-helper-text'
       />
     </form>
-  )
-}
+  );
+};
 
-export default TextFieldValidation
+export default TextFieldValidation;

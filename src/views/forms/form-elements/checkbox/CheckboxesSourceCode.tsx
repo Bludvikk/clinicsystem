@@ -23,7 +23,7 @@ const CheckboxesBasic = () => {
 export default CheckboxesBasic
 `}</code>
   </pre>
-)
+);
 
 export const CheckboxesColorsJSXCode = (
   <pre className='language-jsx'>
@@ -51,7 +51,7 @@ const CheckboxesColors = () => {
 export default CheckboxesColors
 `}</code>
   </pre>
-)
+);
 
 export const CheckboxesCustomIconsJSXCode = (
   <pre className='language-jsx'>
@@ -95,7 +95,7 @@ const CheckboxesCustomIcons = () => {
 export default CheckboxesCustomIcons
 `}</code>
   </pre>
-)
+);
 
 export const CheckboxesCustomizedJSXCode = (
   <pre className='language-jsx'>
@@ -175,7 +175,7 @@ const CheckboxesCustomized = () => {
 export default CheckboxesCustomized
 `}</code>
   </pre>
-)
+);
 
 export const CheckboxesShowErrorJSXCode = (
   <pre className='language-jsx'>
@@ -252,7 +252,7 @@ const CheckboxesShowError = () => {
 export default CheckboxesShowError
 `}</code>
   </pre>
-)
+);
 
 export const CheckboxesLabelPlacementJSXCode = (
   <pre className='language-jsx'>
@@ -279,7 +279,7 @@ const CheckboxesLabelPlacement = () => {
 export default CheckboxesLabelPlacement
 `}</code>
   </pre>
-)
+);
 
 export const CheckboxesControlledUncontrolledJSXCode = (
   <pre className='language-jsx'>
@@ -313,7 +313,7 @@ const CheckboxesControlledUncontrolled = () => {
 export default CheckboxesControlledUncontrolled
 `}</code>
   </pre>
-)
+);
 
 export const CheckboxesSizesJSXCode = (
   <pre className='language-jsx'>
@@ -347,7 +347,7 @@ const CheckboxesSizes = () => {
 export default CheckboxesSizes
 `}</code>
   </pre>
-)
+);
 
 export const CheckboxesBasicTSXCode = (
   <pre className='language-jsx'>
@@ -374,7 +374,7 @@ const CheckboxesBasic = () => {
 export default CheckboxesBasic
 `}</code>
   </pre>
-)
+);
 
 export const CheckboxesColorsTSXCode = (
   <pre className='language-jsx'>
@@ -402,7 +402,7 @@ const CheckboxesColors = () => {
 export default CheckboxesColors
 `}</code>
   </pre>
-)
+);
 
 export const CheckboxesCustomizedTSXCode = (
   <pre className='language-jsx'>
@@ -482,7 +482,7 @@ const CheckboxesCustomized = () => {
 export default CheckboxesCustomized
 `}</code>
   </pre>
-)
+);
 
 export const CheckboxesShowErrorTSXCode = (
   <pre className='language-jsx'>
@@ -563,7 +563,7 @@ const CheckboxesShowError = () => {
 export default CheckboxesShowError
 `}</code>
   </pre>
-)
+);
 
 export const CheckboxesControlledUncontrolledTSXCode = (
   <pre className='language-jsx'>
@@ -597,7 +597,7 @@ const CheckboxesControlledUncontrolled = () => {
 export default CheckboxesControlledUncontrolled
 `}</code>
   </pre>
-)
+);
 
 export const CheckboxesCustomIconsTSXCode = (
   <pre className='language-jsx'>
@@ -641,7 +641,7 @@ const CheckboxesCustomIcons = () => {
 export default CheckboxesCustomIcons
 `}</code>
   </pre>
-)
+);
 
 export const CheckboxesLabelPlacementTSXCode = (
   <pre className='language-jsx'>
@@ -668,7 +668,7 @@ const CheckboxesLabelPlacement = () => {
 export default CheckboxesLabelPlacement
 `}</code>
   </pre>
-)
+);
 
 export const CheckboxesSizesTSXCode = (
   <pre className='language-jsx'>
@@ -702,4 +702,4 @@ const CheckboxesSizes = () => {
 export default CheckboxesSizes
 `}</code>
   </pre>
-)
+);

@@ -1,20 +1,20 @@
 // ** React Imports
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useState } from 'react';
 
 // ** MUI Imports
-import Grid from '@mui/material/Grid'
-import Radio from '@mui/material/Radio'
-import Typography from '@mui/material/Typography'
-import RadioGroup from '@mui/material/RadioGroup'
-import FormControlLabel from '@mui/material/FormControlLabel'
+import Grid from '@mui/material/Grid';
+import Radio from '@mui/material/Radio';
+import Typography from '@mui/material/Typography';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 const RadioControlledUncontrolled = () => {
   // ** State
-  const [value, setValue] = useState<string>('controlled-checked')
+  const [value, setValue] = useState<string>('controlled-checked');
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setValue((event.target as HTMLInputElement).value)
-  }
+    setValue((event.target as HTMLInputElement).value);
+  };
 
   return (
     <Grid container spacing={6}>
@@ -33,7 +33,7 @@ const RadioControlledUncontrolled = () => {
         </RadioGroup>
       </Grid>
     </Grid>
-  )
-}
+  );
+};
 
-export default RadioControlledUncontrolled
+export default RadioControlledUncontrolled;

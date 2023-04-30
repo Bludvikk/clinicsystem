@@ -1,10 +1,10 @@
 // ** MUI Imports
-import Box from '@mui/material/Box'
-import TextField from '@mui/material/TextField'
-import Autocomplete from '@mui/material/Autocomplete'
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 
 // ** Data
-import { top100Films } from 'src/@fake-db/autocomplete'
+import { top100Films } from 'src/@fake-db/autocomplete';
 
 const AutocompleteVariants = () => {
   return (
@@ -39,7 +39,7 @@ const AutocompleteVariants = () => {
         renderInput={params => <TextField {...params} label='Disabled' />}
       />
     </Box>
-  )
-}
+  );
+};
 
-export default AutocompleteVariants
+export default AutocompleteVariants;

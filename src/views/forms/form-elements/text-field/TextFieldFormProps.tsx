@@ -1,5 +1,5 @@
 // ** MUI Imports
-import TextField from '@mui/material/TextField'
+import TextField from '@mui/material/TextField';
 
 const TextFieldFormProps = () => {
   return (
@@ -28,7 +28,7 @@ const TextFieldFormProps = () => {
         helperText='Some important text'
       />
     </form>
-  )
-}
+  );
+};
 
-export default TextFieldFormProps
+export default TextFieldFormProps;

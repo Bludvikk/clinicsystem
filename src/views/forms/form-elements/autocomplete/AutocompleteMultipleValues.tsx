@@ -1,11 +1,11 @@
 // ** MUI Imports
-import Box from '@mui/material/Box'
-import Chip from '@mui/material/Chip'
-import TextField from '@mui/material/TextField'
-import Autocomplete from '@mui/material/Autocomplete'
+import Box from '@mui/material/Box';
+import Chip from '@mui/material/Chip';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 
 // ** Data
-import { top100Films } from 'src/@fake-db/autocomplete'
+import { top100Films } from 'src/@fake-db/autocomplete';
 
 const AutocompleteMultipleValues = () => {
   return (
@@ -46,7 +46,7 @@ const AutocompleteMultipleValues = () => {
         )}
       />
     </Box>
-  )
-}
+  );
+};
 
-export default AutocompleteMultipleValues
+export default AutocompleteMultipleValues;

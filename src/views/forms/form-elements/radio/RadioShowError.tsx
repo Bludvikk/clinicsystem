@@ -1,41 +1,41 @@
 // ** React Imports
-import { ChangeEvent, FormEvent, useState } from 'react'
+import { ChangeEvent, FormEvent, useState } from 'react';
 
 // ** MUI Imports
-import Radio from '@mui/material/Radio'
-import Button from '@mui/material/Button'
-import FormLabel from '@mui/material/FormLabel'
-import RadioGroup from '@mui/material/RadioGroup'
-import FormControl from '@mui/material/FormControl'
-import FormHelperText from '@mui/material/FormHelperText'
-import FormControlLabel from '@mui/material/FormControlLabel'
+import Radio from '@mui/material/Radio';
+import Button from '@mui/material/Button';
+import FormLabel from '@mui/material/FormLabel';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 const RadioShowError = () => {
   // ** States
-  const [value, setValue] = useState<string>('')
-  const [error, setError] = useState<boolean>(false)
-  const [helperText, setHelperText] = useState<string>('Choose wisely')
+  const [value, setValue] = useState<string>('');
+  const [error, setError] = useState<boolean>(false);
+  const [helperText, setHelperText] = useState<string>('Choose wisely');
 
   const handleRadioChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setError(false)
-    setHelperText(' ')
-    setValue((event.target as HTMLInputElement).value)
-  }
+    setError(false);
+    setHelperText(' ');
+    setValue((event.target as HTMLInputElement).value);
+  };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
+    event.preventDefault();
 
     if (value === 'best') {
-      setError(false)
-      setHelperText('You got it!')
+      setError(false);
+      setHelperText('You got it!');
     } else if (value === 'worst') {
-      setError(true)
-      setHelperText('Sorry, wrong answer!')
+      setError(true);
+      setHelperText('Sorry, wrong answer!');
     } else {
-      setError(true)
-      setHelperText('Please select an option.')
+      setError(true);
+      setHelperText('Please select an option.');
     }
-  }
+  };
 
   return (
     <form onSubmit={handleSubmit}>
@@ -51,7 +51,7 @@ const RadioShowError = () => {
         </Button>
       </FormControl>
     </form>
-  )
-}
+  );
+};
 
-export default RadioShowError
+export default RadioShowError;

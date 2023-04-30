@@ -1,22 +1,22 @@
 // ** React Imports
-import { ChangeEvent, MouseEvent, useState } from 'react'
+import { ChangeEvent, MouseEvent, useState } from 'react';
 
 // ** MUI Imports
-import TextField from '@mui/material/TextField'
-import InputLabel from '@mui/material/InputLabel'
-import IconButton from '@mui/material/IconButton'
-import FormControl from '@mui/material/FormControl'
-import OutlinedInput from '@mui/material/OutlinedInput'
-import FormHelperText from '@mui/material/FormHelperText'
-import InputAdornment from '@mui/material/InputAdornment'
+import TextField from '@mui/material/TextField';
+import InputLabel from '@mui/material/InputLabel';
+import IconButton from '@mui/material/IconButton';
+import FormControl from '@mui/material/FormControl';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import FormHelperText from '@mui/material/FormHelperText';
+import InputAdornment from '@mui/material/InputAdornment';
 
 // ** Icon Imports
-import Icon from 'src/@core/components/icon'
+import Icon from 'src/@core/components/icon';
 
 interface State {
-  weight: string
-  password: string
-  showPassword: boolean
+  weight: string;
+  password: string;
+  showPassword: boolean;
 }
 
 const TextFieldInputAdornment = () => {
@@ -25,19 +25,19 @@ const TextFieldInputAdornment = () => {
     weight: '',
     password: '',
     showPassword: false
-  })
+  });
 
   const handleChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
-    setValues({ ...values, [prop]: event.target.value })
-  }
+    setValues({ ...values, [prop]: event.target.value });
+  };
 
   const handleClickShowPassword = () => {
-    setValues({ ...values, showPassword: !values.showPassword })
-  }
+    setValues({ ...values, showPassword: !values.showPassword });
+  };
 
   const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault()
-  }
+    event.preventDefault();
+  };
 
   return (
     <form className='demo-space-x' noValidate autoComplete='off'>
@@ -84,7 +84,7 @@ const TextFieldInputAdornment = () => {
         />
       </FormControl>
     </form>
-  )
-}
+  );
+};
 
-export default TextFieldInputAdornment
+export default TextFieldInputAdornment;

@@ -1,21 +1,21 @@
 // ** React Imports
-import { useState } from 'react'
+import { useState } from 'react';
 
 // ** MUI Imports
-import Box from '@mui/material/Box'
+import Box from '@mui/material/Box';
 
 // ** Third Party Imports
-import DatePicker, { ReactDatePickerProps } from 'react-datepicker'
+import DatePicker, { ReactDatePickerProps } from 'react-datepicker';
 
 // ** Custom Component Imports
-import CustomInput from './PickersCustomInput'
+import CustomInput from './PickersCustomInput';
 
 // ** Types
-import { DateType } from 'src/types/forms/reactDatepickerTypes'
+import { DateType } from 'src/types/forms/reactDatepickerTypes';
 
 const PickersBasic = ({ popperPlacement }: { popperPlacement: ReactDatePickerProps['popperPlacement'] }) => {
   // ** States
-  const [date, setDate] = useState<DateType>(new Date())
+  const [date, setDate] = useState<DateType>(new Date());
 
   return (
     <Box sx={{ display: 'flex', flexWrap: 'wrap' }} className='demo-space-x'>
@@ -52,7 +52,7 @@ const PickersBasic = ({ popperPlacement }: { popperPlacement: ReactDatePickerPro
         />
       </div>
     </Box>
-  )
-}
+  );
+};
 
-export default PickersBasic
+export default PickersBasic;

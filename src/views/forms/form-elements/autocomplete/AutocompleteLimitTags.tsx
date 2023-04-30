@@ -1,9 +1,9 @@
 // ** MUI Imports
-import TextField from '@mui/material/TextField'
-import Autocomplete from '@mui/material/Autocomplete'
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 
 // ** Data
-import { top100Films } from 'src/@fake-db/autocomplete'
+import { top100Films } from 'src/@fake-db/autocomplete';
 
 const AutocompleteLimitTags = () => {
   return (
@@ -16,7 +16,7 @@ const AutocompleteLimitTags = () => {
       defaultValue={[top100Films[13], top100Films[12], top100Films[11]]}
       renderInput={params => <TextField {...params} label='limitTags' placeholder='Favorites' />}
     />
-  )
-}
+  );
+};
 
-export default AutocompleteLimitTags
+export default AutocompleteLimitTags;

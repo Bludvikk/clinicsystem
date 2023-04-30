@@ -1,13 +1,13 @@
 // ** MUI Imports
-import { Theme } from '@mui/material/styles'
+import { Theme } from '@mui/material/styles';
 
 // ** Hook Import
-import { useSettings } from 'src/@core/hooks/useSettings'
+import { useSettings } from 'src/@core/hooks/useSettings';
 
 const Accordion = (theme: Theme) => {
   // Hook & Var
-  const { settings } = useSettings()
-  const { skin } = settings
+  const { settings } = useSettings();
+  const { skin } = settings;
 
   return {
     MuiAccordion: {
@@ -73,7 +73,7 @@ const Accordion = (theme: Theme) => {
         }
       }
     }
-  }
-}
+  };
+};
 
-export default Accordion
+export default Accordion;

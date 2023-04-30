@@ -1,5 +1,5 @@
 // ** MUI Imports
-import TextField from '@mui/material/TextField'
+import TextField from '@mui/material/TextField';
 
 const TextFieldColor = () => {
   return (
@@ -8,7 +8,7 @@ const TextFieldColor = () => {
       <TextField id='color-filled' label='Filled success' variant='filled' color='success' />
       <TextField id='color-standard' label='Standard success' color='success' variant='standard' />
     </form>
-  )
-}
+  );
+};
 
-export default TextFieldColor
+export default TextFieldColor;

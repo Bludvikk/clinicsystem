@@ -1,28 +1,28 @@
 // ** React Imports
-import { useState } from 'react'
+import { useState } from 'react';
 
 // ** MUI Imports
-import Button from '@mui/material/Button'
-import Dialog from '@mui/material/Dialog'
-import Select from '@mui/material/Select'
-import MenuItem from '@mui/material/MenuItem'
-import InputLabel from '@mui/material/InputLabel'
-import DialogTitle from '@mui/material/DialogTitle'
-import FormControl from '@mui/material/FormControl'
-import DialogContent from '@mui/material/DialogContent'
-import DialogActions from '@mui/material/DialogActions'
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import InputLabel from '@mui/material/InputLabel';
+import DialogTitle from '@mui/material/DialogTitle';
+import FormControl from '@mui/material/FormControl';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
 
 const SelectWithDialog = () => {
   // ** State
-  const [open, setOpen] = useState<boolean>(false)
+  const [open, setOpen] = useState<boolean>(false);
 
   const handleClickOpen = () => {
-    setOpen(true)
-  }
+    setOpen(true);
+  };
 
   const handleClose = () => {
-    setOpen(false)
-  }
+    setOpen(false);
+  };
 
   return (
     <div>
@@ -73,7 +73,7 @@ const SelectWithDialog = () => {
         </DialogActions>
       </Dialog>
     </div>
-  )
-}
+  );
+};
 
-export default SelectWithDialog
+export default SelectWithDialog;

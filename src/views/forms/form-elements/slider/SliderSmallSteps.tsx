@@ -1,9 +1,9 @@
 // ** MUI Imports
-import Slider from '@mui/material/Slider'
+import Slider from '@mui/material/Slider';
 
 const valuetext = (value: number) => {
-  return `${value}°C`
-}
+  return `${value}°C`;
+};
 
 const SliderSmallSteps = () => {
   return (
@@ -15,7 +15,7 @@ const SliderSmallSteps = () => {
       getAriaValueText={valuetext}
       aria-labelledby='small-steps-slider'
     />
-  )
-}
+  );
+};
 
-export default SliderSmallSteps
+export default SliderSmallSteps;

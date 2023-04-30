@@ -1,8 +1,8 @@
 // ** MUI Imports
-import Radio from '@mui/material/Radio'
-import RadioGroup from '@mui/material/RadioGroup'
-import FormControl from '@mui/material/FormControl'
-import FormControlLabel from '@mui/material/FormControlLabel'
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControl from '@mui/material/FormControl';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 const RadioLabelPlacement = () => {
   return (
@@ -16,7 +16,7 @@ const RadioLabelPlacement = () => {
         <FormControlLabel value='end' control={<Radio />} label='End' />
       </RadioGroup>
     </FormControl>
-  )
-}
+  );
+};
 
-export default RadioLabelPlacement
+export default RadioLabelPlacement;

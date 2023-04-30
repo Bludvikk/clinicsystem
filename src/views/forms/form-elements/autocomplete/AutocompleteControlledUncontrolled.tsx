@@ -1,26 +1,26 @@
 // ** React Imports
-import { useState, SyntheticEvent } from 'react'
+import { useState, SyntheticEvent } from 'react';
 
 // ** MUI Imports
-import Box from '@mui/material/Box'
-import TextField from '@mui/material/TextField'
-import Autocomplete from '@mui/material/Autocomplete'
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 
 // ** Data
-import { top100Films } from 'src/@fake-db/autocomplete'
+import { top100Films } from 'src/@fake-db/autocomplete';
 
 interface FilmOptionType {
-  year: number
-  title: string
+  year: number;
+  title: string;
 }
 
 const AutocompleteControlledUncontrolled = () => {
   // ** State
-  const [value, setValue] = useState<FilmOptionType | null>(null)
+  const [value, setValue] = useState<FilmOptionType | null>(null);
 
   const handleChange = (event: SyntheticEvent, newValue: FilmOptionType | null) => {
-    setValue(newValue)
-  }
+    setValue(newValue);
+  };
 
   return (
     <Box className='demo-space-x' sx={{ display: 'flex', flexWrap: 'wrap' }}>
@@ -41,7 +41,7 @@ const AutocompleteControlledUncontrolled = () => {
         renderInput={params => <TextField {...params} label='Uncontrolled' />}
       />
     </Box>
-  )
-}
+  );
+};
 
-export default AutocompleteControlledUncontrolled
+export default AutocompleteControlledUncontrolled;

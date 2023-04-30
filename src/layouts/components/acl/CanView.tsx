@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { AbilityContext } from "./Can";
+import React, { useContext } from 'react';
+import { AbilityContext } from './Can';
 
 interface Props {
   children: React.ReactNode;

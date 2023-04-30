@@ -1,7 +1,7 @@
 // ** MUI Imports
-import Switch from '@mui/material/Switch'
-import FormGroup from '@mui/material/FormGroup'
-import FormControlLabel from '@mui/material/FormControlLabel'
+import Switch from '@mui/material/Switch';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 const SwitchesBasic = () => {
   return (
@@ -11,7 +11,7 @@ const SwitchesBasic = () => {
       <FormControlLabel disabled control={<Switch defaultChecked />} label='Disabled Checked' />
       <FormControlLabel disabled control={<Switch />} label='Disabled Unchecked' />
     </FormGroup>
-  )
-}
+  );
+};
 
-export default SwitchesBasic
+export default SwitchesBasic;

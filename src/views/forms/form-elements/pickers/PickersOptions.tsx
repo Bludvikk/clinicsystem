@@ -1,31 +1,31 @@
 // ** React Imports
-import { useState } from 'react'
+import { useState } from 'react';
 
 // ** MUI Imports
-import Box from '@mui/material/Box'
+import Box from '@mui/material/Box';
 
 // ** Third Party Imports
-import DatePicker, { ReactDatePickerProps } from 'react-datepicker'
+import DatePicker, { ReactDatePickerProps } from 'react-datepicker';
 
 // ** Types
-import { DateType } from 'src/types/forms/reactDatepickerTypes'
+import { DateType } from 'src/types/forms/reactDatepickerTypes';
 
 // ** Custom Component Imports
-import CustomInput from './PickersCustomInput'
+import CustomInput from './PickersCustomInput';
 
 const PickersOptions = ({ popperPlacement }: { popperPlacement: ReactDatePickerProps['popperPlacement'] }) => {
   // ** States
-  const [dateOpen, setDateOpen] = useState<DateType>(null)
-  const [dateClear, setDateClear] = useState<DateType>(new Date())
-  const [dateFilter, setDateFilter] = useState<DateType>(new Date())
-  const [dateWeekNum, setDateWeekNum] = useState<DateType>(new Date())
-  const [dateTodayBtn, setDateTodayBtn] = useState<DateType>(new Date())
+  const [dateOpen, setDateOpen] = useState<DateType>(null);
+  const [dateClear, setDateClear] = useState<DateType>(new Date());
+  const [dateFilter, setDateFilter] = useState<DateType>(new Date());
+  const [dateWeekNum, setDateWeekNum] = useState<DateType>(new Date());
+  const [dateTodayBtn, setDateTodayBtn] = useState<DateType>(new Date());
 
   const isWeekday = (date: Date) => {
-    const day = new Date(date).getDay()
+    const day = new Date(date).getDay();
 
-    return day !== 0 && day !== 6
-  }
+    return day !== 0 && day !== 6;
+  };
 
   return (
     <Box sx={{ display: 'flex', flexWrap: 'wrap' }} className='demo-space-x'>
@@ -80,7 +80,7 @@ const PickersOptions = ({ popperPlacement }: { popperPlacement: ReactDatePickerP
         />
       </div>
     </Box>
-  )
-}
+  );
+};
 
-export default PickersOptions
+export default PickersOptions;

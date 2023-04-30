@@ -1,17 +1,17 @@
 // ** React Imports
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useState } from 'react';
 
 // ** MUI Imports
-import Box from '@mui/material/Box'
-import Checkbox from '@mui/material/Checkbox'
-import FormGroup from '@mui/material/FormGroup'
-import FormLabel from '@mui/material/FormLabel'
-import FormControl from '@mui/material/FormControl'
-import FormHelperText from '@mui/material/FormHelperText'
-import FormControlLabel from '@mui/material/FormControlLabel'
+import Box from '@mui/material/Box';
+import Checkbox from '@mui/material/Checkbox';
+import FormGroup from '@mui/material/FormGroup';
+import FormLabel from '@mui/material/FormLabel';
+import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 interface StateType {
-  [key: string]: boolean
+  [key: string]: boolean;
 }
 
 const CheckboxesShowError = () => {
@@ -20,15 +20,15 @@ const CheckboxesShowError = () => {
     gilad: true,
     jason: false,
     antoine: false
-  })
+  });
 
   // ** Vars
-  const { gilad, jason, antoine } = state
-  const error = [gilad, jason, antoine].filter(v => v).length !== 2
+  const { gilad, jason, antoine } = state;
+  const error = [gilad, jason, antoine].filter(v => v).length !== 2;
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setState({ ...state, [event.target.name]: event.target.checked })
-  }
+    setState({ ...state, [event.target.name]: event.target.checked });
+  };
 
   return (
     <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
@@ -69,7 +69,7 @@ const CheckboxesShowError = () => {
         <FormHelperText>You can display an error</FormHelperText>
       </FormControl>
     </Box>
-  )
-}
+  );
+};
 
-export default CheckboxesShowError
+export default CheckboxesShowError;

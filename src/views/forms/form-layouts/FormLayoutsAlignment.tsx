@@ -1,29 +1,29 @@
 // ** React Imports
-import { ChangeEvent, MouseEvent, useState } from 'react'
+import { ChangeEvent, MouseEvent, useState } from 'react';
 
 // ** MUI Imports
-import Card from '@mui/material/Card'
-import Grid from '@mui/material/Grid'
-import Button from '@mui/material/Button'
-import Checkbox from '@mui/material/Checkbox'
-import { styled } from '@mui/material/styles'
-import TextField from '@mui/material/TextField'
-import CardHeader from '@mui/material/CardHeader'
-import Typography from '@mui/material/Typography'
-import InputLabel from '@mui/material/InputLabel'
-import IconButton from '@mui/material/IconButton'
-import CardContent from '@mui/material/CardContent'
-import FormControl from '@mui/material/FormControl'
-import OutlinedInput from '@mui/material/OutlinedInput'
-import InputAdornment from '@mui/material/InputAdornment'
-import FormControlLabel from '@mui/material/FormControlLabel'
+import Card from '@mui/material/Card';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import { styled } from '@mui/material/styles';
+import TextField from '@mui/material/TextField';
+import CardHeader from '@mui/material/CardHeader';
+import Typography from '@mui/material/Typography';
+import InputLabel from '@mui/material/InputLabel';
+import IconButton from '@mui/material/IconButton';
+import CardContent from '@mui/material/CardContent';
+import FormControl from '@mui/material/FormControl';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputAdornment from '@mui/material/InputAdornment';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 // ** Icon Imports
-import Icon from 'src/@core/components/icon'
+import Icon from 'src/@core/components/icon';
 
 interface State {
-  password: string
-  showPassword: boolean
+  password: string;
+  showPassword: boolean;
 }
 
 // Styled component for the form
@@ -32,25 +32,25 @@ const Form = styled('form')(({ theme }) => ({
   padding: theme.spacing(12),
   borderRadius: theme.shape.borderRadius,
   border: `1px solid ${theme.palette.divider}`
-}))
+}));
 
 const FormLayoutsAlignment = () => {
   // ** State
   const [values, setValues] = useState<State>({
     password: '',
     showPassword: false
-  })
+  });
 
   // Handle Password
   const handleChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
-    setValues({ ...values, [prop]: event.target.value })
-  }
+    setValues({ ...values, [prop]: event.target.value });
+  };
   const handleClickShowPassword = () => {
-    setValues({ ...values, showPassword: !values.showPassword })
-  }
+    setValues({ ...values, showPassword: !values.showPassword });
+  };
   const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault()
-  }
+    event.preventDefault();
+  };
 
   return (
     <Card>
@@ -104,7 +104,7 @@ const FormLayoutsAlignment = () => {
         </Form>
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
-export default FormLayoutsAlignment
+export default FormLayoutsAlignment;

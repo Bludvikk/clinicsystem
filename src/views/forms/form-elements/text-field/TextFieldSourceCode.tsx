@@ -16,7 +16,7 @@ const TextFieldColor = () => {
 export default TextFieldColor
 `}</code>
   </pre>
-)
+);
 
 export const TextFieldControlledUncontrolledJSXCode = (
   <pre className='language-jsx'>
@@ -45,7 +45,7 @@ const TextFieldControlledUncontrolled = () => {
 export default TextFieldControlledUncontrolled
 `}</code>
   </pre>
-)
+);
 
 export const TextFieldComponentsJSXCode = (
   <pre className='language-jsx'>
@@ -104,7 +104,7 @@ const TextFieldComponents = () => {
 export default TextFieldComponents
 `}</code>
   </pre>
-)
+);
 
 export const TextFieldCustomizedJSXCode = (
   <pre className='language-jsx'>
@@ -161,7 +161,7 @@ const TextFieldCustomized = () => {
 export default TextFieldCustomized
 `}</code>
   </pre>
-)
+);
 
 export const TextFieldIconsJSXCode = (
   <pre className='language-jsx'>
@@ -219,7 +219,7 @@ const TextFieldIcons = () => {
 export default TextFieldIcons
 `}</code>
   </pre>
-)
+);
 
 export const TextFieldInputAdornmentJSXCode = (
   <pre className='language-jsx'>
@@ -309,7 +309,7 @@ const TextFieldInputAdornment = () => {
 export default TextFieldInputAdornment
 `}</code>
   </pre>
-)
+);
 
 export const TextFieldInputsJSXCode = (
   <pre className='language-jsx'>
@@ -330,7 +330,7 @@ const TextFieldInputs = () => {
 export default TextFieldInputs
 `}</code>
   </pre>
-)
+);
 
 export const TextFieldFormPropsJSXCode = (
   <pre className='language-jsx'>
@@ -370,7 +370,7 @@ const TextFieldFormProps = () => {
 export default TextFieldFormProps
 `}</code>
   </pre>
-)
+);
 
 export const TextFieldLayoutJSXCode = (
   <pre className='language-jsx'>
@@ -411,7 +411,7 @@ const TextFieldLayout = () => {
 export default TextFieldLayout
 `}</code>
   </pre>
-)
+);
 
 export const TextFieldSizesJSXCode = (
   <pre className='language-jsx'>
@@ -430,7 +430,7 @@ const TextFieldSizes = () => {
 export default TextFieldSizes
 `}</code>
   </pre>
-)
+);
 
 export const TextFieldVariantJSXCode = (
   <pre className='language-jsx'>
@@ -450,7 +450,7 @@ const TextFieldVariant = () => {
 export default TextFieldVariant
 `}</code>
   </pre>
-)
+);
 
 export const TextFieldValidationJSXCode = (
   <pre className='language-jsx'>
@@ -475,7 +475,7 @@ const TextFieldValidation = () => {
 export default TextFieldValidation
 `}</code>
   </pre>
-)
+);
 
 export const TextFieldComponentsTSXCode = (
   <pre className='language-jsx'>
@@ -534,7 +534,7 @@ const TextFieldComponents = () => {
 export default TextFieldComponents
 `}</code>
   </pre>
-)
+);
 
 export const TextFieldControlledUncontrolledTSXCode = (
   <pre className='language-jsx'>
@@ -563,7 +563,7 @@ const TextFieldControlledUncontrolled = () => {
 export default TextFieldControlledUncontrolled
 `}</code>
   </pre>
-)
+);
 
 export const TextFieldCustomizedTSXCode = (
   <pre className='language-jsx'>
@@ -620,7 +620,7 @@ const TextFieldCustomized = () => {
 export default TextFieldCustomized
 `}</code>
   </pre>
-)
+);
 
 export const TextFieldInputsTSXCode = (
   <pre className='language-jsx'>
@@ -641,7 +641,7 @@ const TextFieldInputs = () => {
 export default TextFieldInputs
 `}</code>
   </pre>
-)
+);
 
 export const TextFieldFormPropsTSXCode = (
   <pre className='language-jsx'>
@@ -681,7 +681,7 @@ const TextFieldFormProps = () => {
 export default TextFieldFormProps
 `}</code>
   </pre>
-)
+);
 
 export const TextFieldIconsTSXCode = (
   <pre className='language-jsx'>
@@ -739,7 +739,7 @@ const TextFieldIcons = () => {
 export default TextFieldIcons
 `}</code>
   </pre>
-)
+);
 
 export const TextFieldSizesTSXCode = (
   <pre className='language-jsx'>
@@ -758,7 +758,7 @@ const TextFieldSizes = () => {
 export default TextFieldSizes
 `}</code>
   </pre>
-)
+);
 
 export const TextFieldLayoutTSXCode = (
   <pre className='language-jsx'>
@@ -799,7 +799,7 @@ const TextFieldLayout = () => {
 export default TextFieldLayout
 `}</code>
   </pre>
-)
+);
 
 export const TextFieldInputAdornmentTSXCode = (
   <pre className='language-jsx'>
@@ -895,7 +895,7 @@ const TextFieldInputAdornment = () => {
 export default TextFieldInputAdornment
 `}</code>
   </pre>
-)
+);
 
 export const TextFieldColorTSXCode = (
   <pre className='language-jsx'>
@@ -915,7 +915,7 @@ const TextFieldColor = () => {
 export default TextFieldColor
 `}</code>
   </pre>
-)
+);
 
 export const TextFieldValidationTSXCode = (
   <pre className='language-jsx'>
@@ -940,7 +940,7 @@ const TextFieldValidation = () => {
 export default TextFieldValidation
 `}</code>
   </pre>
-)
+);
 
 export const TextFieldVariantTSXCode = (
   <pre className='language-jsx'>
@@ -960,4 +960,4 @@ const TextFieldVariant = () => {
 export default TextFieldVariant
 `}</code>
   </pre>
-)
+);

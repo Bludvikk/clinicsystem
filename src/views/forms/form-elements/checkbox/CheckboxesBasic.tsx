@@ -1,7 +1,7 @@
 // ** MUI Imports
-import Checkbox from '@mui/material/Checkbox'
-import FormGroup from '@mui/material/FormGroup'
-import FormControlLabel from '@mui/material/FormControlLabel'
+import Checkbox from '@mui/material/Checkbox';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 const CheckboxesBasic = () => {
   return (
@@ -15,7 +15,7 @@ const CheckboxesBasic = () => {
       />
       <FormControlLabel disabled label='Disabled Unchecked' control={<Checkbox name='basic-disabled-unchecked' />} />
     </FormGroup>
-  )
-}
+  );
+};
 
-export default CheckboxesBasic
+export default CheckboxesBasic;

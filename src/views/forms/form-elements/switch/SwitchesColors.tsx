@@ -1,7 +1,7 @@
 // ** MUI Imports
-import Switch from '@mui/material/Switch'
-import FormGroup from '@mui/material/FormGroup'
-import FormControlLabel from '@mui/material/FormControlLabel'
+import Switch from '@mui/material/Switch';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 const SwitchesColors = () => {
   return (
@@ -13,7 +13,7 @@ const SwitchesColors = () => {
       <FormControlLabel control={<Switch defaultChecked color='warning' />} label='Warning' />
       <FormControlLabel control={<Switch defaultChecked color='info' />} label='Info' />
     </FormGroup>
-  )
-}
+  );
+};
 
-export default SwitchesColors
+export default SwitchesColors;

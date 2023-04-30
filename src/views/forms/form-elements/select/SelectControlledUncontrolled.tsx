@@ -1,19 +1,19 @@
 // ** React Imports
-import { useState } from 'react'
+import { useState } from 'react';
 
 // ** MUI Imports
-import MenuItem from '@mui/material/MenuItem'
-import InputLabel from '@mui/material/InputLabel'
-import FormControl from '@mui/material/FormControl'
-import Select, { SelectChangeEvent } from '@mui/material/Select'
+import MenuItem from '@mui/material/MenuItem';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 const SelectControlledUncontrolled = () => {
   // ** State
-  const [value, setValue] = useState<string>('')
+  const [value, setValue] = useState<string>('');
 
   const handleChange = (event: SelectChangeEvent) => {
-    setValue(event.target.value as string)
-  }
+    setValue(event.target.value as string);
+  };
 
   return (
     <div className='demo-space-x'>
@@ -46,7 +46,7 @@ const SelectControlledUncontrolled = () => {
         </Select>
       </FormControl>
     </div>
-  )
-}
+  );
+};
 
-export default SelectControlledUncontrolled
+export default SelectControlledUncontrolled;

@@ -1,10 +1,10 @@
 // ** MUI Imports
-import Box from '@mui/material/Box'
-import Select from '@mui/material/Select'
-import MenuItem from '@mui/material/MenuItem'
-import InputLabel from '@mui/material/InputLabel'
-import FormControl from '@mui/material/FormControl'
-import FormHelperText from '@mui/material/FormHelperText'
+import Box from '@mui/material/Box';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
 
 const SelectProps = () => {
   return (
@@ -121,7 +121,7 @@ const SelectProps = () => {
         <FormHelperText>Required</FormHelperText>
       </FormControl>
     </Box>
-  )
-}
+  );
+};
 
-export default SelectProps
+export default SelectProps;

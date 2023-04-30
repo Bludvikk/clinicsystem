@@ -1,14 +1,14 @@
 // ** MUI Imports
-import { styled } from '@mui/material/styles'
-import Box, { BoxProps } from '@mui/material/Box'
+import { styled } from '@mui/material/styles';
+import Box, { BoxProps } from '@mui/material/Box';
 
 // ** Hook Import
-import { useSettings } from 'src/@core/hooks/useSettings'
+import { useSettings } from 'src/@core/hooks/useSettings';
 
 const ReactHotToast = styled(Box)<BoxProps>(({ theme }) => {
   // ** Hook & Var
-  const { settings } = useSettings()
-  const { layout, navHidden } = settings
+  const { settings } = useSettings();
+  const { layout, navHidden } = settings;
 
   return {
     '& > div': {
@@ -34,7 +34,7 @@ const ReactHotToast = styled(Box)<BoxProps>(({ theme }) => {
         height: 14
       }
     }
-  }
-})
+  };
+});
 
-export default ReactHotToast
+export default ReactHotToast;

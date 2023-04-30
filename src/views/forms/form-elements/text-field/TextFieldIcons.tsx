@@ -1,13 +1,13 @@
 // ** MUI Imports
-import Grid from '@mui/material/Grid'
-import Input from '@mui/material/Input'
-import TextField from '@mui/material/TextField'
-import InputLabel from '@mui/material/InputLabel'
-import FormControl from '@mui/material/FormControl'
-import InputAdornment from '@mui/material/InputAdornment'
+import Grid from '@mui/material/Grid';
+import Input from '@mui/material/Input';
+import TextField from '@mui/material/TextField';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import InputAdornment from '@mui/material/InputAdornment';
 
 // ** Icon Imports
-import Icon from 'src/@core/components/icon'
+import Icon from 'src/@core/components/icon';
 
 const TextFieldIcons = () => {
   return (
@@ -46,7 +46,7 @@ const TextFieldIcons = () => {
         </Grid>
       </div>
     </form>
-  )
-}
+  );
+};
 
-export default TextFieldIcons
+export default TextFieldIcons;

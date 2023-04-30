@@ -1,60 +1,60 @@
 // ** React Imports
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react';
 
 // ** MUI Imports
-import TextField from '@mui/material/TextField'
-import Autocomplete from '@mui/material/Autocomplete'
-import CircularProgress from '@mui/material/CircularProgress'
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
+import CircularProgress from '@mui/material/CircularProgress';
 
 // ** Third Party Imports
-import axios from 'axios'
+import axios from 'axios';
 
 interface FilmType {
-  year: number
-  title: string
+  year: number;
+  title: string;
 }
 
 const sleep = (delay = 0) => {
   return new Promise(resolve => {
-    setTimeout(resolve, delay)
-  })
-}
+    setTimeout(resolve, delay);
+  });
+};
 
 const AutocompleteAsynchronousRequest = () => {
   // ** States
-  const [open, setOpen] = useState<boolean>(false)
-  const [options, setOptions] = useState<FilmType[]>([])
+  const [open, setOpen] = useState<boolean>(false);
+  const [options, setOptions] = useState<FilmType[]>([]);
 
-  const loading = open && options.length === 0
+  const loading = open && options.length === 0;
 
   useEffect(() => {
-    let active = true
+    let active = true;
 
     if (!loading) {
-      return undefined
+      return undefined;
     }
 
     const fetchData = async () => {
-      const response = await axios.get('/forms/autocomplete')
-      await sleep(1000)
-      const top100Films = await response.data
+      const response = await axios.get('/forms/autocomplete');
+      await sleep(1000);
+      const top100Films = await response.data;
 
       if (active) {
-        setOptions(Object.keys(top100Films).map(key => top100Films[key]) as FilmType[])
+        setOptions(Object.keys(top100Films).map(key => top100Films[key]) as FilmType[]);
       }
-    }
-    fetchData()
+    };
+    fetchData();
 
     return () => {
-      active = false
-    }
-  }, [loading])
+      active = false;
+    };
+  }, [loading]);
 
   useEffect(() => {
     if (!open) {
-      setOptions([])
+      setOptions([]);
     }
-  }, [open])
+  }, [open]);
 
   return (
     <Autocomplete
@@ -82,7 +82,7 @@ const AutocompleteAsynchronousRequest = () => {
         />
       )}
     />
-  )
-}
+  );
+};
 
-export default AutocompleteAsynchronousRequest
+export default AutocompleteAsynchronousRequest;

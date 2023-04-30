@@ -1,8 +1,8 @@
 // ** MUI Imports
-import Select from '@mui/material/Select'
-import MenuItem from '@mui/material/MenuItem'
-import InputLabel from '@mui/material/InputLabel'
-import FormControl from '@mui/material/FormControl'
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
 
 const SelectVariants = () => {
   return (
@@ -43,7 +43,7 @@ const SelectVariants = () => {
         </Select>
       </FormControl>
     </div>
-  )
-}
+  );
+};
 
-export default SelectVariants
+export default SelectVariants;

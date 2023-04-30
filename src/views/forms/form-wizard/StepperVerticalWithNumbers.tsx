@@ -1,27 +1,27 @@
 // ** React Imports
-import { useState } from 'react'
+import { useState } from 'react';
 
 // ** MUI Imports
-import Box from '@mui/material/Box'
-import Card from '@mui/material/Card'
-import Step from '@mui/material/Step'
-import Button from '@mui/material/Button'
-import Stepper from '@mui/material/Stepper'
-import StepLabel from '@mui/material/StepLabel'
-import CardHeader from '@mui/material/CardHeader'
-import Typography from '@mui/material/Typography'
-import CardContent from '@mui/material/CardContent'
-import StepContent from '@mui/material/StepContent'
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import Step from '@mui/material/Step';
+import Button from '@mui/material/Button';
+import Stepper from '@mui/material/Stepper';
+import StepLabel from '@mui/material/StepLabel';
+import CardHeader from '@mui/material/CardHeader';
+import Typography from '@mui/material/Typography';
+import CardContent from '@mui/material/CardContent';
+import StepContent from '@mui/material/StepContent';
 
 // ** Third Party Imports
-import clsx from 'clsx'
-import toast from 'react-hot-toast'
+import clsx from 'clsx';
+import toast from 'react-hot-toast';
 
 // ** Custom Components Imports
-import StepperCustomDot from './StepperCustomDot'
+import StepperCustomDot from './StepperCustomDot';
 
 // ** Styled Component
-import StepperWrapper from 'src/@core/styles/mui/stepper'
+import StepperWrapper from 'src/@core/styles/mui/stepper';
 
 const steps = [
   {
@@ -42,25 +42,25 @@ const steps = [
     description:
       'Jelly lollipop halvah bear claw jujubes macaroon candy canes. Soufflé halvah lollipop liquorice macaroon powder. Cookie topping pastry oat cake caramels bonbon. Sesame snaps sweet cookie macaroon soufflé pudding. Chocolate donut macaroon muffin donut biscuit marzipan halvah. Bear claw biscuit chocolate cake chupa chups oat cake bear claw cupcake tiramisu apple pie. Carrot cake bear claw marshmallow sweet pudding toffee.'
   }
-]
+];
 
 const StepperVerticalWithNumbers = () => {
   // ** States
-  const [activeStep, setActiveStep] = useState<number>(0)
+  const [activeStep, setActiveStep] = useState<number>(0);
 
   // Handle Stepper
   const handleBack = () => {
-    setActiveStep(prevActiveStep => prevActiveStep - 1)
-  }
+    setActiveStep(prevActiveStep => prevActiveStep - 1);
+  };
   const handleNext = () => {
-    setActiveStep(prevActiveStep => prevActiveStep + 1)
+    setActiveStep(prevActiveStep => prevActiveStep + 1);
     if (activeStep === steps.length - 1) {
-      toast.success('Completed All Steps!!')
+      toast.success('Completed All Steps!!');
     }
-  }
+  };
   const handleReset = () => {
-    setActiveStep(0)
-  }
+    setActiveStep(0);
+  };
 
   return (
     <Card>
@@ -98,7 +98,7 @@ const StepperVerticalWithNumbers = () => {
                     </div>
                   </StepContent>
                 </Step>
-              )
+              );
             })}
           </Stepper>
         </StepperWrapper>
@@ -112,7 +112,7 @@ const StepperVerticalWithNumbers = () => {
         )}
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
-export default StepperVerticalWithNumbers
+export default StepperVerticalWithNumbers;

@@ -1,41 +1,41 @@
 // ** React Imports
-import { ChangeEvent, SyntheticEvent, useState } from 'react'
+import { ChangeEvent, SyntheticEvent, useState } from 'react';
 
 // ** MUI Imports
-import Grid from '@mui/material/Grid'
-import Radio from '@mui/material/Radio'
-import Select from '@mui/material/Select'
-import Button from '@mui/material/Button'
-import Divider from '@mui/material/Divider'
-import MenuItem from '@mui/material/MenuItem'
-import { styled } from '@mui/material/styles'
-import Accordion from '@mui/material/Accordion'
-import TextField from '@mui/material/TextField'
-import FormLabel from '@mui/material/FormLabel'
-import Typography from '@mui/material/Typography'
-import InputLabel from '@mui/material/InputLabel'
-import RadioGroup from '@mui/material/RadioGroup'
-import Box, { BoxProps } from '@mui/material/Box'
-import FormControl from '@mui/material/FormControl'
-import AccordionSummary from '@mui/material/AccordionSummary'
-import AccordionDetails from '@mui/material/AccordionDetails'
-import FormControlLabel from '@mui/material/FormControlLabel'
+import Grid from '@mui/material/Grid';
+import Radio from '@mui/material/Radio';
+import Select from '@mui/material/Select';
+import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
+import MenuItem from '@mui/material/MenuItem';
+import { styled } from '@mui/material/styles';
+import Accordion from '@mui/material/Accordion';
+import TextField from '@mui/material/TextField';
+import FormLabel from '@mui/material/FormLabel';
+import Typography from '@mui/material/Typography';
+import InputLabel from '@mui/material/InputLabel';
+import RadioGroup from '@mui/material/RadioGroup';
+import Box, { BoxProps } from '@mui/material/Box';
+import FormControl from '@mui/material/FormControl';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 // ** Third Party Imports
-import Payment from 'payment'
-import Cards, { Focused } from 'react-credit-cards'
+import Payment from 'payment';
+import Cards, { Focused } from 'react-credit-cards';
 
 // ** Icon Imports
-import Icon from 'src/@core/components/icon'
+import Icon from 'src/@core/components/icon';
 
 // ** Styled Component Imports
-import CardWrapper from 'src/@core/styles/libs/react-credit-cards'
+import CardWrapper from 'src/@core/styles/libs/react-credit-cards';
 
 // ** Util Import
-import { formatCVC, formatExpirationDate, formatCreditCardNumber } from 'src/@core/utils/format'
+import { formatCVC, formatExpirationDate, formatCreditCardNumber } from 'src/@core/utils/format';
 
 // ** Styles Import
-import 'react-credit-cards/es/styles-compiled.css'
+import 'react-credit-cards/es/styles-compiled.css';
 
 // Styled component for the Box wrappers in Delivery Options' accordion
 const BoxWrapper = styled(Box)<BoxProps>(({ theme }) => ({
@@ -53,37 +53,37 @@ const BoxWrapper = styled(Box)<BoxProps>(({ theme }) => ({
     borderBottomLeftRadius: theme.shape.borderRadius,
     borderBottomRightRadius: theme.shape.borderRadius
   }
-}))
+}));
 
 const FormLayoutsCollapsible = () => {
   // ** States
-  const [cvc, setCvc] = useState<string>('')
-  const [name, setName] = useState<string>('')
-  const [focus, setFocus] = useState<string>('')
-  const [expiry, setExpiry] = useState<string>('')
-  const [cardNumber, setCardNumber] = useState<string>('')
-  const [option, setOption] = useState<string>('standard')
-  const [paymentMethod, setPaymentMethod] = useState<string>('card')
-  const [expanded, setExpanded] = useState<string | false>('panel1')
+  const [cvc, setCvc] = useState<string>('');
+  const [name, setName] = useState<string>('');
+  const [focus, setFocus] = useState<string>('');
+  const [expiry, setExpiry] = useState<string>('');
+  const [cardNumber, setCardNumber] = useState<string>('');
+  const [option, setOption] = useState<string>('standard');
+  const [paymentMethod, setPaymentMethod] = useState<string>('card');
+  const [expanded, setExpanded] = useState<string | false>('panel1');
 
   const handleChange = (panel: string) => (event: SyntheticEvent, isExpanded: boolean) => {
-    setExpanded(isExpanded ? panel : false)
-  }
+    setExpanded(isExpanded ? panel : false);
+  };
 
-  const handleBlur = () => setFocus('')
+  const handleBlur = () => setFocus('');
 
   const handleInputChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
     if (target.name === 'number') {
-      target.value = formatCreditCardNumber(target.value, Payment)
-      setCardNumber(target.value)
+      target.value = formatCreditCardNumber(target.value, Payment);
+      setCardNumber(target.value);
     } else if (target.name === 'expiry') {
-      target.value = formatExpirationDate(target.value)
-      setExpiry(target.value)
+      target.value = formatExpirationDate(target.value);
+      setExpiry(target.value);
     } else if (target.name === 'cvc') {
-      target.value = formatCVC(target.value, cardNumber, Payment)
-      setCvc(target.value)
+      target.value = formatCVC(target.value, cardNumber, Payment);
+      setCvc(target.value);
     }
-  }
+  };
 
   return (
     <form onSubmit={e => e.preventDefault()}>
@@ -334,7 +334,7 @@ const FormLayoutsCollapsible = () => {
         </AccordionDetails>
       </Accordion>
     </form>
-  )
-}
+  );
+};
 
-export default FormLayoutsCollapsible
+export default FormLayoutsCollapsible;

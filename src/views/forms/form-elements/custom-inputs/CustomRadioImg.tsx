@@ -1,14 +1,14 @@
 // ** React Imports
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useState } from 'react';
 
 // ** MUI Imports
-import Grid from '@mui/material/Grid'
+import Grid from '@mui/material/Grid';
 
 // ** Type Import
-import { CustomRadioImgData } from 'src/@core/components/custom-radio/types'
+import { CustomRadioImgData } from 'src/@core/components/custom-radio/types';
 
 // ** Demo Components Imports
-import CustomRadioImg from 'src/@core/components/custom-radio/image'
+import CustomRadioImg from 'src/@core/components/custom-radio/image';
 
 const data: CustomRadioImgData[] = [
   {
@@ -24,22 +24,22 @@ const data: CustomRadioImgData[] = [
     value: 'flowers',
     img: '/images/pages/background-5.jpg'
   }
-]
+];
 
 const CustomRadioWithImages = () => {
   const initialSelected: string = data.filter(item => item.isSelected)[data.filter(item => item.isSelected).length - 1]
-    .value
+    .value;
 
   // ** State
-  const [selected, setSelected] = useState<string>(initialSelected)
+  const [selected, setSelected] = useState<string>(initialSelected);
 
   const handleChange = (prop: string | ChangeEvent<HTMLInputElement>) => {
     if (typeof prop === 'string') {
-      setSelected(prop)
+      setSelected(prop);
     } else {
-      setSelected((prop.target as HTMLInputElement).value)
+      setSelected((prop.target as HTMLInputElement).value);
     }
-  }
+  };
 
   return (
     <Grid container spacing={4}>
@@ -54,7 +54,7 @@ const CustomRadioWithImages = () => {
         />
       ))}
     </Grid>
-  )
-}
+  );
+};
 
-export default CustomRadioWithImages
+export default CustomRadioWithImages;

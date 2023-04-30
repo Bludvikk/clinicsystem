@@ -1,17 +1,13 @@
-import { FilterQueryInputType } from "@/utils/common.type";
-import {
-  FilterData,
-  InvalidateQueries,
-  SetQueryDataDeleted,
-} from "@/utils/rq.context";
-import { trpc } from "@/utils/trpc";
+import { FilterQueryInputType } from '@/utils/common.type';
+import { FilterData, InvalidateQueries, SetQueryDataDeleted } from '@/utils/rq.context';
+import { trpc } from '@/utils/trpc';
 
 export const getPatients = (filterQuery?: FilterQueryInputType) => {
   const result = trpc.patient.list.useQuery(
     {},
     {
       staleTime: Infinity,
-      select: (data) => new FilterData(data, filterQuery).filter(),
+      select: data => new FilterData(data, filterQuery).filter()
     }
   );
 
@@ -20,14 +16,14 @@ export const getPatients = (filterQuery?: FilterQueryInputType) => {
 
 export const getPatient = ({ id }: FilterQueryInputType) => {
   const { data } = getPatients({ id });
-  return data?.find((row) => row.id === id);
+  return data?.find(row => row.id === id);
 };
 
 export const postPatient = () => {
   const mutation = trpc.patient.post.useMutation({
     onSuccess: () => {
-      InvalidateQueries({ queryKey: {}, routerKey: "patient" });
-    },
+      InvalidateQueries({ queryKey: {}, routerKey: 'patient' });
+    }
   });
 
   return mutation;
@@ -38,10 +34,10 @@ export const deletePatient = () => {
     onSuccess: ({ id }) => {
       SetQueryDataDeleted({
         queryKey: {},
-        routerKey: "patient",
-        filterQuery: { id },
+        routerKey: 'patient',
+        filterQuery: { id }
       });
-    },
+    }
   });
 
   return mutation;

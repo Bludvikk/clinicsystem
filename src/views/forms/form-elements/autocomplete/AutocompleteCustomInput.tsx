@@ -1,7 +1,7 @@
 // ** MUI Imports
-import Autocomplete from '@mui/material/Autocomplete'
+import Autocomplete from '@mui/material/Autocomplete';
 
-const options = ['Option 1', 'Option 2']
+const options = ['Option 1', 'Option 2'];
 
 const AutocompleteCustomInput = () => {
   return (
@@ -22,7 +22,7 @@ const AutocompleteCustomInput = () => {
         }
       }}
     />
-  )
-}
+  );
+};
 
-export default AutocompleteCustomInput
+export default AutocompleteCustomInput;

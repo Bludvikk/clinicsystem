@@ -1,7 +1,7 @@
 // ** MUI Imports
-import Radio from '@mui/material/Radio'
-import RadioGroup from '@mui/material/RadioGroup'
-import FormControlLabel from '@mui/material/FormControlLabel'
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 const RadioColor = () => {
   return (
@@ -13,7 +13,7 @@ const RadioColor = () => {
       <FormControlLabel value='warning' label='Warning' control={<Radio color='warning' />} />
       <FormControlLabel value='info' label='Info' control={<Radio color='info' />} />
     </RadioGroup>
-  )
-}
+  );
+};
 
-export default RadioColor
+export default RadioColor;

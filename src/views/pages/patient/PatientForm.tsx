@@ -3,11 +3,11 @@ import {
   IAddPatient,
   IMedication,
   addMedicationSchema,
-  PatientUnionFieldType,
-} from "@/server/schema/patient";
-import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Box } from "@mui/system";
+  PatientUnionFieldType
+} from '@/server/schema/patient';
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Box } from '@mui/system';
 
 import {
   Button,
@@ -19,65 +19,64 @@ import {
   MenuItem,
   Select,
   TextField,
-  Typography,
-} from "@mui/material";
-import { DatePicker } from "@mui/x-date-pickers";
+  Typography
+} from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers';
 
-import { ChangeEvent, FormEvent, useEffect, useId, useState } from "react";
-import { AgeFromDate } from "age-calculator";
+import { ChangeEvent, FormEvent, useEffect, useId, useState } from 'react';
+import { AgeFromDate } from 'age-calculator';
 
-import { postPatient } from "@/server/hooks/patient";
-import { toast } from "react-hot-toast";
-import { getReferences } from "@/server/hooks/reference";
-import { FormControlPropsType } from "@/utils/common.type";
-import { FormObjectComponent } from "@/utils/form.component";
+import { postPatient } from '@/server/hooks/patient';
+import { toast } from 'react-hot-toast';
+import { getReferences } from '@/server/hooks/reference';
+import { FormControlPropsType } from '@/utils/common.type';
+import { FormObjectComponent } from '@/utils/form.component';
 
 const PatientForm = () => {
   const [medications, setMedications] = useState<IMedication[]>([]);
 
-  const { mutateAsync: postPatientMutateAsync, status: postPatientStatus } =
-    postPatient();
+  const { mutateAsync: postPatientMutateAsync, status: postPatientStatus } = postPatient();
 
   const { data: referencesData, status: referencesDataStatus } = getReferences({
-    entities: [1, 2, 3],
+    entities: [1, 2, 3]
   });
 
   const defaultValues = {
-    firstName: "",
-    lastName: "",
-    middleInitial: "",
-    address: "",
+    firstName: '',
+    lastName: '',
+    middleInitial: '',
+    address: '',
     dateOfBirth: new Date(),
     civilStatusId: 0,
     age: 0,
     occupationId: 0,
     genderId: 0,
-    contactNumber: "",
+    contactNumber: '',
     familyHistory: {
       diseases: [],
-      others: "N/A",
+      others: 'N/A'
     },
     personalHistory: {
       smoking: 0,
       alcohol: 0,
-      currentHealthCondition: "",
-      medications: [],
+      currentHealthCondition: '',
+      medications: []
     },
     pastMedicalHistory: {
-      hospitalized: "N/A",
-      injuries: "N/A",
-      surgeries: "N/A",
-      allergies: "N/A",
-      measles: "N/A",
-      chickenPox: "N/A",
-      others: "N/A",
+      hospitalized: 'N/A',
+      injuries: 'N/A',
+      surgeries: 'N/A',
+      allergies: 'N/A',
+      measles: 'N/A',
+      chickenPox: 'N/A',
+      others: 'N/A'
     },
     obGyne: {
       menstrualCycle: new Date(),
       days: 0,
       p: 0,
-      g: 0,
-    },
+      g: 0
+    }
   };
 
   const {
@@ -87,49 +86,44 @@ const PatientForm = () => {
     setValue,
     getValues,
     reset,
-    formState: { errors },
+    formState: { errors }
   } = useForm<IAddPatient>({
     defaultValues,
-    mode: "onChange",
-    resolver: zodResolver(addPatientSchema),
+    mode: 'onChange',
+    resolver: zodResolver(addPatientSchema)
   });
 
   const [age, setAge] = useState(0);
-  const dateOfBirthWatch = watch("dateOfBirth");
+  const dateOfBirthWatch = watch('dateOfBirth');
 
   const {
     reset: reset2,
     control: control2,
     handleSubmit: handleSubmit2,
     watch: watch2,
-    formState: { errors: errors2 },
+    formState: { errors: errors2 }
   } = useForm<IMedication>({
     defaultValues: {
-      brandName: "",
-      dosage: "",
-      generic: "",
+      brandName: '',
+      dosage: '',
+      generic: ''
     },
-    mode: "onChange",
-    resolver: zodResolver(addMedicationSchema),
+    mode: 'onChange',
+    resolver: zodResolver(addMedicationSchema)
   });
 
-  const medicationOnSubmitHandler: SubmitHandler<IMedication> = (
-    data: IMedication,
-    e: any
-  ) => {
+  const medicationOnSubmitHandler: SubmitHandler<IMedication> = (data: IMedication, e: any) => {
     reset2();
-    setMedications((prev) => [...prev, { ...data }]);
+    setMedications(prev => [...prev, { ...data }]);
   };
 
-  const addPatientOnSubmitHandler: SubmitHandler<IAddPatient> = async (
-    data: IAddPatient
-  ) => {
+  const addPatientOnSubmitHandler: SubmitHandler<IAddPatient> = async (data: IAddPatient) => {
     try {
       const result = await postPatientMutateAsync(data);
       if (result.data) {
         toast.success(result.message);
       } else {
-        toast.error("something went wrong.");
+        toast.error('something went wrong.');
       }
       reset();
     } catch (err: any) {
@@ -138,84 +132,75 @@ const PatientForm = () => {
   };
 
   const handleFamilyHistoryDisease = (e: ChangeEvent<HTMLInputElement>) => {
-    const currentDiseasesValue = getValues("familyHistory.diseases");
+    const currentDiseasesValue = getValues('familyHistory.diseases');
 
-    if (e.target.checked)
-      setValue("familyHistory.diseases", [
-        ...currentDiseasesValue,
-        parseInt(e.target.value),
-      ]);
+    if (e.target.checked) setValue('familyHistory.diseases', [...currentDiseasesValue, parseInt(e.target.value)]);
     else {
-      const filterValue = currentDiseasesValue.filter(
-        (value) => value !== parseInt(e.target.value)
-      );
-      setValue("familyHistory.diseases", [...filterValue]);
+      const filterValue = currentDiseasesValue.filter(value => value !== parseInt(e.target.value));
+      setValue('familyHistory.diseases', [...filterValue]);
     }
   };
 
   console.log(errors);
 
   useEffect(() => {
-    setValue("personalHistory.medications", medications);
+    setValue('personalHistory.medications', medications);
   }, [medications]);
 
   useEffect(() => {
-    setValue("age", new AgeFromDate(getValues("dateOfBirth")).age);
+    setValue('age', new AgeFromDate(getValues('dateOfBirth')).age);
   }, [dateOfBirthWatch]);
 
-  const PATIENT_PANEL = ["General"] as const;
-  const PATIENT_FIELDS: Record<
-    typeof PATIENT_PANEL[number],
-    FormControlPropsType<PatientUnionFieldType>[]
-  > = {
+  const PATIENT_PANEL = ['General'] as const;
+  const PATIENT_FIELDS: Record<(typeof PATIENT_PANEL)[number], FormControlPropsType<PatientUnionFieldType>[]> = {
     General: [
       {
-        label: "First Name",
-        dbField: "firstName",
-        type: "textField",
+        label: 'First Name',
+        dbField: 'firstName',
+        type: 'textField',
         required: true,
         autoFocus: true,
-        extendedProps: { textFieldAttribute: { sx: { width: 200 } } },
+        extendedProps: { textFieldAttribute: { sx: { width: 200 } } }
       },
       {
-        label: "Last Name",
-        dbField: "lastName",
-        type: "textField",
+        label: 'Last Name',
+        dbField: 'lastName',
+        type: 'textField',
         required: true,
         extendedProps: {
           textFieldAttribute: {
-            margin: "dense",
-            sx: { backgroundColor: "red" },
-          },
-        },
+            margin: 'dense',
+            sx: { backgroundColor: 'red' }
+          }
+        }
       },
       {
-        label: "Middle Initial",
-        dbField: "middleInitial",
-        type: "textField",
+        label: 'Middle Initial',
+        dbField: 'middleInitial',
+        type: 'textField',
         required: true,
         extendedProps: {
-          textFieldAttribute: { margin: "dense", rows: 5, multiline: true },
-        },
+          textFieldAttribute: { margin: 'dense', rows: 5, multiline: true }
+        }
       },
       {
-        label: "Gender",
-        dbField: "genderId",
-        type: "dropDown",
+        label: 'Gender',
+        dbField: 'genderId',
+        type: 'dropDown',
         required: true,
         autoFocus: true,
         entityId: 1,
-        extendedProps: {},
+        extendedProps: {}
       },
       {
-        label: "Date of Birth",
-        type: "datePicker",
-        dbField: "dateOfBirth",
+        label: 'Date of Birth',
+        type: 'datePicker',
+        dbField: 'dateOfBirth',
         autoFocus: true,
         required: true,
-        extendedProps: {},
-      },
-    ],
+        extendedProps: {}
+      }
+    ]
   };
 
   return (
@@ -812,14 +797,9 @@ const PatientForm = () => {
 
     <div>
       <pre>{JSON.stringify(watch(), null, 2)}</pre>
-      {PATIENT_FIELDS["General"].map((obj, index) => (
+      {PATIENT_FIELDS['General'].map((obj, index) => (
         <Grid key={obj.dbField} item sm={6} xs={12}>
-          <FormObjectComponent
-            key={index}
-            objFieldProp={obj}
-            control={control}
-            errors={errors}
-          />
+          <FormObjectComponent key={index} objFieldProp={obj} control={control} errors={errors} />
         </Grid>
       ))}
     </div>

@@ -1,25 +1,25 @@
 // ** React Imports
-import { useState } from 'react'
+import { useState } from 'react';
 
 // ** MUI Imports
-import Box from '@mui/material/Box'
+import Box from '@mui/material/Box';
 
 // ** Third Party Imports
-import addDays from 'date-fns/addDays'
-import setHours from 'date-fns/setHours'
-import setMinutes from 'date-fns/setMinutes'
-import DatePicker, { ReactDatePickerProps } from 'react-datepicker'
+import addDays from 'date-fns/addDays';
+import setHours from 'date-fns/setHours';
+import setMinutes from 'date-fns/setMinutes';
+import DatePicker, { ReactDatePickerProps } from 'react-datepicker';
 
 // ** Types
-import { DateType } from 'src/types/forms/reactDatepickerTypes'
+import { DateType } from 'src/types/forms/reactDatepickerTypes';
 
 // ** Custom Component Imports
-import CustomInput from './PickersCustomInput'
+import CustomInput from './PickersCustomInput';
 
 const PickersSpecificRange = ({ popperPlacement }: { popperPlacement: ReactDatePickerProps['popperPlacement'] }) => {
   // ** States
-  const [date, setDate] = useState<DateType>(new Date())
-  const [time, setTime] = useState<DateType>(new Date())
+  const [date, setDate] = useState<DateType>(new Date());
+  const [time, setTime] = useState<DateType>(new Date());
 
   return (
     <Box sx={{ display: 'flex', flexWrap: 'wrap' }} className='demo-space-x'>
@@ -48,7 +48,7 @@ const PickersSpecificRange = ({ popperPlacement }: { popperPlacement: ReactDateP
         />
       </div>
     </Box>
-  )
-}
+  );
+};
 
-export default PickersSpecificRange
+export default PickersSpecificRange;

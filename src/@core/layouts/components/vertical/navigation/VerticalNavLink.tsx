@@ -1,44 +1,44 @@
 // ** React Imports
-import { ElementType } from 'react'
+import { ElementType } from 'react';
 
 // ** Next Imports
-import Link from 'next/link'
-import { useRouter } from 'next/router'
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 // ** MUI Imports
-import Chip from '@mui/material/Chip'
-import ListItem from '@mui/material/ListItem'
-import Typography from '@mui/material/Typography'
-import Box, { BoxProps } from '@mui/material/Box'
-import ListItemIcon from '@mui/material/ListItemIcon'
-import { styled, useTheme } from '@mui/material/styles'
-import ListItemButton, { ListItemButtonProps } from '@mui/material/ListItemButton'
+import Chip from '@mui/material/Chip';
+import ListItem from '@mui/material/ListItem';
+import Typography from '@mui/material/Typography';
+import Box, { BoxProps } from '@mui/material/Box';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import { styled, useTheme } from '@mui/material/styles';
+import ListItemButton, { ListItemButtonProps } from '@mui/material/ListItemButton';
 
 // ** Configs Import
-import themeConfig from 'src/configs/themeConfig'
+import themeConfig from 'src/configs/themeConfig';
 
 // ** Types
-import { NavLink, NavGroup } from 'src/@core/layouts/types'
-import { Settings } from 'src/@core/context/settingsContext'
+import { NavLink, NavGroup } from 'src/@core/layouts/types';
+import { Settings } from 'src/@core/context/settingsContext';
 
 // ** Custom Components Imports
-import UserIcon from 'src/layouts/components/UserIcon'
-import Translations from 'src/layouts/components/Translations'
-import CanViewNavLink from 'src/layouts/components/acl/CanViewNavLink'
+import UserIcon from 'src/layouts/components/UserIcon';
+import Translations from 'src/layouts/components/Translations';
+import CanViewNavLink from 'src/layouts/components/acl/CanViewNavLink';
 
 // ** Util Import
-import { handleURLQueries } from 'src/@core/layouts/utils'
+import { handleURLQueries } from 'src/@core/layouts/utils';
 
 interface Props {
-  parent?: boolean
-  item: NavLink
-  navHover?: boolean
-  settings: Settings
-  navVisible?: boolean
-  collapsedNavWidth: number
-  navigationBorderWidth: number
-  toggleNavVisibility: () => void
-  isSubToSub?: NavGroup | undefined
+  parent?: boolean;
+  item: NavLink;
+  navHover?: boolean;
+  settings: Settings;
+  navVisible?: boolean;
+  collapsedNavWidth: number;
+  navigationBorderWidth: number;
+  toggleNavVisibility: () => void;
+  isSubToSub?: NavGroup | undefined;
 }
 
 // ** Styled Components
@@ -63,7 +63,7 @@ const MenuNavLink = styled(ListItemButton)<
       color: `${theme.palette.common.white} !important`
     }
   }
-}))
+}));
 
 const MenuItemTextMetaWrapper = styled(Box)<BoxProps>({
   width: '100%',
@@ -72,7 +72,7 @@ const MenuItemTextMetaWrapper = styled(Box)<BoxProps>({
   justifyContent: 'space-between',
   transition: 'opacity .25s ease-in-out',
   ...(themeConfig.menuTextTruncate && { overflow: 'hidden' })
-})
+});
 
 const VerticalNavLink = ({
   item,
@@ -86,24 +86,24 @@ const VerticalNavLink = ({
   navigationBorderWidth
 }: Props) => {
   // ** Hooks
-  const theme = useTheme()
-  const router = useRouter()
+  const theme = useTheme();
+  const router = useRouter();
 
   // ** Vars
-  const { mode, navCollapsed } = settings
+  const { mode, navCollapsed } = settings;
 
-  const icon = parent && !item.icon ? themeConfig.navSubItemIcon : item.icon
+  const icon = parent && !item.icon ? themeConfig.navSubItemIcon : item.icon;
 
   const conditionalIconColor = () => {
     if (mode === 'semi-dark') {
       return {
         color: `rgba(${theme.palette.customColors.dark}, ${parent ? 0.6 : 0.87})`
-      }
+      };
     } else
       return {
         color: parent ? 'text.secondary' : 'text.primary'
-      }
-  }
+      };
+  };
 
   const conditionalBgColor = () => {
     if (mode === 'semi-dark') {
@@ -111,17 +111,17 @@ const VerticalNavLink = ({
         '&:hover': {
           backgroundColor: `rgba(${theme.palette.customColors.dark}, 0.05)`
         }
-      }
-    } else return {}
-  }
+      };
+    } else return {};
+  };
 
   const isNavLinkActive = () => {
     if (router.pathname === item.path || handleURLQueries(router, item.path)) {
-      return true
+      return true;
     } else {
-      return false
+      return false;
     }
-  }
+  };
 
   return (
     <CanViewNavLink navLink={item}>
@@ -143,11 +143,11 @@ const VerticalNavLink = ({
           {...(item.openInNewTab ? { target: '_blank' } : null)}
           onClick={e => {
             if (item.path === undefined) {
-              e.preventDefault()
-              e.stopPropagation()
+              e.preventDefault();
+              e.stopPropagation();
             }
             if (navVisible) {
-              toggleNavVisibility()
+              toggleNavVisibility();
             }
           }}
           sx={{
@@ -200,7 +200,7 @@ const VerticalNavLink = ({
         </MenuNavLink>
       </ListItem>
     </CanViewNavLink>
-  )
-}
+  );
+};
 
-export default VerticalNavLink
+export default VerticalNavLink;

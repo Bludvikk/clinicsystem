@@ -1,6 +1,6 @@
 // ** MUI Imports
-import Slider from '@mui/material/Slider'
-import Typography from '@mui/material/Typography'
+import Slider from '@mui/material/Slider';
+import Typography from '@mui/material/Typography';
 
 const SliderBasic = () => {
   return (
@@ -10,7 +10,7 @@ const SliderBasic = () => {
       <Typography sx={{ fontWeight: 500 }}>Disabled Slider</Typography>
       <Slider disabled defaultValue={30} aria-labelledby='disabled-slider' />
     </div>
-  )
-}
+  );
+};
 
-export default SliderBasic
+export default SliderBasic;

@@ -1,6 +1,6 @@
 // ** MUI Imports
-import { styled } from '@mui/material/styles'
-import MuiSlider, { SliderProps } from '@mui/material/Slider'
+import { styled } from '@mui/material/styles';
+import MuiSlider, { SliderProps } from '@mui/material/Slider';
 
 const marks = [
   {
@@ -15,7 +15,7 @@ const marks = [
   {
     value: 100
   }
-]
+];
 
 // Styled Slider component
 const Slider = styled(MuiSlider)<SliderProps>(({ theme }) => ({
@@ -66,10 +66,10 @@ const Slider = styled(MuiSlider)<SliderProps>(({ theme }) => ({
       color: theme.palette.mode === 'dark' ? theme.palette.common.white : theme.palette.common.black
     }
   }
-}))
+}));
 
 const SliderCustomized = () => (
   <Slider marks={marks} defaultValue={60} valueLabelDisplay='on' aria-labelledby='customized-slider' />
-)
+);
 
-export default SliderCustomized
+export default SliderCustomized;

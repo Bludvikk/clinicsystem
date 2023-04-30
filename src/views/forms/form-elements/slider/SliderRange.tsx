@@ -1,9 +1,9 @@
 // ** MUI Imports
-import Slider from '@mui/material/Slider'
+import Slider from '@mui/material/Slider';
 
 const valuetext = (value: number) => {
-  return `${value}°C`
-}
+  return `${value}°C`;
+};
 
 const SliderRange = () => {
   return (
@@ -13,7 +13,7 @@ const SliderRange = () => {
       getAriaValueText={valuetext}
       aria-labelledby='range-slider'
     />
-  )
-}
+  );
+};
 
-export default SliderRange
+export default SliderRange;

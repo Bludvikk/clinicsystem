@@ -1,27 +1,27 @@
 // ** React Imports
-import { ReactNode } from 'react'
+import { ReactNode } from 'react';
 
 // ** Next Import
-import Link from 'next/link'
+import Link from 'next/link';
 
 // ** MUI Components
-import Button from '@mui/material/Button'
-import { styled } from '@mui/material/styles'
-import Typography from '@mui/material/Typography'
-import Box, { BoxProps } from '@mui/material/Box'
+import Button from '@mui/material/Button';
+import { styled } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
+import Box, { BoxProps } from '@mui/material/Box';
 
 // ** Layout Import
-import BlankLayout from 'src/@core/layouts/BlankLayout'
+import BlankLayout from 'src/@core/layouts/BlankLayout';
 
 // ** Demo Imports
-import FooterIllustrations from 'src/views/pages/misc/FooterIllustrations'
+import FooterIllustrations from 'src/views/pages/misc/FooterIllustrations';
 
 // ** Styled Components
 const BoxWrapper = styled(Box)<BoxProps>(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
     width: '90vw'
   }
-}))
+}));
 
 const Img = styled('img')(({ theme }) => ({
   marginTop: theme.spacing(15),
@@ -34,7 +34,7 @@ const Img = styled('img')(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
     height: 400
   }
-}))
+}));
 
 const Error401 = () => {
   return (
@@ -56,9 +56,9 @@ const Error401 = () => {
       </Box>
       <FooterIllustrations image='/images/pages/misc-401-object.png' />
     </Box>
-  )
-}
+  );
+};
 
-Error401.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
+Error401.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>;
 
-export default Error401
+export default Error401;

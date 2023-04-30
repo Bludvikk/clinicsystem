@@ -1,7 +1,7 @@
-import { Grid } from "@mui/material";
-import UserTableList from "@/views/apps/user/list/UserTableList";
-import { requireAuth } from "@/common/requireAuth";
-import { NextPage } from "next";
+import { Grid } from '@mui/material';
+import UserTableList from '@/views/apps/user/list/UserTableList';
+import { requireAuth } from '@/common/requireAuth';
+import { NextPage } from 'next';
 
 export const getServerSideProps = requireAuth(async () => {
   return { props: {} };
@@ -18,8 +18,8 @@ const UserPage: NextPage = () => {
 };
 
 UserPage.acl = {
-  action: "read",
-  subject: "user",
+  action: 'read',
+  subject: 'user'
 };
 
 export default UserPage;

@@ -1,15 +1,15 @@
 // ** MUI Imports
-import Box from '@mui/material/Box'
-import TextField from '@mui/material/TextField'
-import Autocomplete from '@mui/material/Autocomplete'
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 
 // ** Data
-import { countries } from 'src/@fake-db/autocomplete'
+import { countries } from 'src/@fake-db/autocomplete';
 
 interface CountryType {
-  code: string
-  label: string
-  phone: string
+  code: string;
+  label: string;
+  phone: string;
 }
 
 const AutocompleteCountry = () => {
@@ -43,7 +43,7 @@ const AutocompleteCountry = () => {
         />
       )}
     />
-  )
-}
+  );
+};
 
-export default AutocompleteCountry
+export default AutocompleteCountry;

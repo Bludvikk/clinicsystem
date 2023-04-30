@@ -21,7 +21,7 @@ const RadioColor = () => {
 export default RadioColor
 `}</code>
   </pre>
-)
+);
 
 export const RadioControlledUncontrolledJSXCode = (
   <pre className='language-jsx'>
@@ -66,7 +66,7 @@ const RadioControlledUncontrolled = () => {
 export default RadioControlledUncontrolled
 `}</code>
   </pre>
-)
+);
 
 export const RadioCustomizedJSXCode = (
   <pre className='language-jsx'>
@@ -150,7 +150,7 @@ const RadioCustomized = () => {
 export default RadioCustomized
 `}</code>
   </pre>
-)
+);
 
 export const RadioGroupJSXCode = (
   <pre className='language-jsx'>
@@ -189,7 +189,7 @@ const RadioGroupComponent = () => {
 export default RadioGroupComponent
 `}</code>
   </pre>
-)
+);
 
 export const RadioStandaloneJSXCode = (
   <pre className='language-jsx'>
@@ -230,7 +230,7 @@ const RadioStandalone = () => {
 export default RadioStandalone
 `}</code>
   </pre>
-)
+);
 
 export const RadioLabelPlacementJSXCode = (
   <pre className='language-jsx'>
@@ -258,7 +258,7 @@ const RadioLabelPlacement = () => {
 export default RadioLabelPlacement
 `}</code>
   </pre>
-)
+);
 
 export const RadioShowErrorJSXCode = (
   <pre className='language-jsx'>
@@ -320,7 +320,7 @@ const RadioShowError = () => {
 export default RadioShowError
 `}</code>
   </pre>
-)
+);
 
 export const RadioSizesJSXCode = (
   <pre className='language-jsx'>
@@ -341,7 +341,7 @@ const RadioSizes = () => {
 export default RadioSizes
 `}</code>
   </pre>
-)
+);
 
 export const RadioControlledUncontrolledTSXCode = (
   <pre className='language-jsx'>
@@ -386,7 +386,7 @@ const RadioControlledUncontrolled = () => {
 export default RadioControlledUncontrolled
 `}</code>
   </pre>
-)
+);
 
 export const RadioCustomizedTSXCode = (
   <pre className='language-jsx'>
@@ -470,7 +470,7 @@ const RadioCustomized = () => {
 export default RadioCustomized
 `}</code>
   </pre>
-)
+);
 
 export const RadioGroupTSXCode = (
   <pre className='language-jsx'>
@@ -509,7 +509,7 @@ const RadioGroupComponent = () => {
 export default RadioGroupComponent
 `}</code>
   </pre>
-)
+);
 
 export const RadioShowErrorTSXCode = (
   <pre className='language-jsx'>
@@ -572,7 +572,7 @@ const RadioShowError = () => {
 export default RadioShowError
 `}</code>
   </pre>
-)
+);
 
 export const RadioColorTSXCode = (
   <pre className='language-jsx'>
@@ -597,7 +597,7 @@ const RadioColor = () => {
 export default RadioColor
 `}</code>
   </pre>
-)
+);
 
 export const RadioLabelPlacementTSXCode = (
   <pre className='language-jsx'>
@@ -625,7 +625,7 @@ const RadioLabelPlacement = () => {
 export default RadioLabelPlacement
 `}</code>
   </pre>
-)
+);
 
 export const RadioStandaloneTSXCode = (
   <pre className='language-jsx'>
@@ -666,7 +666,7 @@ const RadioStandalone = () => {
 export default RadioStandalone
 `}</code>
   </pre>
-)
+);
 
 export const RadioSizesTSXCode = (
   <pre className='language-jsx'>
@@ -687,4 +687,4 @@ const RadioSizes = () => {
 export default RadioSizes
 `}</code>
   </pre>
-)
+);

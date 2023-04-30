@@ -1,7 +1,7 @@
 // ** MUI Imports
-import Switch from '@mui/material/Switch'
-import FormGroup from '@mui/material/FormGroup'
-import FormControlLabel from '@mui/material/FormControlLabel'
+import Switch from '@mui/material/Switch';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 const SwitchesSizes = () => {
   return (
@@ -9,7 +9,7 @@ const SwitchesSizes = () => {
       <FormControlLabel control={<Switch size='small' />} label='Small' />
       <FormControlLabel control={<Switch />} label='Default' />
     </FormGroup>
-  )
-}
+  );
+};
 
-export default SwitchesSizes
+export default SwitchesSizes;

@@ -1,5 +1,5 @@
 // ** MUI Imports
-import { Theme } from '@mui/material/styles'
+import { Theme } from '@mui/material/styles';
 
 const DataGrid = (theme: Theme) => {
   return {
@@ -103,7 +103,7 @@ const DataGrid = (theme: Theme) => {
         headerHeight: 54
       }
     }
-  }
-}
+  };
+};
 
-export default DataGrid
+export default DataGrid;

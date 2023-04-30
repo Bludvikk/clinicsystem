@@ -1,5 +1,5 @@
 // ** MUI Imports
-import Input from '@mui/material/Input'
+import Input from '@mui/material/Input';
 
 const TextFieldInputs = () => {
   return (
@@ -9,7 +9,7 @@ const TextFieldInputs = () => {
       <Input defaultValue='Disabled' disabled inputProps={{ 'aria-label': 'description' }} />
       <Input defaultValue='Error' error inputProps={{ 'aria-label': 'description' }} />
     </form>
-  )
-}
+  );
+};
 
-export default TextFieldInputs
+export default TextFieldInputs;

@@ -1,7 +1,7 @@
-import { Grid } from "@mui/material";
-import { requireAuth } from "@/common/requireAuth";
-import PatientTableList from "@/views/apps/patient/list/PatientTableList";
-import { NextPage } from "next";
+import { Grid } from '@mui/material';
+import { requireAuth } from '@/common/requireAuth';
+import PatientTableList from '@/views/apps/patient/list/PatientTableList';
+import { NextPage } from 'next';
 
 export const getServerSideProps = requireAuth(async () => {
   return { props: {} };
@@ -18,8 +18,8 @@ const PatientPage: NextPage = () => {
 };
 
 PatientPage.acl = {
-  action: "read",
-  subject: "patient",
+  action: 'read',
+  subject: 'patient'
 };
 
 export default PatientPage;

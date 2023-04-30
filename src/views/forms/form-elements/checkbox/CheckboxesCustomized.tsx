@@ -1,6 +1,6 @@
 // ** MUI Imports
-import { styled } from '@mui/material/styles'
-import Checkbox, { CheckboxProps } from '@mui/material/Checkbox'
+import { styled } from '@mui/material/styles';
+import Checkbox, { CheckboxProps } from '@mui/material/Checkbox';
 
 const BpIcon = styled('span')(({ theme }) => ({
   width: 16,
@@ -26,7 +26,7 @@ const BpIcon = styled('span')(({ theme }) => ({
     theme.palette.mode === 'dark'
       ? 'linear-gradient(180deg,hsla(0,0%,100%,.05),hsla(0,0%,100%,0))'
       : 'linear-gradient(180deg,hsla(0,0%,100%,.8),hsla(0,0%,100%,0))'
-}))
+}));
 
 const BpCheckedIcon = styled(BpIcon)({
   backgroundColor: '#137cbd',
@@ -44,7 +44,7 @@ const BpCheckedIcon = styled(BpIcon)({
       " fill-rule='evenodd' clip-rule='evenodd' d='M12 5c-.28 0-.53.11-.71.29L7 9.59l-2.29-2.3a1.003 " +
       "1.003 0 00-1.42 1.42l3 3c.18.18.43.29.71.29s.53-.11.71-.29l5-5A1.003 1.003 0 0012 5z' fill='%23fff'/%3E%3C/svg%3E\")"
   }
-})
+});
 
 // Inspired by blueprintjs
 const BpCheckbox = (props: CheckboxProps) => {
@@ -58,8 +58,8 @@ const BpCheckbox = (props: CheckboxProps) => {
       inputProps={{ 'aria-label': 'Checkbox demo' }}
       sx={{ '&:hover': { backgroundColor: 'transparent' } }}
     />
-  )
-}
+  );
+};
 
 const CheckboxesCustomized = () => {
   return (
@@ -68,7 +68,7 @@ const CheckboxesCustomized = () => {
       <BpCheckbox defaultChecked />
       <BpCheckbox disabled />
     </div>
-  )
-}
+  );
+};
 
-export default CheckboxesCustomized
+export default CheckboxesCustomized;

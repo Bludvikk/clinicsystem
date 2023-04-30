@@ -1,10 +1,10 @@
 // ** MUI Imports
-import { styled } from '@mui/material/styles'
-import FormLabel from '@mui/material/FormLabel'
-import RadioGroup from '@mui/material/RadioGroup'
-import FormControl from '@mui/material/FormControl'
-import Radio, { RadioProps } from '@mui/material/Radio'
-import FormControlLabel from '@mui/material/FormControlLabel'
+import { styled } from '@mui/material/styles';
+import FormLabel from '@mui/material/FormLabel';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControl from '@mui/material/FormControl';
+import Radio, { RadioProps } from '@mui/material/Radio';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 const BpIcon = styled('span')(({ theme }) => ({
   width: 16,
@@ -30,7 +30,7 @@ const BpIcon = styled('span')(({ theme }) => ({
     theme.palette.mode === 'dark'
       ? 'linear-gradient(180deg,hsla(0,0%,100%,.05),hsla(0,0%,100%,0))'
       : 'linear-gradient(180deg,hsla(0,0%,100%,.8),hsla(0,0%,100%,0))'
-}))
+}));
 
 const BpCheckedIcon = styled(BpIcon)({
   backgroundColor: '#137cbd',
@@ -45,7 +45,7 @@ const BpCheckedIcon = styled(BpIcon)({
     display: 'block',
     backgroundImage: 'radial-gradient(#fff,#fff 28%,transparent 32%)'
   }
-})
+});
 
 // Inspired by blueprintjs
 const BpRadio = (props: RadioProps) => {
@@ -58,8 +58,8 @@ const BpRadio = (props: RadioProps) => {
       checkedIcon={<BpCheckedIcon />}
       sx={{ '&:hover': { backgroundColor: 'transparent' } }}
     />
-  )
-}
+  );
+};
 
 const RadioCustomized = () => {
   return (
@@ -72,7 +72,7 @@ const RadioCustomized = () => {
         <FormControlLabel value='disabled' disabled control={<BpRadio />} label='Disabled' />
       </RadioGroup>
     </FormControl>
-  )
-}
+  );
+};
 
-export default RadioCustomized
+export default RadioCustomized;
