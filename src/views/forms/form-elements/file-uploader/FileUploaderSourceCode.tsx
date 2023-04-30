@@ -128,7 +128,7 @@ const FileUploaderMultiple = () => {
 export default FileUploaderMultiple
 `}</code>
   </pre>
-)
+);
 
 export const FileUploaderRestrictionsJSXCode = (
   <pre className='language-jsx'>
@@ -261,7 +261,7 @@ const FileUploaderRestrictions = () => {
 export default FileUploaderRestrictions
 `}</code>
   </pre>
-)
+);
 
 export const FileUploaderSingleJSXCode = (
   <pre className='language-jsx'>
@@ -348,7 +348,7 @@ const FileUploaderSingle = () => {
 export default FileUploaderSingle
 `}</code>
   </pre>
-)
+);
 
 export const FileUploaderMultipleTSXCode = (
   <pre className='language-jsx'>
@@ -486,7 +486,7 @@ const FileUploaderMultiple = () => {
 export default FileUploaderMultiple
 `}</code>
   </pre>
-)
+);
 
 export const FileUploaderRestrictionsTSXCode = (
   <pre className='language-jsx'>
@@ -625,7 +625,7 @@ const FileUploaderRestrictions = () => {
 export default FileUploaderRestrictions
 `}</code>
   </pre>
-)
+);
 
 export const FileUploaderSingleTSXCode = (
   <pre className='language-jsx'>
@@ -718,4 +718,4 @@ const FileUploaderSingle = () => {
 export default FileUploaderSingle
 `}</code>
   </pre>
-)
+);

@@ -1,24 +1,24 @@
 // ** React Imports
-import { useState } from 'react'
+import { useState } from 'react';
 
 // ** MUI Imports
-import Box from '@mui/material/Box'
+import Box from '@mui/material/Box';
 
 // ** Third Party Imports
-import subDays from 'date-fns/subDays'
-import addDays from 'date-fns/addDays'
-import DatePicker, { ReactDatePickerProps } from 'react-datepicker'
+import subDays from 'date-fns/subDays';
+import addDays from 'date-fns/addDays';
+import DatePicker, { ReactDatePickerProps } from 'react-datepicker';
 
 // ** Types
-import { DateType } from 'src/types/forms/reactDatepickerTypes'
+import { DateType } from 'src/types/forms/reactDatepickerTypes';
 
 // ** Custom Component Imports
-import CustomInput from './PickersCustomInput'
+import CustomInput from './PickersCustomInput';
 
 const PickersMinMax = ({ popperPlacement }: { popperPlacement: ReactDatePickerProps['popperPlacement'] }) => {
   // ** States
-  const [minDate, setMinDate] = useState<DateType>(new Date())
-  const [maxDate, setMaxDate] = useState<DateType>(new Date())
+  const [minDate, setMinDate] = useState<DateType>(new Date());
+  const [maxDate, setMaxDate] = useState<DateType>(new Date());
 
   return (
     <Box sx={{ display: 'flex', flexWrap: 'wrap' }} className='demo-space-x'>
@@ -43,7 +43,7 @@ const PickersMinMax = ({ popperPlacement }: { popperPlacement: ReactDatePickerPr
         />
       </div>
     </Box>
-  )
-}
+  );
+};
 
-export default PickersMinMax
+export default PickersMinMax;

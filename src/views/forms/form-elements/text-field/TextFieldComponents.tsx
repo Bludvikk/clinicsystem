@@ -1,21 +1,21 @@
 // ** React Imports
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useState } from 'react';
 
 // ** MUI Imports
-import Input from '@mui/material/Input'
-import InputLabel from '@mui/material/InputLabel'
-import FormControl from '@mui/material/FormControl'
-import FilledInput from '@mui/material/FilledInput'
-import OutlinedInput from '@mui/material/OutlinedInput'
-import FormHelperText from '@mui/material/FormHelperText'
+import Input from '@mui/material/Input';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import FilledInput from '@mui/material/FilledInput';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import FormHelperText from '@mui/material/FormHelperText';
 
 const TextFieldComponents = () => {
   // ** State
-  const [name, setName] = useState<string>('Composed TextField')
+  const [name, setName] = useState<string>('Composed TextField');
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setName(event.target.value)
-  }
+    setName(event.target.value);
+  };
 
   return (
     <form className='demo-space-x' noValidate autoComplete='off'>
@@ -47,7 +47,7 @@ const TextFieldComponents = () => {
         <FilledInput id='component-filled' value={name} onChange={handleChange} />
       </FormControl>
     </form>
-  )
-}
+  );
+};
 
-export default TextFieldComponents
+export default TextFieldComponents;

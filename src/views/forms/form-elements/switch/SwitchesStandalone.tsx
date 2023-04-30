@@ -1,5 +1,5 @@
 // ** MUI Imports
-import Switch from '@mui/material/Switch'
+import Switch from '@mui/material/Switch';
 
 const SwitchesStandalone = () => {
   return (
@@ -9,7 +9,7 @@ const SwitchesStandalone = () => {
       <Switch disabled defaultChecked />
       <Switch disabled />
     </div>
-  )
-}
+  );
+};
 
-export default SwitchesStandalone
+export default SwitchesStandalone;

@@ -1,5 +1,5 @@
 // ** MUI Imports
-import Slider from '@mui/material/Slider'
+import Slider from '@mui/material/Slider';
 
 const marks = [
   {
@@ -18,15 +18,15 @@ const marks = [
     value: 100,
     label: '100°'
   }
-]
+];
 
 const valuetext = (value: number) => {
-  return `${value}°C`
-}
+  return `${value}°C`;
+};
 
 const valueLabelFormat = (value: number) => {
-  return marks.findIndex(mark => mark.value === value) + 1
-}
+  return marks.findIndex(mark => mark.value === value) + 1;
+};
 
 const SliderRestrictedValues = () => {
   return (
@@ -39,7 +39,7 @@ const SliderRestrictedValues = () => {
       valueLabelFormat={valueLabelFormat}
       aria-labelledby='restricted-values-slider'
     />
-  )
-}
+  );
+};
 
-export default SliderRestrictedValues
+export default SliderRestrictedValues;

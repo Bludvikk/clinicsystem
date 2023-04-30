@@ -1,16 +1,16 @@
 // ** React Imports
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useState } from 'react';
 
 // ** MUI Imports
-import Radio from '@mui/material/Radio'
+import Radio from '@mui/material/Radio';
 
 const RadioStandalone = () => {
   // ** State
-  const [selectedValue, setSelectedValue] = useState<string>('a')
+  const [selectedValue, setSelectedValue] = useState<string>('a');
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setSelectedValue(event.target.value)
-  }
+    setSelectedValue(event.target.value);
+  };
 
   return (
     <div>
@@ -29,7 +29,7 @@ const RadioStandalone = () => {
         inputProps={{ 'aria-label': 'B' }}
       />
     </div>
-  )
-}
+  );
+};
 
-export default RadioStandalone
+export default RadioStandalone;

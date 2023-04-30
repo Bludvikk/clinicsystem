@@ -1,7 +1,7 @@
 // ** MUI Imports
-import Grid from '@mui/material/Grid'
-import Typography from '@mui/material/Typography'
-import TextareaAutosize from '@mui/material/TextareaAutosize'
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import TextareaAutosize from '@mui/material/TextareaAutosize';
 
 const TextareaBasic = () => {
   return (
@@ -26,7 +26,7 @@ const TextareaBasic = () => {
         </Grid>
       </Grid>
     </form>
-  )
-}
+  );
+};
 
-export default TextareaBasic
+export default TextareaBasic;

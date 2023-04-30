@@ -1,8 +1,8 @@
 // ** MUI Imports
-import { Theme } from '@mui/material/styles'
+import { Theme } from '@mui/material/styles';
 
 // ** Theme Type Import
-import { Skin } from 'src/@core/layouts/types'
+import { Skin } from 'src/@core/layouts/types';
 
 const Dialog = (theme: Theme, skin: Skin) => {
   return {
@@ -56,7 +56,7 @@ const Dialog = (theme: Theme, skin: Skin) => {
         }
       }
     }
-  }
-}
+  };
+};
 
-export default Dialog
+export default Dialog;

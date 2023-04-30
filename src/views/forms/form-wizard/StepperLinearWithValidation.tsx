@@ -1,47 +1,47 @@
 // ** React Imports
-import { Fragment, MouseEvent, useState } from 'react'
+import { Fragment, MouseEvent, useState } from 'react';
 
 // ** MUI Imports
-import Box from '@mui/material/Box'
-import Card from '@mui/material/Card'
-import Step from '@mui/material/Step'
-import Grid from '@mui/material/Grid'
-import Button from '@mui/material/Button'
-import Select from '@mui/material/Select'
-import Divider from '@mui/material/Divider'
-import Stepper from '@mui/material/Stepper'
-import MenuItem from '@mui/material/MenuItem'
-import StepLabel from '@mui/material/StepLabel'
-import TextField from '@mui/material/TextField'
-import Typography from '@mui/material/Typography'
-import InputLabel from '@mui/material/InputLabel'
-import IconButton from '@mui/material/IconButton'
-import CardContent from '@mui/material/CardContent'
-import FormControl from '@mui/material/FormControl'
-import OutlinedInput from '@mui/material/OutlinedInput'
-import FormHelperText from '@mui/material/FormHelperText'
-import InputAdornment from '@mui/material/InputAdornment'
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import Step from '@mui/material/Step';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
+import Select from '@mui/material/Select';
+import Divider from '@mui/material/Divider';
+import Stepper from '@mui/material/Stepper';
+import MenuItem from '@mui/material/MenuItem';
+import StepLabel from '@mui/material/StepLabel';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import InputLabel from '@mui/material/InputLabel';
+import IconButton from '@mui/material/IconButton';
+import CardContent from '@mui/material/CardContent';
+import FormControl from '@mui/material/FormControl';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import FormHelperText from '@mui/material/FormHelperText';
+import InputAdornment from '@mui/material/InputAdornment';
 
 // ** Third Party Imports
-import * as yup from 'yup'
-import toast from 'react-hot-toast'
-import { useForm, Controller } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup';
+import toast from 'react-hot-toast';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 // ** Icon Imports
-import Icon from 'src/@core/components/icon'
+import Icon from 'src/@core/components/icon';
 
 // ** Custom Components Imports
-import StepperCustomDot from './StepperCustomDot'
+import StepperCustomDot from './StepperCustomDot';
 
 // ** Styled Components
-import StepperWrapper from 'src/@core/styles/mui/stepper'
+import StepperWrapper from 'src/@core/styles/mui/stepper';
 
 interface State {
-  password: string
-  password2: string
-  showPassword: boolean
-  showPassword2: boolean
+  password: string;
+  password2: string;
+  showPassword: boolean;
+  showPassword2: boolean;
 }
 
 const steps = [
@@ -57,26 +57,26 @@ const steps = [
     title: 'Social Links',
     subtitle: 'Add Social Links'
   }
-]
+];
 
 const defaultAccountValues = {
   email: '',
   username: '',
   password: '',
   'confirm-password': ''
-}
+};
 const defaultPersonalValues = {
   country: '',
   language: [],
   'last-name': '',
   'first-name': ''
-}
+};
 const defaultSocialValues = {
   google: '',
   twitter: '',
   facebook: '',
   linkedIn: ''
-}
+};
 
 const accountSchema = yup.object().shape({
   username: yup.string().required(),
@@ -86,29 +86,29 @@ const accountSchema = yup.object().shape({
     .string()
     .required()
     .oneOf([yup.ref('password'), null], 'Passwords must match')
-})
+});
 const personalSchema = yup.object().shape({
   country: yup.string().required(),
   'last-name': yup.string().required(),
   'first-name': yup.string().required(),
   language: yup.array().min(1).required()
-})
+});
 const socialSchema = yup.object().shape({
   google: yup.string().required(),
   twitter: yup.string().required(),
   facebook: yup.string().required(),
   linkedIn: yup.string().required()
-})
+});
 
 const StepperLinearWithValidation = () => {
   // ** States
-  const [activeStep, setActiveStep] = useState<number>(0)
+  const [activeStep, setActiveStep] = useState<number>(0);
   const [state, setState] = useState<State>({
     password: '',
     password2: '',
     showPassword: false,
     showPassword2: false
-  })
+  });
 
   // ** Hooks
   const {
@@ -119,7 +119,7 @@ const StepperLinearWithValidation = () => {
   } = useForm({
     defaultValues: defaultAccountValues,
     resolver: yupResolver(accountSchema)
-  })
+  });
   const {
     reset: personalReset,
     control: personalControl,
@@ -128,7 +128,7 @@ const StepperLinearWithValidation = () => {
   } = useForm({
     defaultValues: defaultPersonalValues,
     resolver: yupResolver(personalSchema)
-  })
+  });
   const {
     reset: socialReset,
     control: socialControl,
@@ -137,40 +137,40 @@ const StepperLinearWithValidation = () => {
   } = useForm({
     defaultValues: defaultSocialValues,
     resolver: yupResolver(socialSchema)
-  })
+  });
 
   // Handle Stepper
   const handleBack = () => {
-    setActiveStep(prevActiveStep => prevActiveStep - 1)
-  }
+    setActiveStep(prevActiveStep => prevActiveStep - 1);
+  };
   const handleReset = () => {
-    setActiveStep(0)
-    socialReset({ google: '', twitter: '', facebook: '', linkedIn: '' })
-    accountReset({ email: '', username: '', password: '', 'confirm-password': '' })
-    personalReset({ country: '', language: [], 'last-name': '', 'first-name': '' })
-  }
+    setActiveStep(0);
+    socialReset({ google: '', twitter: '', facebook: '', linkedIn: '' });
+    accountReset({ email: '', username: '', password: '', 'confirm-password': '' });
+    personalReset({ country: '', language: [], 'last-name': '', 'first-name': '' });
+  };
   const onSubmit = () => {
-    setActiveStep(activeStep + 1)
+    setActiveStep(activeStep + 1);
     if (activeStep === steps.length - 1) {
-      toast.success('Form Submitted')
+      toast.success('Form Submitted');
     }
-  }
+  };
 
   // Handle Password
   const handleClickShowPassword = () => {
-    setState({ ...state, showPassword: !state.showPassword })
-  }
+    setState({ ...state, showPassword: !state.showPassword });
+  };
   const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault()
-  }
+    event.preventDefault();
+  };
 
   // Handle Confirm Password
   const handleClickShowConfirmPassword = () => {
-    setState({ ...state, showPassword2: !state.showPassword2 })
-  }
+    setState({ ...state, showPassword2: !state.showPassword2 });
+  };
   const handleMouseDownConfirmPassword = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault()
-  }
+    event.preventDefault();
+  };
 
   const getStepContent = (step: number) => {
     switch (step) {
@@ -326,7 +326,7 @@ const StepperLinearWithValidation = () => {
               </Grid>
             </Grid>
           </form>
-        )
+        );
       case 1:
         return (
           <form key={1} onSubmit={handlePersonalSubmit(onSubmit)}>
@@ -473,7 +473,7 @@ const StepperLinearWithValidation = () => {
               </Grid>
             </Grid>
           </form>
-        )
+        );
       case 2:
         return (
           <form key={2} onSubmit={handleSocialSubmit(onSubmit)}>
@@ -592,11 +592,11 @@ const StepperLinearWithValidation = () => {
               </Grid>
             </Grid>
           </form>
-        )
+        );
       default:
-        return null
+        return null;
     }
-  }
+  };
 
   const renderContent = () => {
     if (activeStep === steps.length) {
@@ -609,11 +609,11 @@ const StepperLinearWithValidation = () => {
             </Button>
           </Box>
         </Fragment>
-      )
+      );
     } else {
-      return getStepContent(activeStep)
+      return getStepContent(activeStep);
     }
-  }
+  };
 
   return (
     <Card>
@@ -622,10 +622,10 @@ const StepperLinearWithValidation = () => {
           <Stepper activeStep={activeStep}>
             {steps.map((step, index) => {
               const labelProps: {
-                error?: boolean
-              } = {}
+                error?: boolean;
+              } = {};
               if (index === activeStep) {
-                labelProps.error = false
+                labelProps.error = false;
                 if (
                   (accountErrors.email ||
                     accountErrors.username ||
@@ -633,7 +633,7 @@ const StepperLinearWithValidation = () => {
                     accountErrors['confirm-password']) &&
                   activeStep === 0
                 ) {
-                  labelProps.error = true
+                  labelProps.error = true;
                 } else if (
                   (personalErrors.country ||
                     personalErrors.language ||
@@ -641,14 +641,14 @@ const StepperLinearWithValidation = () => {
                     personalErrors['first-name']) &&
                   activeStep === 1
                 ) {
-                  labelProps.error = true
+                  labelProps.error = true;
                 } else if (
                   (socialErrors.google || socialErrors.twitter || socialErrors.facebook || socialErrors.linkedIn) &&
                   activeStep === 2
                 ) {
-                  labelProps.error = true
+                  labelProps.error = true;
                 } else {
-                  labelProps.error = false
+                  labelProps.error = false;
                 }
               }
 
@@ -664,7 +664,7 @@ const StepperLinearWithValidation = () => {
                     </div>
                   </StepLabel>
                 </Step>
-              )
+              );
             })}
           </Stepper>
         </StepperWrapper>
@@ -674,7 +674,7 @@ const StepperLinearWithValidation = () => {
 
       <CardContent>{renderContent()}</CardContent>
     </Card>
-  )
-}
+  );
+};
 
-export default StepperLinearWithValidation
+export default StepperLinearWithValidation;

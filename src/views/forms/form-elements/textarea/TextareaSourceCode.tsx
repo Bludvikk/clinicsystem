@@ -34,7 +34,7 @@ const TextareaBasic = () => {
 export default TextareaBasic
 `}</code>
   </pre>
-)
+);
 
 export const TextareaVariantJSXCode = (
   <pre className='language-jsx'>
@@ -126,7 +126,7 @@ const TextareaVariant = () => {
 export default TextareaVariant
 `}</code>
   </pre>
-)
+);
 
 export const TextareaBasicTSXCode = (
   <pre className='language-jsx'>
@@ -164,7 +164,7 @@ const TextareaBasic = () => {
 export default TextareaBasic
 `}</code>
   </pre>
-)
+);
 
 export const TextareaVariantTSXCode = (
   <pre className='language-jsx'>
@@ -256,4 +256,4 @@ const TextareaVariant = () => {
 export default TextareaVariant
 `}</code>
   </pre>
-)
+);

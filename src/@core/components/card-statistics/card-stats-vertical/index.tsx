@@ -1,22 +1,22 @@
 // ** MUI Imports
-import Box from '@mui/material/Box'
-import Card from '@mui/material/Card'
-import Typography from '@mui/material/Typography'
-import CardContent from '@mui/material/CardContent'
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import Typography from '@mui/material/Typography';
+import CardContent from '@mui/material/CardContent';
 
 // ** Custom Components Imports
-import CustomChip from 'src/@core/components/mui/chip'
-import CustomAvatar from 'src/@core/components/mui/avatar'
+import CustomChip from 'src/@core/components/mui/chip';
+import CustomAvatar from 'src/@core/components/mui/avatar';
 
 // ** Icon Imports
-import Icon from 'src/@core/components/icon'
+import Icon from 'src/@core/components/icon';
 
 // ** Types Imports
-import { CardStatsVerticalProps } from 'src/@core/components/card-statistics/types'
+import { CardStatsVerticalProps } from 'src/@core/components/card-statistics/types';
 
 const CardStatsVertical = (props: CardStatsVerticalProps) => {
   // ** Props
-  const { title, color, icon, stats, chipText, trendNumber, trend = 'positive' } = props
+  const { title, color, icon, stats, chipText, trendNumber, trend = 'positive' } = props;
 
   return (
     <Card>
@@ -49,7 +49,7 @@ const CardStatsVertical = (props: CardStatsVerticalProps) => {
         />
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
-export default CardStatsVertical
+export default CardStatsVertical;

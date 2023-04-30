@@ -1,32 +1,32 @@
 // ** React Imports
-import { MouseEvent, useState } from 'react'
+import { MouseEvent, useState } from 'react';
 
 // ** MUI Imports
-import Card from '@mui/material/Card'
-import Grid from '@mui/material/Grid'
-import Button from '@mui/material/Button'
-import TextField from '@mui/material/TextField'
-import CardHeader from '@mui/material/CardHeader'
-import InputLabel from '@mui/material/InputLabel'
-import IconButton from '@mui/material/IconButton'
-import CardContent from '@mui/material/CardContent'
-import FormControl from '@mui/material/FormControl'
-import OutlinedInput from '@mui/material/OutlinedInput'
-import FormHelperText from '@mui/material/FormHelperText'
-import InputAdornment from '@mui/material/InputAdornment'
+import Card from '@mui/material/Card';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import CardHeader from '@mui/material/CardHeader';
+import InputLabel from '@mui/material/InputLabel';
+import IconButton from '@mui/material/IconButton';
+import CardContent from '@mui/material/CardContent';
+import FormControl from '@mui/material/FormControl';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import FormHelperText from '@mui/material/FormHelperText';
+import InputAdornment from '@mui/material/InputAdornment';
 
 // ** Third Party Imports
-import * as yup from 'yup'
-import toast from 'react-hot-toast'
-import { useForm, Controller } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup';
+import toast from 'react-hot-toast';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 // ** Icon Imports
-import Icon from 'src/@core/components/icon'
+import Icon from 'src/@core/components/icon';
 
 interface State {
-  password: string
-  showPassword: boolean
+  password: string;
+  showPassword: boolean;
 }
 
 const defaultValues = {
@@ -34,17 +34,17 @@ const defaultValues = {
   lastName: '',
   password: '',
   firstName: ''
-}
+};
 
 const showErrors = (field: string, valueLen: number, min: number) => {
   if (valueLen === 0) {
-    return `${field} field is required`
+    return `${field} field is required`;
   } else if (valueLen > 0 && valueLen < min) {
-    return `${field} must be at least ${min} characters`
+    return `${field} must be at least ${min} characters`;
   } else {
-    return ''
+    return '';
   }
-}
+};
 
 const schema = yup.object().shape({
   email: yup.string().email().required(),
@@ -60,14 +60,14 @@ const schema = yup.object().shape({
     .string()
     .min(3, obj => showErrors('firstName', obj.value.length, obj.min))
     .required()
-})
+});
 
 const FormValidationSchema = () => {
   // ** States
   const [state, setState] = useState<State>({
     password: '',
     showPassword: false
-  })
+  });
 
   // ** Hook
   const {
@@ -78,17 +78,17 @@ const FormValidationSchema = () => {
     defaultValues,
     mode: 'onChange',
     resolver: yupResolver(schema)
-  })
+  });
 
   const handleClickShowPassword = () => {
-    setState({ ...state, showPassword: !state.showPassword })
-  }
+    setState({ ...state, showPassword: !state.showPassword });
+  };
 
   const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault()
-  }
+    event.preventDefault();
+  };
 
-  const onSubmit = () => toast.success('Form Submitted')
+  const onSubmit = () => toast.success('Form Submitted');
 
   return (
     <Card>
@@ -221,7 +221,7 @@ const FormValidationSchema = () => {
         </form>
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
-export default FormValidationSchema
+export default FormValidationSchema;

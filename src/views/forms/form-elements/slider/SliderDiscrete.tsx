@@ -1,9 +1,9 @@
 // ** MUI Imports
-import Slider from '@mui/material/Slider'
+import Slider from '@mui/material/Slider';
 
 const valuetext = (value: number) => {
-  return `${value}°C`
-}
+  return `${value}°C`;
+};
 
 const SliderDiscrete = () => {
   return (
@@ -17,7 +17,7 @@ const SliderDiscrete = () => {
       getAriaValueText={valuetext}
       aria-labelledby='discrete-slider'
     />
-  )
-}
+  );
+};
 
-export default SliderDiscrete
+export default SliderDiscrete;

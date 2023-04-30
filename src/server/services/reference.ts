@@ -1,33 +1,27 @@
-import { TRPCError } from "@trpc/server";
-import { Context } from "@/server/context";
-import { Prisma as prismaCli } from "@prisma/client";
-import { FilterQueryInputType, ParamsInput } from "@/utils/common.type";
-import { PostReferenceDtoType } from "../schema/reference";
-import { RecordDoesExist } from "@/utils/http.message";
+import { TRPCError } from '@trpc/server';
+import { Context } from '@/server/context';
+import { Prisma as prismaCli } from '@prisma/client';
+import { FilterQueryInputType, ParamsInput } from '@/utils/common.type';
+import { PostReferenceDtoType } from '../schema/reference';
+import { RecordDoesExist } from '@/utils/http.message';
 
 export type ReferencesAsyncType = typeof getReferences;
 
-export const getReferences = async (
-  ctx: Context,
-  filterQuery: FilterQueryInputType
-) => {
+export const getReferences = async (ctx: Context, filterQuery: FilterQueryInputType) => {
   try {
     const entities = filterQuery?.entities;
 
     return await ctx.prisma.reference.findMany({
       where: {
-        entityId: { in: entities },
-      },
+        entityId: { in: entities }
+      }
     });
   } catch (err) {
     throw err;
   }
 };
 
-export const postReference = async (
-  ctx: Context,
-  postReferenceDto: PostReferenceDtoType
-) => {
+export const postReference = async (ctx: Context, postReferenceDto: PostReferenceDtoType) => {
   try {
     const { params, body } = postReferenceDto;
 
@@ -36,24 +30,24 @@ export const postReference = async (
       return {
         data: await ctx.prisma.reference.update({
           where: { id: params.id },
-          data: body,
+          data: body
         }),
-        message: "Reference updated successfully.",
-        status: "success",
+        message: 'Reference updated successfully.',
+        status: 'success'
       };
     }
 
     return {
       data: await ctx.prisma.reference.create({ data: body }),
-      message: "Reference created successfully.",
-      status: "success",
+      message: 'Reference created successfully.',
+      status: 'success'
     };
   } catch (err) {
     if (err instanceof prismaCli.PrismaClientKnownRequestError) {
-      if (err.code === "P2002") {
+      if (err.code === 'P2002') {
         throw new RecordDoesExist({
           module: postReferenceDto.params.module,
-          code: postReferenceDto.body.code,
+          code: postReferenceDto.body.code
         });
       }
     }
@@ -67,15 +61,15 @@ export const deleteReference = async (ctx: Context, params: ParamsInput) => {
 
     return {
       id: params.id,
-      message: "Reference deleted successfully.",
-      status: "success",
+      message: 'Reference deleted successfully.',
+      status: 'success'
     };
   } catch (err) {
     if (err instanceof prismaCli.PrismaClientKnownRequestError) {
-      if (err.code === "P2025") {
+      if (err.code === 'P2025') {
         throw new TRPCError({
-          code: "NOT_FOUND",
-          message: `Record ID <<${params.id}>> not found.`,
+          code: 'NOT_FOUND',
+          message: `Record ID <<${params.id}>> not found.`
         });
       }
     }

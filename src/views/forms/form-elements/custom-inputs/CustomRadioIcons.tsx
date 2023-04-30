@@ -1,18 +1,18 @@
 // ** React Imports
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useState } from 'react';
 
 // ** MUI Imports
-import Grid from '@mui/material/Grid'
+import Grid from '@mui/material/Grid';
 
 // ** Type Import
-import { CustomRadioIconsData, CustomRadioIconsProps } from 'src/@core/components/custom-radio/types'
+import { CustomRadioIconsData, CustomRadioIconsProps } from 'src/@core/components/custom-radio/types';
 
 // ** Demo Components Imports
-import CustomRadioIcons from 'src/@core/components/custom-radio/icons'
+import CustomRadioIcons from 'src/@core/components/custom-radio/icons';
 
 interface IconType {
-  icon: CustomRadioIconsProps['icon']
-  iconProps: CustomRadioIconsProps['iconProps']
+  icon: CustomRadioIconsProps['icon'];
+  iconProps: CustomRadioIconsProps['iconProps'];
 }
 
 const data: CustomRadioIconsData[] = [
@@ -32,28 +32,28 @@ const data: CustomRadioIconsData[] = [
     title: 'Enterprise',
     content: 'Solution for big organizations.'
   }
-]
+];
 
 const icons: IconType[] = [
   { icon: 'mdi:rocket-launch-outline', iconProps: { fontSize: '2rem', style: { marginBottom: 8 } } },
   { icon: 'mdi:account-outline', iconProps: { fontSize: '2rem', style: { marginBottom: 8 } } },
   { icon: 'mdi:crown-outline', iconProps: { fontSize: '2rem', style: { marginBottom: 8 } } }
-]
+];
 
 const CustomRadioWithIcons = () => {
   const initialSelected: string = data.filter(item => item.isSelected)[data.filter(item => item.isSelected).length - 1]
-    .value
+    .value;
 
   // ** State
-  const [selected, setSelected] = useState<string>(initialSelected)
+  const [selected, setSelected] = useState<string>(initialSelected);
 
   const handleChange = (prop: string | ChangeEvent<HTMLInputElement>) => {
     if (typeof prop === 'string') {
-      setSelected(prop)
+      setSelected(prop);
     } else {
-      setSelected((prop.target as HTMLInputElement).value)
+      setSelected((prop.target as HTMLInputElement).value);
     }
-  }
+  };
 
   return (
     <Grid container spacing={4}>
@@ -70,7 +70,7 @@ const CustomRadioWithIcons = () => {
         />
       ))}
     </Grid>
-  )
-}
+  );
+};
 
-export default CustomRadioWithIcons
+export default CustomRadioWithIcons;

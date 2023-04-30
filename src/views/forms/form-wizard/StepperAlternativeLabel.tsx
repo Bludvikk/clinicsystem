@@ -1,42 +1,42 @@
 // ** React Imports
-import { ChangeEvent, Fragment, MouseEvent, useState } from 'react'
+import { ChangeEvent, Fragment, MouseEvent, useState } from 'react';
 
 // ** MUI Imports
-import Box from '@mui/material/Box'
-import Card from '@mui/material/Card'
-import Step from '@mui/material/Step'
-import Grid from '@mui/material/Grid'
-import Button from '@mui/material/Button'
-import Stepper from '@mui/material/Stepper'
-import MenuItem from '@mui/material/MenuItem'
-import StepLabel from '@mui/material/StepLabel'
-import TextField from '@mui/material/TextField'
-import Typography from '@mui/material/Typography'
-import IconButton from '@mui/material/IconButton'
-import InputLabel from '@mui/material/InputLabel'
-import CardContent from '@mui/material/CardContent'
-import FormControl from '@mui/material/FormControl'
-import OutlinedInput from '@mui/material/OutlinedInput'
-import InputAdornment from '@mui/material/InputAdornment'
-import Select, { SelectChangeEvent } from '@mui/material/Select'
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import Step from '@mui/material/Step';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
+import Stepper from '@mui/material/Stepper';
+import MenuItem from '@mui/material/MenuItem';
+import StepLabel from '@mui/material/StepLabel';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import InputLabel from '@mui/material/InputLabel';
+import CardContent from '@mui/material/CardContent';
+import FormControl from '@mui/material/FormControl';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputAdornment from '@mui/material/InputAdornment';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 // ** Icon Imports
-import Icon from 'src/@core/components/icon'
+import Icon from 'src/@core/components/icon';
 
 // ** Custom Components Imports
-import StepperCustomDot from './StepperCustomDot'
+import StepperCustomDot from './StepperCustomDot';
 
 // ** Third Party Imports
-import toast from 'react-hot-toast'
+import toast from 'react-hot-toast';
 
 // ** Styled Component
-import StepperWrapper from 'src/@core/styles/mui/stepper'
+import StepperWrapper from 'src/@core/styles/mui/stepper';
 
 interface State {
-  password: string
-  password2: string
-  showPassword: boolean
-  showPassword2: boolean
+  password: string;
+  password2: string;
+  showPassword: boolean;
+  showPassword2: boolean;
 }
 
 const steps = [
@@ -52,79 +52,79 @@ const steps = [
     title: 'Social Links',
     subtitle: 'Add Social Links'
   }
-]
+];
 
 const StepperAlternativeLabel = () => {
   // ** States
-  const [email, setEmail] = useState<string>('')
-  const [google, setGoogle] = useState<string>('')
-  const [country, setCountry] = useState<string>('')
-  const [twitter, setTwitter] = useState<string>('')
-  const [username, setUsername] = useState<string>('')
-  const [lastName, setLastName] = useState<string>('')
-  const [facebook, setFacebook] = useState<string>('')
-  const [linkedIn, setLinkedIn] = useState<string>('')
-  const [firstName, setFirstName] = useState<string>('')
-  const [activeStep, setActiveStep] = useState<number>(0)
-  const [language, setLanguage] = useState<string[]>([])
+  const [email, setEmail] = useState<string>('');
+  const [google, setGoogle] = useState<string>('');
+  const [country, setCountry] = useState<string>('');
+  const [twitter, setTwitter] = useState<string>('');
+  const [username, setUsername] = useState<string>('');
+  const [lastName, setLastName] = useState<string>('');
+  const [facebook, setFacebook] = useState<string>('');
+  const [linkedIn, setLinkedIn] = useState<string>('');
+  const [firstName, setFirstName] = useState<string>('');
+  const [activeStep, setActiveStep] = useState<number>(0);
+  const [language, setLanguage] = useState<string[]>([]);
   const [state, setState] = useState<State>({
     password: '',
     password2: '',
     showPassword: false,
     showPassword2: false
-  })
+  });
 
   // Handle Stepper
   const handleBack = () => {
-    setActiveStep(prevActiveStep => prevActiveStep - 1)
-  }
+    setActiveStep(prevActiveStep => prevActiveStep - 1);
+  };
   const handleNext = () => {
-    setActiveStep(prevActiveStep => prevActiveStep + 1)
+    setActiveStep(prevActiveStep => prevActiveStep + 1);
     if (activeStep === steps.length - 1) {
-      toast.success('Form Submitted')
+      toast.success('Form Submitted');
     }
-  }
+  };
   const handleReset = () => {
-    setEmail('')
-    setGoogle('')
-    setCountry('')
-    setTwitter('')
-    setUsername('')
-    setLastName('')
-    setFacebook('')
-    setLinkedIn('')
-    setLanguage([])
-    setFirstName('')
-    setActiveStep(0)
-    setState({ ...state, password: '', password2: '' })
-  }
+    setEmail('');
+    setGoogle('');
+    setCountry('');
+    setTwitter('');
+    setUsername('');
+    setLastName('');
+    setFacebook('');
+    setLinkedIn('');
+    setLanguage([]);
+    setFirstName('');
+    setActiveStep(0);
+    setState({ ...state, password: '', password2: '' });
+  };
 
   // Handle Password
   const handlePasswordChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
-    setState({ ...state, [prop]: event.target.value })
-  }
+    setState({ ...state, [prop]: event.target.value });
+  };
   const handleClickShowPassword = () => {
-    setState({ ...state, showPassword: !state.showPassword })
-  }
+    setState({ ...state, showPassword: !state.showPassword });
+  };
   const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault()
-  }
+    event.preventDefault();
+  };
 
   // Handle Confirm Password
   const handleConfirmChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
-    setState({ ...state, [prop]: event.target.value })
-  }
+    setState({ ...state, [prop]: event.target.value });
+  };
   const handleClickShowConfirmPassword = () => {
-    setState({ ...state, showPassword2: !state.showPassword2 })
-  }
+    setState({ ...state, showPassword2: !state.showPassword2 });
+  };
   const handleMouseDownConfirmPassword = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault()
-  }
+    event.preventDefault();
+  };
 
   // Handle Language
   const handleSelectChange = (event: SelectChangeEvent<string[]>) => {
-    setLanguage(event.target.value as string[])
-  }
+    setLanguage(event.target.value as string[]);
+  };
 
   const getStepContent = (step: number) => {
     switch (step) {
@@ -199,7 +199,7 @@ const StepperAlternativeLabel = () => {
               </FormControl>
             </Grid>
           </Fragment>
-        )
+        );
       case 1:
         return (
           <Fragment key={step}>
@@ -260,7 +260,7 @@ const StepperAlternativeLabel = () => {
               </FormControl>
             </Grid>
           </Fragment>
-        )
+        );
       case 2:
         return (
           <Fragment key={step}>
@@ -301,11 +301,11 @@ const StepperAlternativeLabel = () => {
               />
             </Grid>
           </Fragment>
-        )
+        );
       default:
-        return 'Unknown Step'
+        return 'Unknown Step';
     }
-  }
+  };
 
   const renderContent = () => {
     if (activeStep === steps.length) {
@@ -318,7 +318,7 @@ const StepperAlternativeLabel = () => {
             </Button>
           </Box>
         </Fragment>
-      )
+      );
     } else {
       return (
         <form onSubmit={e => e.preventDefault()}>
@@ -348,9 +348,9 @@ const StepperAlternativeLabel = () => {
             </Grid>
           </Grid>
         </form>
-      )
+      );
     }
-  }
+  };
 
   return (
     <Fragment>
@@ -368,7 +368,7 @@ const StepperAlternativeLabel = () => {
                   </div>
                 </StepLabel>
               </Step>
-            )
+            );
           })}
         </Stepper>
       </StepperWrapper>
@@ -376,7 +376,7 @@ const StepperAlternativeLabel = () => {
         <CardContent>{renderContent()}</CardContent>
       </Card>
     </Fragment>
-  )
-}
+  );
+};
 
-export default StepperAlternativeLabel
+export default StepperAlternativeLabel;

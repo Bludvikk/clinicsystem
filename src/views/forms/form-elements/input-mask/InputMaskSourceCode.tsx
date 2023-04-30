@@ -84,7 +84,7 @@ const InputMaskExamples = () => {
 export default InputMaskExamples
 `}</code>
   </pre>
-)
+);
 
 export const InputMaskExamplesTSXCode = (
   <pre className='language-jsx'>
@@ -172,4 +172,4 @@ const InputMaskExamples = () => {
 export default InputMaskExamples
 `}</code>
   </pre>
-)
+);

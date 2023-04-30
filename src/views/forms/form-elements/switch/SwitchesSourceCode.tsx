@@ -21,7 +21,7 @@ const SwitchesColors = () => {
 export default SwitchesColors
 `}</code>
   </pre>
-)
+);
 
 export const SwitchesBasicJSXCode = (
   <pre className='language-jsx'>
@@ -44,7 +44,7 @@ const SwitchesBasic = () => {
 export default SwitchesBasic
 `}</code>
   </pre>
-)
+);
 
 export const SwitchesControlledUncontrolledJSXCode = (
   <pre className='language-jsx'>
@@ -75,7 +75,7 @@ const SwitchesControlledUncontrolled = () => {
 export default SwitchesControlledUncontrolled
 `}</code>
   </pre>
-)
+);
 
 export const SwitchesLabelPlacementJSXCode = (
   <pre className='language-jsx'>
@@ -102,7 +102,7 @@ const SwitchedLabelPlacement = () => {
 export default SwitchedLabelPlacement
 `}</code>
   </pre>
-)
+);
 
 export const SwitchesCustomizedJSXCode = (
   <pre className='language-jsx'>
@@ -149,7 +149,7 @@ const SwitchesCustomized = () => <FormControlLabel label='iOS Style' control={<S
 export default SwitchesCustomized
 `}</code>
   </pre>
-)
+);
 
 export const SwitchesStandaloneJSXCode = (
   <pre className='language-jsx'>
@@ -170,7 +170,7 @@ const SwitchesStandalone = () => {
 export default SwitchesStandalone
 `}</code>
   </pre>
-)
+);
 
 export const SwitchesSizesJSXCode = (
   <pre className='language-jsx'>
@@ -191,7 +191,7 @@ const SwitchesSizes = () => {
 export default SwitchesSizes
 `}</code>
   </pre>
-)
+);
 
 export const SwitchesBasicTSXCode = (
   <pre className='language-jsx'>
@@ -214,7 +214,7 @@ const SwitchesBasic = () => {
 export default SwitchesBasic
 `}</code>
   </pre>
-)
+);
 
 export const SwitchesCustomizedTSXCode = (
   <pre className='language-jsx'>
@@ -262,7 +262,7 @@ const SwitchesCustomized = () => <FormControlLabel label='iOS Style' control={<S
 export default SwitchesCustomized
 `}</code>
   </pre>
-)
+);
 
 export const SwitchesLabelPlacementTSXCode = (
   <pre className='language-jsx'>
@@ -289,7 +289,7 @@ const SwitchedLabelPlacement = () => {
 export default SwitchedLabelPlacement
 `}</code>
   </pre>
-)
+);
 
 export const SwitchesColorsTSXCode = (
   <pre className='language-jsx'>
@@ -314,7 +314,7 @@ const SwitchesColors = () => {
 export default SwitchesColors
 `}</code>
   </pre>
-)
+);
 
 export const SwitchesStandaloneTSXCode = (
   <pre className='language-jsx'>
@@ -335,7 +335,7 @@ const SwitchesStandalone = () => {
 export default SwitchesStandalone
 `}</code>
   </pre>
-)
+);
 
 export const SwitchesSizesTSXCode = (
   <pre className='language-jsx'>
@@ -356,7 +356,7 @@ const SwitchesSizes = () => {
 export default SwitchesSizes
 `}</code>
   </pre>
-)
+);
 
 export const SwitchesControlledUncontrolledTSXCode = (
   <pre className='language-jsx'>
@@ -387,4 +387,4 @@ const SwitchesControlledUncontrolled = () => {
 export default SwitchesControlledUncontrolled
 `}</code>
   </pre>
-)
+);

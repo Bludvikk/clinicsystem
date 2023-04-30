@@ -1,60 +1,60 @@
 // ** React Imports
-import { forwardRef, MouseEvent, useState, ChangeEvent } from 'react'
+import { forwardRef, MouseEvent, useState, ChangeEvent } from 'react';
 
 // ** MUI Imports
-import Card from '@mui/material/Card'
-import Grid from '@mui/material/Grid'
-import Radio from '@mui/material/Radio'
-import Select from '@mui/material/Select'
-import Button from '@mui/material/Button'
-import MenuItem from '@mui/material/MenuItem'
-import Checkbox from '@mui/material/Checkbox'
-import TextField from '@mui/material/TextField'
-import FormLabel from '@mui/material/FormLabel'
-import CardHeader from '@mui/material/CardHeader'
-import InputLabel from '@mui/material/InputLabel'
-import IconButton from '@mui/material/IconButton'
-import RadioGroup from '@mui/material/RadioGroup'
-import CardContent from '@mui/material/CardContent'
-import FormControl from '@mui/material/FormControl'
-import OutlinedInput from '@mui/material/OutlinedInput'
-import FormHelperText from '@mui/material/FormHelperText'
-import InputAdornment from '@mui/material/InputAdornment'
-import FormControlLabel from '@mui/material/FormControlLabel'
+import Card from '@mui/material/Card';
+import Grid from '@mui/material/Grid';
+import Radio from '@mui/material/Radio';
+import Select from '@mui/material/Select';
+import Button from '@mui/material/Button';
+import MenuItem from '@mui/material/MenuItem';
+import Checkbox from '@mui/material/Checkbox';
+import TextField from '@mui/material/TextField';
+import FormLabel from '@mui/material/FormLabel';
+import CardHeader from '@mui/material/CardHeader';
+import InputLabel from '@mui/material/InputLabel';
+import IconButton from '@mui/material/IconButton';
+import RadioGroup from '@mui/material/RadioGroup';
+import CardContent from '@mui/material/CardContent';
+import FormControl from '@mui/material/FormControl';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import FormHelperText from '@mui/material/FormHelperText';
+import InputAdornment from '@mui/material/InputAdornment';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 // ** Third Party Imports
-import toast from 'react-hot-toast'
-import DatePicker from 'react-datepicker'
-import { useForm, Controller } from 'react-hook-form'
+import toast from 'react-hot-toast';
+import DatePicker from 'react-datepicker';
+import { useForm, Controller } from 'react-hook-form';
 
 // ** Icon Imports
-import Icon from 'src/@core/components/icon'
+import Icon from 'src/@core/components/icon';
 
 // ** Types
-import { DateType } from 'src/types/forms/reactDatepickerTypes'
+import { DateType } from 'src/types/forms/reactDatepickerTypes';
 
 interface State {
-  password: string
-  showPassword: boolean
+  password: string;
+  showPassword: boolean;
 }
 
 interface FormInputs {
-  dob: DateType
-  email: string
-  radio: string
-  select: string
-  lastName: string
-  password: string
-  textarea: string
-  checkbox: boolean
-  firstName: string
+  dob: DateType;
+  email: string;
+  radio: string;
+  select: string;
+  lastName: string;
+  password: string;
+  textarea: string;
+  checkbox: boolean;
+  firstName: string;
 }
 
 interface CustomInputProps {
-  value: DateType
-  label: string
-  error: boolean
-  onChange: (event: ChangeEvent) => void
+  value: DateType;
+  label: string;
+  error: boolean;
+  onChange: (event: ChangeEvent) => void;
 }
 
 const defaultValues = {
@@ -67,35 +67,35 @@ const defaultValues = {
   textarea: '',
   firstName: '',
   checkbox: false
-}
+};
 
 const CustomInput = forwardRef(({ ...props }: CustomInputProps, ref) => {
-  return <TextField inputRef={ref} {...props} sx={{ width: '100%' }} />
-})
+  return <TextField inputRef={ref} {...props} sx={{ width: '100%' }} />;
+});
 
 const FormValidationBasic = () => {
   // ** States
   const [state, setState] = useState<State>({
     password: '',
     showPassword: false
-  })
+  });
 
   // ** Hooks
   const {
     control,
     handleSubmit,
     formState: { errors }
-  } = useForm<FormInputs>({ defaultValues })
+  } = useForm<FormInputs>({ defaultValues });
 
   const handleClickShowPassword = () => {
-    setState({ ...state, showPassword: !state.showPassword })
-  }
+    setState({ ...state, showPassword: !state.showPassword });
+  };
 
   const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault()
-  }
+    event.preventDefault();
+  };
 
-  const onSubmit = () => toast.success('Form Submitted')
+  const onSubmit = () => toast.success('Form Submitted');
 
   return (
     <Card>
@@ -387,7 +387,7 @@ const FormValidationBasic = () => {
         </form>
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
-export default FormValidationBasic
+export default FormValidationBasic;

@@ -1,9 +1,9 @@
 // ** MUI Imports
-import TextField from '@mui/material/TextField'
-import Autocomplete from '@mui/material/Autocomplete'
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 
 // ** Data
-import { top100Films } from 'src/@fake-db/autocomplete'
+import { top100Films } from 'src/@fake-db/autocomplete';
 
 const AutocompleteSmallSize = () => {
   return (
@@ -27,7 +27,7 @@ const AutocompleteSmallSize = () => {
         renderInput={params => <TextField {...params} label='Size small' placeholder='Favorites' />}
       />
     </div>
-  )
-}
+  );
+};
 
-export default AutocompleteSmallSize
+export default AutocompleteSmallSize;

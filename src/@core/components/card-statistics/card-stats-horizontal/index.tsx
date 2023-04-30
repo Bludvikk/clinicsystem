@@ -1,30 +1,30 @@
 // ** MUI Imports
-import Box from '@mui/material/Box'
-import Card from '@mui/material/Card'
-import { styled } from '@mui/material/styles'
-import Typography from '@mui/material/Typography'
-import { AvatarProps } from '@mui/material/Avatar'
-import CardContent from '@mui/material/CardContent'
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import { styled } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
+import { AvatarProps } from '@mui/material/Avatar';
+import CardContent from '@mui/material/CardContent';
 
 // ** Custom Components Imports
-import CustomAvatar from 'src/@core/components/mui/avatar'
+import CustomAvatar from 'src/@core/components/mui/avatar';
 
 // ** Icon Imports
-import Icon from 'src/@core/components/icon'
+import Icon from 'src/@core/components/icon';
 
 // ** Types Imports
-import { CardStatsHorizontalProps } from 'src/@core/components/card-statistics/types'
+import { CardStatsHorizontalProps } from 'src/@core/components/card-statistics/types';
 
 // ** Styled Avatar component
 const Avatar = styled(CustomAvatar)<AvatarProps>(({ theme }) => ({
   width: 40,
   height: 40,
   marginRight: theme.spacing(4)
-}))
+}));
 
 const CardStatsHorizontal = (props: CardStatsHorizontalProps) => {
   // ** Props
-  const { title, icon, stats, trendNumber, color = 'primary', trend = 'positive' } = props
+  const { title, icon, stats, trendNumber, color = 'primary', trend = 'positive' } = props;
 
   return (
     <Card>
@@ -50,7 +50,7 @@ const CardStatsHorizontal = (props: CardStatsHorizontalProps) => {
         </Box>
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
-export default CardStatsHorizontal
+export default CardStatsHorizontal;

@@ -1,10 +1,10 @@
 // ** MUI Imports
-import Checkbox from '@mui/material/Checkbox'
-import TextField from '@mui/material/TextField'
-import Autocomplete from '@mui/material/Autocomplete'
+import Checkbox from '@mui/material/Checkbox';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 
 // ** Data
-import { top100Films } from 'src/@fake-db/autocomplete'
+import { top100Films } from 'src/@fake-db/autocomplete';
 
 const AutocompleteCheckboxes = () => {
   return (
@@ -22,7 +22,7 @@ const AutocompleteCheckboxes = () => {
         </li>
       )}
     />
-  )
-}
+  );
+};
 
-export default AutocompleteCheckboxes
+export default AutocompleteCheckboxes;

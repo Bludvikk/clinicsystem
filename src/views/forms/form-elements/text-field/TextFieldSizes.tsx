@@ -1,5 +1,5 @@
 // ** MUI Imports
-import TextField from '@mui/material/TextField'
+import TextField from '@mui/material/TextField';
 
 const TextFieldSizes = () => {
   return (
@@ -7,7 +7,7 @@ const TextFieldSizes = () => {
       <TextField label='Size' id='size-small' defaultValue='Small' size='small' />
       <TextField label='Size' id='size-normal' defaultValue='Normal' />
     </form>
-  )
-}
+  );
+};
 
-export default TextFieldSizes
+export default TextFieldSizes;

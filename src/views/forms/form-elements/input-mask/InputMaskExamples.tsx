@@ -1,10 +1,10 @@
 // ** MUI Imports
-import Grid from '@mui/material/Grid'
-import InputLabel from '@mui/material/InputLabel'
+import Grid from '@mui/material/Grid';
+import InputLabel from '@mui/material/InputLabel';
 
 // ** CleaveJS Imports
-import Cleave from 'cleave.js/react'
-import 'cleave.js/dist/addons/cleave-phone.us'
+import Cleave from 'cleave.js/react';
+import 'cleave.js/dist/addons/cleave-phone.us';
 
 const InputMaskExamples = () => {
   return (
@@ -76,7 +76,7 @@ const InputMaskExamples = () => {
         <Cleave id='prefix' options={{ prefix: '+63', blocks: [3, 3, 3, 4], uppercase: true }} />
       </Grid>
     </Grid>
-  )
-}
+  );
+};
 
-export default InputMaskExamples
+export default InputMaskExamples;

@@ -1,10 +1,10 @@
 // ** MUI Imports
-import Checkbox from '@mui/material/Checkbox'
-import FormGroup from '@mui/material/FormGroup'
-import FormControlLabel from '@mui/material/FormControlLabel'
+import Checkbox from '@mui/material/Checkbox';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 // ** Icon Imports
-import Icon from 'src/@core/components/icon'
+import Icon from 'src/@core/components/icon';
 
 const CheckboxesSizes = () => {
   return (
@@ -22,7 +22,7 @@ const CheckboxesSizes = () => {
       />
       <FormControlLabel label='Default' control={<Checkbox defaultChecked name='size-default' />} />
     </FormGroup>
-  )
-}
+  );
+};
 
-export default CheckboxesSizes
+export default CheckboxesSizes;

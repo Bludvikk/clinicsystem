@@ -1,25 +1,16 @@
-import {
-  Box,
-  Button,
-  CardContent,
-  CardHeader,
-  Divider,
-  Grid,
-} from "@mui/material";
-import Icon from "@/@core/components/icon";
+import { Box, Button, CardContent, CardHeader, Divider, Grid } from '@mui/material';
+import Icon from '@/@core/components/icon';
 
-import { useEffect } from "react";
-import { useFilterControlChange } from "@/utils/helper";
-import { useUserFormStore } from "@/stores/user.store";
-import { DropdownData, TextInputSearch } from "@/utils/form.component";
+import { useEffect } from 'react';
+import { useFilterControlChange } from '@/utils/helper';
+import { useUserFormStore } from '@/stores/user.store';
+import { DropdownData, TextInputSearch } from '@/utils/form.component';
 
 const UserTableHeader = () => {
   const { searchFilter, handleSearchFilter } = useFilterControlChange();
   const { onAdd, setSearchFilter } = useUserFormStore();
 
-  const filterTableHeader = new Map([["tableHeader", [6, 7, 8]]]).get(
-    "tableHeader"
-  );
+  const filterTableHeader = new Map([['tableHeader', [6, 7, 8]]]).get('tableHeader');
   const dataLoaded = !!filterTableHeader;
 
   const handleCreate = () => {
@@ -33,17 +24,14 @@ const UserTableHeader = () => {
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
-        <CardHeader
-          title="Search Filters"
-          sx={{ pb: 4, "& .MuiCardHeader-title": { letterSpacing: ".15px" } }}
-        />
+        <CardHeader title='Search Filters' sx={{ pb: 4, '& .MuiCardHeader-title': { letterSpacing: '.15px' } }} />
         {dataLoaded ? (
           <CardContent>
             <Grid container spacing={6}>
-              {filterTableHeader.map((entityId) => (
+              {filterTableHeader.map(entityId => (
                 <Grid key={entityId} item sm={4} xs={12}>
                   <DropdownData
-                    type="filter"
+                    type='filter'
                     id={entityId}
                     handleSearchFilter={handleSearchFilter}
                     searchFilterValue={searchFilter}
@@ -59,33 +47,29 @@ const UserTableHeader = () => {
           sx={{
             p: 5,
             pb: 3,
-            display: "flex",
-            flexWrap: "wrap",
-            alignItems: "center",
-            justifyContent: "space-between",
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            justifyContent: 'space-between'
           }}
         >
           <Button
             sx={{ mr: 4, mb: 2 }}
-            color="secondary"
-            variant="outlined"
-            startIcon={<Icon icon="mdi:export-variant" fontSize={20} />}
+            color='secondary'
+            variant='outlined'
+            startIcon={<Icon icon='mdi:export-variant' fontSize={20} />}
           >
             Export
           </Button>
 
-          <Box sx={{ display: "flex", flexWrap: "wrap", alignItems: "center" }}>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
             <TextInputSearch
               handleSearchFilter={handleSearchFilter}
               searchFilterValue={searchFilter}
-              textFieldAttribute={{ size: "small", sx: { mb: 2 } }}
+              textFieldAttribute={{ size: 'small', sx: { mb: 2 } }}
             />
 
-            <Button
-              sx={{ mb: 2, ml: 5 }}
-              onClick={handleCreate}
-              variant="contained"
-            >
+            <Button sx={{ mb: 2, ml: 5 }} onClick={handleCreate} variant='contained'>
               Add User
             </Button>
           </Box>

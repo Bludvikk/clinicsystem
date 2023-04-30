@@ -1,8 +1,8 @@
 // ** MUI Imports
-import { Theme } from '@mui/material/styles'
+import { Theme } from '@mui/material/styles';
 
 // ** Util Imports
-import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
+import { hexToRGBA } from 'src/@core/utils/hex-to-rgba';
 
 const Chip = (theme: Theme) => {
   return {
@@ -74,7 +74,7 @@ const Chip = (theme: Theme) => {
         }
       }
     }
-  }
-}
+  };
+};
 
-export default Chip
+export default Chip;

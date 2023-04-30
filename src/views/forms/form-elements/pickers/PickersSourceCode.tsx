@@ -57,7 +57,7 @@ const PickersBasic = ({ popperPlacement }) => {
 export default PickersBasic
 `}</code>
   </pre>
-)
+);
 
 export const PickersCallbacksJSXCode = (
   <pre className='language-jsx'>
@@ -125,7 +125,7 @@ const PickersCallbacks = ({ popperPlacement }) => {
 export default PickersCallbacks
 `}</code>
   </pre>
-)
+);
 
 export const PickersCustomInputJSXCode = (
   <pre className='language-jsx'>
@@ -147,7 +147,7 @@ const PickersComponent = forwardRef(({ ...props }, ref) => {
 export default PickersComponent
 `}</code>
   </pre>
-)
+);
 
 export const PickersCustomizationJSXCode = (
   <pre className='language-jsx'>
@@ -199,7 +199,7 @@ const PickersCustomization = ({ popperPlacement }) => {
 export default PickersCustomization
 `}</code>
   </pre>
-)
+);
 
 export const PickersIncludeExcludeJSXCode = (
   <pre className='language-jsx'>
@@ -289,7 +289,7 @@ const PickersIncludeExclude = ({ popperPlacement }) => {
 export default PickersIncludeExclude
 `}</code>
   </pre>
-)
+);
 
 export const PickersLocaleJSXCode = (
   <pre className='language-jsx'>
@@ -349,7 +349,7 @@ const PickersLocale = ({ popperPlacement }) => {
 export default PickersLocale
 `}</code>
   </pre>
-)
+);
 
 export const PickersMinMaxJSXCode = (
   <pre className='language-jsx'>
@@ -401,7 +401,7 @@ const PickersMinMax = ({ popperPlacement }) => {
 export default PickersMinMax
 `}</code>
   </pre>
-)
+);
 
 export const PickersMonthYearQuarterJSXCode = (
   <pre className='language-jsx'>
@@ -465,7 +465,7 @@ const PickersMonthYear = ({ popperPlacement }) => {
 export default PickersMonthYear
 `}</code>
   </pre>
-)
+);
 
 export const PickersOptionsJSXCode = (
   <pre className='language-jsx'>
@@ -554,7 +554,7 @@ const PickersOptions = ({ popperPlacement }) => {
 export default PickersOptions
 `}</code>
   </pre>
-)
+);
 
 export const PickersRangeJSXCode = (
   <pre className='language-jsx'>
@@ -633,7 +633,7 @@ const PickersRange = ({ popperPlacement }) => {
 export default PickersRange
 `}</code>
   </pre>
-)
+);
 
 export const PickersMonthYearDropdownsJSXCode = (
   <pre className='language-jsx'>
@@ -698,7 +698,7 @@ const PickersMonthYearDropdowns = ({ popperPlacement }) => {
 export default PickersMonthYearDropdowns
 `}</code>
   </pre>
-)
+);
 
 export const PickersSpecificRangeJSXCode = (
   <pre className='language-jsx'>
@@ -755,7 +755,7 @@ const PickersSpecificRange = ({ popperPlacement }) => {
 export default PickersSpecificRange
 `}</code>
   </pre>
-)
+);
 
 export const PickersTimeJSXCode = (
   <pre className='language-jsx'>
@@ -811,7 +811,7 @@ const PickersTime = ({ popperPlacement }) => {
 export default PickersTime
 `}</code>
   </pre>
-)
+);
 
 export const PickersBasicTSXCode = (
   <pre className='language-jsx'>
@@ -875,7 +875,7 @@ const PickersBasic = ({ popperPlacement }: { popperPlacement: ReactDatePickerPro
 export default PickersBasic
 `}</code>
   </pre>
-)
+);
 
 export const PickersCallbacksTSXCode = (
   <pre className='language-jsx'>
@@ -946,7 +946,7 @@ const PickersCallbacks = ({ popperPlacement }: { popperPlacement: ReactDatePicke
 export default PickersCallbacks
 `}</code>
   </pre>
-)
+);
 
 export const PickersCustomInputTSXCode = (
   <pre className='language-jsx'>
@@ -973,7 +973,7 @@ const PickersComponent = forwardRef(({ ...props }: PickerProps, ref) => {
 export default PickersComponent
 `}</code>
   </pre>
-)
+);
 
 export const PickersCustomizationTSXCode = (
   <pre className='language-jsx'>
@@ -1028,7 +1028,7 @@ const PickersCustomization = ({ popperPlacement }: { popperPlacement: ReactDateP
 export default PickersCustomization
 `}</code>
   </pre>
-)
+);
 
 export const PickersLocaleTSXCode = (
   <pre className='language-jsx'>
@@ -1095,7 +1095,7 @@ const PickersLocale = ({ popperPlacement }: { popperPlacement: ReactDatePickerPr
 export default PickersLocale
 `}</code>
   </pre>
-)
+);
 
 export const PickersIncludeExcludeTSXCode = (
   <pre className='language-jsx'>
@@ -1188,7 +1188,7 @@ const PickersIncludeExclude = ({ popperPlacement }: { popperPlacement: ReactDate
 export default PickersIncludeExclude
 `}</code>
   </pre>
-)
+);
 
 export const PickersMonthYearQuarterTSXCode = (
   <pre className='language-jsx'>
@@ -1255,7 +1255,7 @@ const PickersMonthYear = ({ popperPlacement }: { popperPlacement: ReactDatePicke
 export default PickersMonthYear
 `}</code>
   </pre>
-)
+);
 
 export const PickersOptionsTSXCode = (
   <pre className='language-jsx'>
@@ -1347,7 +1347,7 @@ const PickersOptions = ({ popperPlacement }: { popperPlacement: ReactDatePickerP
 export default PickersOptions
 `}</code>
   </pre>
-)
+);
 
 export const PickersRangeTSXCode = (
   <pre className='language-jsx'>
@@ -1444,7 +1444,7 @@ const PickersRange = ({ popperPlacement }: { popperPlacement: ReactDatePickerPro
 export default PickersRange
 `}</code>
   </pre>
-)
+);
 
 export const PickersMonthYearDropdownsTSXCode = (
   <pre className='language-jsx'>
@@ -1516,7 +1516,7 @@ const PickersMonthYearDropdowns = ({
 export default PickersMonthYearDropdowns
 `}</code>
   </pre>
-)
+);
 
 export const PickersMinMaxTSXCode = (
   <pre className='language-jsx'>
@@ -1571,7 +1571,7 @@ const PickersMinMax = ({ popperPlacement }: { popperPlacement: ReactDatePickerPr
 export default PickersMinMax
 `}</code>
   </pre>
-)
+);
 
 export const PickersSpecificRangeTSXCode = (
   <pre className='language-jsx'>
@@ -1631,7 +1631,7 @@ const PickersSpecificRange = ({ popperPlacement }: { popperPlacement: ReactDateP
 export default PickersSpecificRange
 `}</code>
   </pre>
-)
+);
 
 export const PickersTimeTSXCode = (
   <pre className='language-jsx'>
@@ -1690,4 +1690,4 @@ const PickersTime = ({ popperPlacement }: { popperPlacement: ReactDatePickerProp
 export default PickersTime
 `}</code>
   </pre>
-)
+);

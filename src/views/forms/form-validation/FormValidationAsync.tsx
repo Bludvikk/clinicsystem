@@ -1,38 +1,38 @@
 // ** React Imports
-import { MouseEvent, useState } from 'react'
+import { MouseEvent, useState } from 'react';
 
 // ** MUI Imports
-import Card from '@mui/material/Card'
-import Grid from '@mui/material/Grid'
-import Button from '@mui/material/Button'
-import TextField from '@mui/material/TextField'
-import CardHeader from '@mui/material/CardHeader'
-import InputLabel from '@mui/material/InputLabel'
-import IconButton from '@mui/material/IconButton'
-import CardContent from '@mui/material/CardContent'
-import FormControl from '@mui/material/FormControl'
-import OutlinedInput from '@mui/material/OutlinedInput'
-import FormHelperText from '@mui/material/FormHelperText'
-import InputAdornment from '@mui/material/InputAdornment'
-import CircularProgress from '@mui/material/CircularProgress'
+import Card from '@mui/material/Card';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import CardHeader from '@mui/material/CardHeader';
+import InputLabel from '@mui/material/InputLabel';
+import IconButton from '@mui/material/IconButton';
+import CardContent from '@mui/material/CardContent';
+import FormControl from '@mui/material/FormControl';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import FormHelperText from '@mui/material/FormHelperText';
+import InputAdornment from '@mui/material/InputAdornment';
+import CircularProgress from '@mui/material/CircularProgress';
 
 // ** Third Party Imports
-import toast from 'react-hot-toast'
-import { useForm, Controller } from 'react-hook-form'
+import toast from 'react-hot-toast';
+import { useForm, Controller } from 'react-hook-form';
 
 // ** Icon Imports
-import Icon from 'src/@core/components/icon'
+import Icon from 'src/@core/components/icon';
 
 interface State {
-  password: string
-  showPassword: boolean
+  password: string;
+  showPassword: boolean;
 }
 
 interface FormInputs {
-  email: string
-  lastName: string
-  password: string
-  firstName: string
+  email: string;
+  lastName: string;
+  password: string;
+  firstName: string;
 }
 
 const defaultValues = {
@@ -40,38 +40,38 @@ const defaultValues = {
   lastName: '',
   password: '',
   firstName: ''
-}
+};
 
 const FormValidationAsync = () => {
   // ** States
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(false);
   const [state, setState] = useState<State>({
     password: '',
     showPassword: false
-  })
+  });
 
   // ** Hook
   const {
     control,
     handleSubmit,
     formState: { errors }
-  } = useForm<FormInputs>({ defaultValues })
+  } = useForm<FormInputs>({ defaultValues });
 
   const handleClickShowPassword = () => {
-    setState({ ...state, showPassword: !state.showPassword })
-  }
+    setState({ ...state, showPassword: !state.showPassword });
+  };
 
   const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault()
-  }
+    event.preventDefault();
+  };
 
   const onSubmit = async () => {
-    setLoading(true)
-    const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
-    await sleep(2000)
-    setLoading(false)
-    toast.success('Form Submitted')
-  }
+    setLoading(true);
+    const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+    await sleep(2000);
+    setLoading(false);
+    toast.success('Form Submitted');
+  };
 
   return (
     <Card>
@@ -214,7 +214,7 @@ const FormValidationAsync = () => {
         </form>
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
-export default FormValidationAsync
+export default FormValidationAsync;

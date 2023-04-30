@@ -1,5 +1,5 @@
 // ** MUI Imports
-import TextField from '@mui/material/TextField'
+import TextField from '@mui/material/TextField';
 
 const TextFieldVariant = () => {
   return (
@@ -8,7 +8,7 @@ const TextFieldVariant = () => {
       <TextField id='filled-basic' label='Filled' variant='filled' />
       <TextField id='standard-basic' label='Standard' variant='standard' />
     </form>
-  )
-}
+  );
+};
 
-export default TextFieldVariant
+export default TextFieldVariant;

@@ -1,5 +1,5 @@
 // ** MUI Imports
-import Slider from '@mui/material/Slider'
+import Slider from '@mui/material/Slider';
 
 const marks = [
   {
@@ -18,11 +18,11 @@ const marks = [
     value: 100,
     label: '100°'
   }
-]
+];
 
 const valuetext = (value: number) => {
-  return `${value}°C`
-}
+  return `${value}°C`;
+};
 
 const SliderInvertedTrack = () => {
   return (
@@ -33,7 +33,7 @@ const SliderInvertedTrack = () => {
       getAriaValueText={valuetext}
       aria-labelledby='inverted-track-slider'
     />
-  )
-}
+  );
+};
 
-export default SliderInvertedTrack
+export default SliderInvertedTrack;

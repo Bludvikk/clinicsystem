@@ -54,7 +54,7 @@ const SelectControlledUncontrolled = () => {
 export default SelectControlledUncontrolled
 `}</code>
   </pre>
-)
+);
 
 export const SelectCustomizedJSXCode = (
   <pre className='language-jsx'>
@@ -155,7 +155,7 @@ const SelectCustomized = () => {
 export default SelectCustomized
 `}</code>
   </pre>
-)
+);
 
 export const SelectMultipleJSXCode = (
   <pre className='language-jsx'>
@@ -350,7 +350,7 @@ const SelectMultiple = () => {
 export default SelectMultiple
 `}</code>
   </pre>
-)
+);
 
 export const SelectGroupingJSXCode = (
   <pre className='language-jsx'>
@@ -399,7 +399,7 @@ const SelectGrouping = () => {
 export default SelectGrouping
 `}</code>
   </pre>
-)
+);
 
 export const SelectNativeJSXCode = (
   <pre className='language-jsx'>
@@ -469,7 +469,7 @@ const SelectNative = () => {
 export default SelectNative
 `}</code>
   </pre>
-)
+);
 
 export const SelectPropsJSXCode = (
   <pre className='language-jsx'>
@@ -602,7 +602,7 @@ const SelectProps = () => {
 export default SelectProps
 `}</code>
   </pre>
-)
+);
 
 export const SelectWithDialogJSXCode = (
   <pre className='language-jsx'>
@@ -687,7 +687,7 @@ const SelectWithDialog = () => {
 export default SelectWithDialog
 `}</code>
   </pre>
-)
+);
 
 export const SelectVariantsJSXCode = (
   <pre className='language-jsx'>
@@ -742,7 +742,7 @@ const SelectVariants = () => {
 export default SelectVariants
 `}</code>
   </pre>
-)
+);
 
 export const SelectControlledUncontrolledTSXCode = (
   <pre className='language-jsx'>
@@ -800,7 +800,7 @@ const SelectControlledUncontrolled = () => {
 export default SelectControlledUncontrolled
 `}</code>
   </pre>
-)
+);
 
 export const SelectMultipleTSXCode = (
   <pre className='language-jsx'>
@@ -994,7 +994,7 @@ const SelectMultiple = () => {
 export default SelectMultiple
 `}</code>
   </pre>
-)
+);
 
 export const SelectGroupingTSXCode = (
   <pre className='language-jsx'>
@@ -1043,7 +1043,7 @@ const SelectGrouping = () => {
 export default SelectGrouping
 `}</code>
   </pre>
-)
+);
 
 export const SelectCustomizedTSXCode = (
   <pre className='language-jsx'>
@@ -1144,7 +1144,7 @@ const SelectCustomized = () => {
 export default SelectCustomized
 `}</code>
   </pre>
-)
+);
 
 export const SelectNativeTSXCode = (
   <pre className='language-jsx'>
@@ -1214,7 +1214,7 @@ const SelectNative = () => {
 export default SelectNative
 `}</code>
   </pre>
-)
+);
 
 export const SelectPropsTSXCode = (
   <pre className='language-jsx'>
@@ -1347,7 +1347,7 @@ const SelectProps = () => {
 export default SelectProps
 `}</code>
   </pre>
-)
+);
 
 export const SelectVariantsTSXCode = (
   <pre className='language-jsx'>
@@ -1402,7 +1402,7 @@ const SelectVariants = () => {
 export default SelectVariants
 `}</code>
   </pre>
-)
+);
 
 export const SelectWithDialogTSXCode = (
   <pre className='language-jsx'>
@@ -1487,4 +1487,4 @@ const SelectWithDialog = () => {
 export default SelectWithDialog
 `}</code>
   </pre>
-)
+);

@@ -1,7 +1,7 @@
 // ** MUI Imports
-import Checkbox from '@mui/material/Checkbox'
-import FormGroup from '@mui/material/FormGroup'
-import FormControlLabel from '@mui/material/FormControlLabel'
+import Checkbox from '@mui/material/Checkbox';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 const CheckboxesColors = () => {
   return (
@@ -16,7 +16,7 @@ const CheckboxesColors = () => {
       <FormControlLabel label='Warning' control={<Checkbox defaultChecked name='color-warning' color='warning' />} />
       <FormControlLabel label='Info' control={<Checkbox defaultChecked name='color-info' color='info' />} />
     </FormGroup>
-  )
-}
+  );
+};
 
-export default CheckboxesColors
+export default CheckboxesColors;

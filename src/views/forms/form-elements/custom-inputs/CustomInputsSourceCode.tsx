@@ -59,7 +59,7 @@ const BasicCustomCheckbox = () => {
 export default BasicCustomCheckbox
 `}</code>
   </pre>
-)
+);
 
 export const CustomCheckboxImgJSXCode = (
   <pre className='language-jsx'>
@@ -122,7 +122,7 @@ const CustomCheckboxWithImages = () => {
 export default CustomCheckboxWithImages
 `}</code>
   </pre>
-)
+);
 
 export const CustomCheckboxIconsJSXCode = (
   <pre className='language-jsx'>
@@ -196,7 +196,7 @@ const CustomCheckboxWithIcons = () => {
 export default CustomCheckboxWithIcons
 `}</code>
   </pre>
-)
+);
 
 export const CustomRadioBasicJSXCode = (
   <pre className='language-jsx'>
@@ -258,7 +258,7 @@ const BasicCustomRadio = () => {
 export default BasicCustomRadio
 `}</code>
   </pre>
-)
+);
 
 export const CustomRadioIconsJSXCode = (
   <pre className='language-jsx'>
@@ -331,7 +331,7 @@ const CustomRadioWithIcons = () => {
 export default CustomRadioWithIcons
 `}</code>
   </pre>
-)
+);
 
 export const CustomRadioImgJSXCode = (
   <pre className='language-jsx'>
@@ -393,7 +393,7 @@ const CustomRadioWithImages = () => {
 export default CustomRadioWithImages
 `}</code>
   </pre>
-)
+);
 
 export const CustomCheckboxImgTSXCode = (
   <pre className='language-jsx'>
@@ -459,7 +459,7 @@ const CustomCheckboxWithImages = () => {
 export default CustomCheckboxWithImages
 `}</code>
   </pre>
-)
+);
 
 export const CustomRadioIconsTSXCode = (
   <pre className='language-jsx'>
@@ -541,7 +541,7 @@ const CustomRadioWithIcons = () => {
 export default CustomRadioWithIcons
 `}</code>
   </pre>
-)
+);
 
 export const CustomRadioBasicTSXCode = (
   <pre className='language-jsx'>
@@ -607,7 +607,7 @@ const BasicCustomRadio = () => {
 export default BasicCustomRadio
 `}</code>
   </pre>
-)
+);
 
 export const CustomCheckboxIconsTSXCode = (
   <pre className='language-jsx'>
@@ -689,7 +689,7 @@ const CustomCheckboxWithIcons = () => {
 export default CustomCheckboxWithIcons
 `}</code>
   </pre>
-)
+);
 
 export const CustomRadioImgTSXCode = (
   <pre className='language-jsx'>
@@ -755,7 +755,7 @@ const CustomRadioWithImages = () => {
 export default CustomRadioWithImages
 `}</code>
   </pre>
-)
+);
 
 export const CustomCheckboxBasicTSXCode = (
   <pre className='language-jsx'>
@@ -821,4 +821,4 @@ const BasicCustomCheckbox = () => {
 export default BasicCustomCheckbox
 `}</code>
   </pre>
-)
+);

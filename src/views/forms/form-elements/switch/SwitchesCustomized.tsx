@@ -1,7 +1,7 @@
 // ** MUI Imports
-import Switch from '@mui/material/Switch'
-import { styled } from '@mui/material/styles'
-import MuiFormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel'
+import Switch from '@mui/material/Switch';
+import { styled } from '@mui/material/styles';
+import MuiFormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel';
 
 // Styled FormControlLabel component
 const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ theme }) => ({
@@ -35,8 +35,8 @@ const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ t
       transition: theme.transitions.create(['background-color', 'border'])
     }
   }
-}))
+}));
 
-const SwitchesCustomized = () => <FormControlLabel label='iOS Style' control={<Switch defaultChecked />} />
+const SwitchesCustomized = () => <FormControlLabel label='iOS Style' control={<Switch defaultChecked />} />;
 
-export default SwitchesCustomized
+export default SwitchesCustomized;

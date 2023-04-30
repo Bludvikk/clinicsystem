@@ -1,7 +1,7 @@
 // ** MUI Imports
-import Checkbox from '@mui/material/Checkbox'
-import FormGroup from '@mui/material/FormGroup'
-import FormControlLabel from '@mui/material/FormControlLabel'
+import Checkbox from '@mui/material/Checkbox';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 const CheckboxesLabelPlacement = () => {
   return (
@@ -15,7 +15,7 @@ const CheckboxesLabelPlacement = () => {
         <FormControlLabel value='end' control={<Checkbox />} label='End' labelPlacement='end' />
       </FormGroup>
     </div>
-  )
-}
+  );
+};
 
-export default CheckboxesLabelPlacement
+export default CheckboxesLabelPlacement;

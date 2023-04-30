@@ -1,28 +1,28 @@
 // ** React Imports
-import { useState } from 'react'
+import { useState } from 'react';
 
 // ** MUI Imports
-import Box from '@mui/material/Box'
+import Box from '@mui/material/Box';
 
 // ** Third Party Imports
-import addDays from 'date-fns/addDays'
-import subDays from 'date-fns/subDays'
-import setHours from 'date-fns/setHours'
-import DatePicker, { ReactDatePickerProps } from 'react-datepicker'
-import setMinutes from 'date-fns/setMinutes'
+import addDays from 'date-fns/addDays';
+import subDays from 'date-fns/subDays';
+import setHours from 'date-fns/setHours';
+import DatePicker, { ReactDatePickerProps } from 'react-datepicker';
+import setMinutes from 'date-fns/setMinutes';
 
 // ** Types
-import { DateType } from 'src/types/forms/reactDatepickerTypes'
+import { DateType } from 'src/types/forms/reactDatepickerTypes';
 
 // ** Custom Component Imports
-import CustomInput from './PickersCustomInput'
+import CustomInput from './PickersCustomInput';
 
 const PickersIncludeExclude = ({ popperPlacement }: { popperPlacement: ReactDatePickerProps['popperPlacement'] }) => {
   // ** States
-  const [date, setDate] = useState<DateType>(new Date())
-  const [dateExclude, setDateExclude] = useState<DateType>(new Date())
-  const [time, setTime] = useState<DateType>(setHours(setMinutes(new Date(), 0), 18))
-  const [timeExclude, setTimeExclude] = useState<DateType>(setHours(setMinutes(new Date(), 0), 18))
+  const [date, setDate] = useState<DateType>(new Date());
+  const [dateExclude, setDateExclude] = useState<DateType>(new Date());
+  const [time, setTime] = useState<DateType>(setHours(setMinutes(new Date(), 0), 18));
+  const [timeExclude, setTimeExclude] = useState<DateType>(setHours(setMinutes(new Date(), 0), 18));
 
   return (
     <Box sx={{ display: 'flex', flexWrap: 'wrap' }} className='demo-space-x'>
@@ -81,7 +81,7 @@ const PickersIncludeExclude = ({ popperPlacement }: { popperPlacement: ReactDate
         />
       </div>
     </Box>
-  )
-}
+  );
+};
 
-export default PickersIncludeExclude
+export default PickersIncludeExclude;

@@ -19,7 +19,7 @@ const EditorControlled = () => {
 export default EditorControlled
 `}</code>
   </pre>
-)
+);
 
 export const EditorUncontrolledJSXCode = (
   <pre className='language-jsx'>
@@ -31,7 +31,7 @@ const EditorUncontrolled = () => <ReactDraftWysiwyg />
 export default EditorUncontrolled
 `}</code>
   </pre>
-)
+);
 
 export const EditorControlledTSXCode = (
   <pre className='language-jsx'>
@@ -54,7 +54,7 @@ const EditorControlled = () => {
 export default EditorControlled
 `}</code>
   </pre>
-)
+);
 
 export const EditorUncontrolledTSXCode = (
   <pre className='language-jsx'>
@@ -66,4 +66,4 @@ const EditorUncontrolled = () => <ReactDraftWysiwyg />
 export default EditorUncontrolled
 `}</code>
   </pre>
-)
+);

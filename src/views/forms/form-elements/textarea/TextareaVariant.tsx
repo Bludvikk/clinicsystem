@@ -1,17 +1,17 @@
 // ** React Imports
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useState } from 'react';
 
 // ** MUI Imports
-import Box from '@mui/material/Box'
-import TextField from '@mui/material/TextField'
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
 
 const TextareaVariant = () => {
   // ** State
-  const [value, setValue] = useState<string>('Controlled')
+  const [value, setValue] = useState<string>('Controlled');
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value)
-  }
+    setValue(event.target.value);
+  };
 
   return (
     <form noValidate autoComplete='off'>
@@ -80,7 +80,7 @@ const TextareaVariant = () => {
         />
       </div>
     </form>
-  )
-}
+  );
+};
 
-export default TextareaVariant
+export default TextareaVariant;

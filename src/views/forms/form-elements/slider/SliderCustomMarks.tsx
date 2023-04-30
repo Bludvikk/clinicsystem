@@ -1,5 +1,5 @@
 // ** MUI Imports
-import Slider from '@mui/material/Slider'
+import Slider from '@mui/material/Slider';
 
 const marks = [
   {
@@ -18,11 +18,11 @@ const marks = [
     value: 100,
     label: '100°'
   }
-]
+];
 
 const valuetext = (value: number) => {
-  return `${value}°C`
-}
+  return `${value}°C`;
+};
 
 const SliderCustomMarks = () => {
   return (
@@ -34,7 +34,7 @@ const SliderCustomMarks = () => {
       getAriaValueText={valuetext}
       aria-labelledby='custom-marks-slider'
     />
-  )
-}
+  );
+};
 
-export default SliderCustomMarks
+export default SliderCustomMarks;

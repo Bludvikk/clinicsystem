@@ -1,7 +1,7 @@
 // ** MUI Imports
-import Radio from '@mui/material/Radio'
-import RadioGroup from '@mui/material/RadioGroup'
-import FormControlLabel from '@mui/material/FormControlLabel'
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 const RadioSizes = () => {
   return (
@@ -9,7 +9,7 @@ const RadioSizes = () => {
       <FormControlLabel value='small' control={<Radio size='small' />} label='Small' />
       <FormControlLabel value='default' control={<Radio />} label='Default' />
     </RadioGroup>
-  )
-}
+  );
+};
 
-export default RadioSizes
+export default RadioSizes;

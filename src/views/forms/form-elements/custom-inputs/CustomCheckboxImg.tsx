@@ -1,14 +1,14 @@
 // ** React Imports
-import { useState } from 'react'
+import { useState } from 'react';
 
 // ** MUI Imports
-import Grid from '@mui/material/Grid'
+import Grid from '@mui/material/Grid';
 
 // ** Type Import
-import { CustomCheckboxImgData } from 'src/@core/components/custom-checkbox/types'
+import { CustomCheckboxImgData } from 'src/@core/components/custom-checkbox/types';
 
 // ** Demo Components Imports
-import CustomCheckboxImg from 'src/@core/components/custom-checkbox/image'
+import CustomCheckboxImg from 'src/@core/components/custom-checkbox/image';
 
 const data: CustomCheckboxImgData[] = [
   {
@@ -24,22 +24,22 @@ const data: CustomCheckboxImgData[] = [
     value: 'flowers',
     img: '/images/pages/background-5.jpg'
   }
-]
+];
 
 const CustomCheckboxWithImages = () => {
-  const initialSelected: string[] = data.filter(item => item.isSelected).map(item => item.value)
+  const initialSelected: string[] = data.filter(item => item.isSelected).map(item => item.value);
 
   // ** State
-  const [selected, setSelected] = useState<string[]>(initialSelected)
+  const [selected, setSelected] = useState<string[]>(initialSelected);
 
   const handleChange = (value: string) => {
     if (selected.includes(value)) {
-      const updatedArr = selected.filter(item => item !== value)
-      setSelected(updatedArr)
+      const updatedArr = selected.filter(item => item !== value);
+      setSelected(updatedArr);
     } else {
-      setSelected([...selected, value])
+      setSelected([...selected, value]);
     }
-  }
+  };
 
   return (
     <Grid container spacing={4}>
@@ -54,7 +54,7 @@ const CustomCheckboxWithImages = () => {
         />
       ))}
     </Grid>
-  )
-}
+  );
+};
 
-export default CustomCheckboxWithImages
+export default CustomCheckboxWithImages;

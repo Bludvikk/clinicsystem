@@ -1,11 +1,11 @@
 // ** React Import
-import { useEffect, useRef } from "react";
+import { useEffect, useRef } from 'react';
 
 // ** Type Import
-import { LayoutProps } from "src/@core/layouts/types";
+import { LayoutProps } from 'src/@core/layouts/types';
 
 // ** Layout Components
-import VerticalLayout from "./VerticalLayout";
+import VerticalLayout from './VerticalLayout';
 
 const Layout = (props: LayoutProps) => {
   // ** Props
@@ -17,7 +17,7 @@ const Layout = (props: LayoutProps) => {
   useEffect(() => {
     if (hidden) {
       if (settings.navCollapsed) {
-        saveSettings({ ...settings, navCollapsed: false, layout: "vertical" });
+        saveSettings({ ...settings, navCollapsed: false, layout: 'vertical' });
         isCollapsed.current = true;
       }
     } else {
@@ -25,7 +25,7 @@ const Layout = (props: LayoutProps) => {
         saveSettings({
           ...settings,
           navCollapsed: true,
-          layout: settings.lastLayout,
+          layout: settings.lastLayout
         });
         isCollapsed.current = false;
       } else {

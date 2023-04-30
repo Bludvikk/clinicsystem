@@ -1,9 +1,9 @@
 // ** MUI Imports
-import TextField from '@mui/material/TextField'
-import Autocomplete from '@mui/material/Autocomplete'
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 
 // ** Data
-import { top100Films } from 'src/@fake-db/autocomplete'
+import { top100Films } from 'src/@fake-db/autocomplete';
 
 const AutocompleteFreeSolo = () => {
   return (
@@ -14,7 +14,7 @@ const AutocompleteFreeSolo = () => {
       options={top100Films.map(option => option.title)}
       renderInput={params => <TextField {...params} label='Free Solo' />}
     />
-  )
-}
+  );
+};
 
-export default AutocompleteFreeSolo
+export default AutocompleteFreeSolo;

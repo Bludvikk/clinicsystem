@@ -1,23 +1,23 @@
 // ** MUI Imports
-import Divider from '@mui/material/Divider'
-import Typography from '@mui/material/Typography'
-import { styled, useTheme } from '@mui/material/styles'
-import MuiListSubheader, { ListSubheaderProps } from '@mui/material/ListSubheader'
+import Divider from '@mui/material/Divider';
+import Typography from '@mui/material/Typography';
+import { styled, useTheme } from '@mui/material/styles';
+import MuiListSubheader, { ListSubheaderProps } from '@mui/material/ListSubheader';
 
 // ** Types
-import { NavSectionTitle } from 'src/@core/layouts/types'
-import { Settings } from 'src/@core/context/settingsContext'
+import { NavSectionTitle } from 'src/@core/layouts/types';
+import { Settings } from 'src/@core/context/settingsContext';
 
 // ** Custom Components Imports
-import Translations from 'src/layouts/components/Translations'
-import CanViewNavSectionTitle from 'src/layouts/components/acl/CanViewNavSectionTitle'
+import Translations from 'src/layouts/components/Translations';
+import CanViewNavSectionTitle from 'src/layouts/components/acl/CanViewNavSectionTitle';
 
 interface Props {
-  navHover: boolean
-  settings: Settings
-  item: NavSectionTitle
-  collapsedNavWidth: number
-  navigationBorderWidth: number
+  navHover: boolean;
+  settings: Settings;
+  item: NavSectionTitle;
+  collapsedNavWidth: number;
+  navigationBorderWidth: number;
 }
 
 // ** Styled Components
@@ -32,17 +32,17 @@ const ListSubheader = styled((props: ListSubheaderProps) => <MuiListSubheader co
     color: theme.palette.text.disabled,
     transition: 'padding-left .25s ease-in-out'
   })
-)
+);
 
 const VerticalNavSectionTitle = (props: Props) => {
   // ** Props
-  const { item, navHover, settings, collapsedNavWidth, navigationBorderWidth } = props
+  const { item, navHover, settings, collapsedNavWidth, navigationBorderWidth } = props;
 
   // ** Hook
-  const theme = useTheme()
+  const theme = useTheme();
 
   // ** Vars
-  const { mode, navCollapsed } = settings
+  const { mode, navCollapsed } = settings;
 
   const conditionalBorderColor = () => {
     if (mode === 'semi-dark') {
@@ -50,21 +50,21 @@ const VerticalNavSectionTitle = (props: Props) => {
         '&, &:before': {
           borderColor: `rgba(${theme.palette.customColors.dark}, 0.12)`
         }
-      }
-    } else return {}
-  }
+      };
+    } else return {};
+  };
 
   const conditionalColor = () => {
     if (mode === 'semi-dark') {
       return {
         color: `rgba(${theme.palette.customColors.dark}, 0.38) !important`
-      }
+      };
     } else {
       return {
         color: 'text.disabled'
-      }
+      };
     }
-  }
+  };
 
   return (
     <CanViewNavSectionTitle navTitle={item}>
@@ -100,7 +100,7 @@ const VerticalNavSectionTitle = (props: Props) => {
         </Divider>
       </ListSubheader>
     </CanViewNavSectionTitle>
-  )
-}
+  );
+};
 
-export default VerticalNavSectionTitle
+export default VerticalNavSectionTitle;

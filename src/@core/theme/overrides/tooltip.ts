@@ -1,8 +1,8 @@
 // ** MUI Imports
-import { Theme } from '@mui/material/styles'
+import { Theme } from '@mui/material/styles';
 
 // ** Util Import
-import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
+import { hexToRGBA } from 'src/@core/utils/hex-to-rgba';
 
 const Tooltip = (theme: Theme) => {
   return {
@@ -18,7 +18,7 @@ const Tooltip = (theme: Theme) => {
         }
       }
     }
-  }
-}
+  };
+};
 
-export default Tooltip
+export default Tooltip;

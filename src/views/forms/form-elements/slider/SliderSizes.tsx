@@ -1,6 +1,6 @@
 // ** MUI Imports
-import Slider from '@mui/material/Slider'
-import Typography from '@mui/material/Typography'
+import Slider from '@mui/material/Slider';
+import Typography from '@mui/material/Typography';
 
 const SliderSizes = () => {
   return (
@@ -10,7 +10,7 @@ const SliderSizes = () => {
       <Typography sx={{ fontWeight: 500 }}>Normal</Typography>
       <Slider defaultValue={30} aria-labelledby='normal-slider' />
     </div>
-  )
-}
+  );
+};
 
-export default SliderSizes
+export default SliderSizes;

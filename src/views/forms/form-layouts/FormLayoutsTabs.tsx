@@ -1,88 +1,88 @@
 // ** React Imports
-import { ChangeEvent, forwardRef, MouseEvent, SyntheticEvent, useState } from 'react'
+import { ChangeEvent, forwardRef, MouseEvent, SyntheticEvent, useState } from 'react';
 
 // ** MUI Imports
-import Tab from '@mui/material/Tab'
-import Card from '@mui/material/Card'
-import Grid from '@mui/material/Grid'
-import TabList from '@mui/lab/TabList'
-import TabPanel from '@mui/lab/TabPanel'
-import Button from '@mui/material/Button'
-import Divider from '@mui/material/Divider'
-import TabContext from '@mui/lab/TabContext'
-import MenuItem from '@mui/material/MenuItem'
-import TextField from '@mui/material/TextField'
-import InputLabel from '@mui/material/InputLabel'
-import IconButton from '@mui/material/IconButton'
-import CardContent from '@mui/material/CardContent'
-import FormControl from '@mui/material/FormControl'
-import CardActions from '@mui/material/CardActions'
-import OutlinedInput from '@mui/material/OutlinedInput'
-import InputAdornment from '@mui/material/InputAdornment'
-import Select, { SelectChangeEvent } from '@mui/material/Select'
+import Tab from '@mui/material/Tab';
+import Card from '@mui/material/Card';
+import Grid from '@mui/material/Grid';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
+import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
+import TabContext from '@mui/lab/TabContext';
+import MenuItem from '@mui/material/MenuItem';
+import TextField from '@mui/material/TextField';
+import InputLabel from '@mui/material/InputLabel';
+import IconButton from '@mui/material/IconButton';
+import CardContent from '@mui/material/CardContent';
+import FormControl from '@mui/material/FormControl';
+import CardActions from '@mui/material/CardActions';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputAdornment from '@mui/material/InputAdornment';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 // ** Third Party Imports
-import DatePicker from 'react-datepicker'
+import DatePicker from 'react-datepicker';
 
 // ** Icon Imports
-import Icon from 'src/@core/components/icon'
+import Icon from 'src/@core/components/icon';
 
 // ** Types
-import { DateType } from 'src/types/forms/reactDatepickerTypes'
+import { DateType } from 'src/types/forms/reactDatepickerTypes';
 
 interface State {
-  password: string
-  password2: string
-  showPassword: boolean
-  showPassword2: boolean
+  password: string;
+  password2: string;
+  showPassword: boolean;
+  showPassword2: boolean;
 }
 
 const CustomInput = forwardRef((props, ref) => {
-  return <TextField fullWidth {...props} inputRef={ref} label='Birth Date' autoComplete='off' />
-})
+  return <TextField fullWidth {...props} inputRef={ref} label='Birth Date' autoComplete='off' />;
+});
 
 const FormLayoutsTabs = () => {
   // ** States
-  const [value, setValue] = useState<string>('personal-info')
-  const [date, setDate] = useState<DateType>(null)
-  const [language, setLanguage] = useState<string[]>([])
+  const [value, setValue] = useState<string>('personal-info');
+  const [date, setDate] = useState<DateType>(null);
+  const [language, setLanguage] = useState<string[]>([]);
   const [values, setValues] = useState<State>({
     password: '',
     password2: '',
     showPassword: false,
     showPassword2: false
-  })
+  });
 
   const handleTabsChange = (event: SyntheticEvent, newValue: string) => {
-    setValue(newValue)
-  }
+    setValue(newValue);
+  };
 
   // Handle Password
   const handlePasswordChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
-    setValues({ ...values, [prop]: event.target.value })
-  }
+    setValues({ ...values, [prop]: event.target.value });
+  };
   const handleClickShowPassword = () => {
-    setValues({ ...values, showPassword: !values.showPassword })
-  }
+    setValues({ ...values, showPassword: !values.showPassword });
+  };
   const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault()
-  }
+    event.preventDefault();
+  };
 
   // Handle Confirm Password
   const handleConfirmChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
-    setValues({ ...values, [prop]: event.target.value })
-  }
+    setValues({ ...values, [prop]: event.target.value });
+  };
   const handleClickShowConfirmPassword = () => {
-    setValues({ ...values, showPassword2: !values.showPassword2 })
-  }
+    setValues({ ...values, showPassword2: !values.showPassword2 });
+  };
   const handleMouseDownConfirmPassword = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault()
-  }
+    event.preventDefault();
+  };
 
   // Handle Select
   const handleSelectChange = (event: SelectChangeEvent<string[]>) => {
-    setLanguage(event.target.value as string[])
-  }
+    setLanguage(event.target.value as string[]);
+  };
 
   return (
     <Card>
@@ -255,7 +255,7 @@ const FormLayoutsTabs = () => {
         </form>
       </TabContext>
     </Card>
-  )
-}
+  );
+};
 
-export default FormLayoutsTabs
+export default FormLayoutsTabs;

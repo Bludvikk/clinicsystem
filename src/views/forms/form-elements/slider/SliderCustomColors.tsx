@@ -1,10 +1,10 @@
 // ** MUI Imports
-import { styled } from '@mui/material/styles'
-import Typography from '@mui/material/Typography'
-import MuiSlider, { SliderProps } from '@mui/material/Slider'
+import { styled } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
+import MuiSlider, { SliderProps } from '@mui/material/Slider';
 
 // ** Util Import
-import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
+import { hexToRGBA } from 'src/@core/utils/hex-to-rgba';
 
 // Styled component for a success Slider
 const SliderSuccess = styled(MuiSlider)<SliderProps>(({ theme }) => ({
@@ -20,7 +20,7 @@ const SliderSuccess = styled(MuiSlider)<SliderProps>(({ theme }) => ({
   '& .MuiSlider-thumb.Mui-focusVisible.Mui-active': {
     boxShadow: `0 0 0 14px ${hexToRGBA(theme.palette.success.main, 0.16)}`
   }
-}))
+}));
 
 // Styled component for a error Slider
 const SliderError = styled(MuiSlider)<SliderProps>(({ theme }) => ({
@@ -36,7 +36,7 @@ const SliderError = styled(MuiSlider)<SliderProps>(({ theme }) => ({
   '& .MuiSlider-thumb.Mui-focusVisible.Mui-active': {
     boxShadow: `0 0 0 14px ${hexToRGBA(theme.palette.error.main, 0.16)}`
   }
-}))
+}));
 
 // Styled component for a warning Slider
 const SliderWarning = styled(MuiSlider)<SliderProps>(({ theme }) => ({
@@ -52,7 +52,7 @@ const SliderWarning = styled(MuiSlider)<SliderProps>(({ theme }) => ({
   '& .MuiSlider-thumb.Mui-focusVisible.Mui-active': {
     boxShadow: `0 0 0 14px ${hexToRGBA(theme.palette.warning.main, 0.16)}`
   }
-}))
+}));
 
 // Styled component for a info Slider
 const SliderInfo = styled(MuiSlider)<SliderProps>(({ theme }) => ({
@@ -68,7 +68,7 @@ const SliderInfo = styled(MuiSlider)<SliderProps>(({ theme }) => ({
   '& .MuiSlider-thumb.Mui-focusVisible.Mui-active': {
     boxShadow: `0 0 0 14px ${hexToRGBA(theme.palette.info.main, 0.16)}`
   }
-}))
+}));
 
 const SliderCustomColors = () => {
   return (
@@ -82,7 +82,7 @@ const SliderCustomColors = () => {
       <Typography sx={{ fontWeight: 500 }}>Info Slider</Typography>
       <SliderInfo defaultValue={30} aria-labelledby='info-slider' />
     </div>
-  )
-}
+  );
+};
 
-export default SliderCustomColors
+export default SliderCustomColors;

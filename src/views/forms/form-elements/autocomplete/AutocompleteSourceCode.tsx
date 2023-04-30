@@ -30,7 +30,7 @@ const AutocompleteCheckboxes = () => {
 export default AutocompleteCheckboxes
 `}</code>
   </pre>
-)
+);
 
 export const AutocompleteCountryJSXCode = (
   <pre className='language-jsx'>
@@ -79,7 +79,7 @@ const AutocompleteCountry = () => {
 export default AutocompleteCountry
 `}</code>
   </pre>
-)
+);
 
 export const AutocompleteAsynchronousRequestJSXCode = (
   <pre className='language-jsx'>
@@ -163,7 +163,7 @@ const AutocompleteAsynchronousRequest = () => {
 export default AutocompleteAsynchronousRequest
 `}</code>
   </pre>
-)
+);
 
 export const AutocompleteControlledUncontrolledJSXCode = (
   <pre className='language-jsx'>
@@ -211,7 +211,7 @@ const AutocompleteControlledUncontrolled = () => {
 export default AutocompleteControlledUncontrolled
 `}</code>
   </pre>
-)
+);
 
 export const AutocompleteCreatableJSXCode = (
   <pre className='language-jsx'>
@@ -286,7 +286,7 @@ const AutocompleteCreatable = () => {
 export default AutocompleteCreatable
 `}</code>
   </pre>
-)
+);
 
 export const AutocompleteCustomInputJSXCode = (
   <pre className='language-jsx'>
@@ -320,7 +320,7 @@ const AutocompleteCustomInput = () => {
 export default AutocompleteCustomInput
 `}</code>
   </pre>
-)
+);
 
 export const AutocompleteGroupedJSXCode = (
   <pre className='language-jsx'>
@@ -356,7 +356,7 @@ const AutocompleteGrouped = () => {
 export default AutocompleteGrouped
 `}</code>
   </pre>
-)
+);
 
 export const AutocompleteCustomFilterJSXCode = (
   <pre className='language-jsx'>
@@ -387,7 +387,7 @@ const AutocompleteCustomFilter = () => {
 export default AutocompleteCustomFilter
 `}</code>
   </pre>
-)
+);
 
 export const AutocompleteMultipleValuesJSXCode = (
   <pre className='language-jsx'>
@@ -445,7 +445,7 @@ const AutocompleteMultipleValues = () => {
 export default AutocompleteMultipleValues
 `}</code>
   </pre>
-)
+);
 
 export const AutocompletePropsJSXCode = (
   <pre className='language-jsx'>
@@ -539,7 +539,7 @@ const AutocompleteProps = () => {
 export default AutocompleteProps
 `}</code>
   </pre>
-)
+);
 
 export const AutocompleteDisabledOptionsJSXCode = (
   <pre className='language-jsx'>
@@ -566,7 +566,7 @@ const AutocompleteDisabledOptions = () => {
 export default AutocompleteDisabledOptions
 `}</code>
   </pre>
-)
+);
 
 export const AutocompleteSmallSizeJSXCode = (
   <pre className='language-jsx'>
@@ -605,7 +605,7 @@ const AutocompleteSmallSize = () => {
 export default AutocompleteSmallSize
 `}</code>
   </pre>
-)
+);
 
 export const AutocompleteVariantsJSXCode = (
   <pre className='language-jsx'>
@@ -656,7 +656,7 @@ const AutocompleteVariants = () => {
 export default AutocompleteVariants
 `}</code>
   </pre>
-)
+);
 
 export const AutocompleteFixedOptionsJSXCode = (
   <pre className='language-jsx'>
@@ -705,7 +705,7 @@ const AutocompleteFixedOptions = () => {
 export default AutocompleteFixedOptions
 `}</code>
   </pre>
-)
+);
 
 export const AutocompleteFreeSoloJSXCode = (
   <pre className='language-jsx'>
@@ -731,7 +731,7 @@ const AutocompleteFreeSolo = () => {
 export default AutocompleteFreeSolo
 `}</code>
   </pre>
-)
+);
 
 export const AutocompleteLimitTagsJSXCode = (
   <pre className='language-jsx'>
@@ -759,7 +759,7 @@ const AutocompleteLimitTags = () => {
 export default AutocompleteLimitTags
 `}</code>
   </pre>
-)
+);
 
 export const AutocompleteCheckboxesTSXCode = (
   <pre className='language-jsx'>
@@ -793,7 +793,7 @@ const AutocompleteCheckboxes = () => {
 export default AutocompleteCheckboxes
 `}</code>
   </pre>
-)
+);
 
 export const AutocompleteControlledUncontrolledTSXCode = (
   <pre className='language-jsx'>
@@ -846,7 +846,7 @@ const AutocompleteControlledUncontrolled = () => {
 export default AutocompleteControlledUncontrolled
 `}</code>
   </pre>
-)
+);
 
 export const AutocompleteCountryTSXCode = (
   <pre className='language-jsx'>
@@ -901,7 +901,7 @@ const AutocompleteCountry = () => {
 export default AutocompleteCountry
 `}</code>
   </pre>
-)
+);
 
 export const AutocompleteAsynchronousRequestTSXCode = (
   <pre className='language-jsx'>
@@ -995,7 +995,7 @@ const AutocompleteAsynchronousRequest = () => {
 export default AutocompleteAsynchronousRequest
 `}</code>
   </pre>
-)
+);
 
 export const AutocompleteCustomInputTSXCode = (
   <pre className='language-jsx'>
@@ -1029,7 +1029,7 @@ const AutocompleteCustomInput = () => {
 export default AutocompleteCustomInput
 `}</code>
   </pre>
-)
+);
 
 export const AutocompleteCreatableTSXCode = (
   <pre className='language-jsx'>
@@ -1110,7 +1110,7 @@ const AutocompleteCreatable = () => {
 export default AutocompleteCreatable
 `}</code>
   </pre>
-)
+);
 
 export const AutocompleteCustomFilterTSXCode = (
   <pre className='language-jsx'>
@@ -1146,7 +1146,7 @@ const AutocompleteCustomFilter = () => {
 export default AutocompleteCustomFilter
 `}</code>
   </pre>
-)
+);
 
 export const AutocompleteFixedOptionsTSXCode = (
   <pre className='language-jsx'>
@@ -1201,7 +1201,7 @@ const AutocompleteFixedOptions = () => {
 export default AutocompleteFixedOptions
 `}</code>
   </pre>
-)
+);
 
 export const AutocompleteGroupedTSXCode = (
   <pre className='language-jsx'>
@@ -1237,7 +1237,7 @@ const AutocompleteGrouped = () => {
 export default AutocompleteGrouped
 `}</code>
   </pre>
-)
+);
 
 export const AutocompleteMultipleValuesTSXCode = (
   <pre className='language-jsx'>
@@ -1295,7 +1295,7 @@ const AutocompleteMultipleValues = () => {
 export default AutocompleteMultipleValues
 `}</code>
   </pre>
-)
+);
 
 export const AutocompleteFreeSoloTSXCode = (
   <pre className='language-jsx'>
@@ -1321,7 +1321,7 @@ const AutocompleteFreeSolo = () => {
 export default AutocompleteFreeSolo
 `}</code>
   </pre>
-)
+);
 
 export const AutocompleteLimitTagsTSXCode = (
   <pre className='language-jsx'>
@@ -1349,7 +1349,7 @@ const AutocompleteLimitTags = () => {
 export default AutocompleteLimitTags
 `}</code>
   </pre>
-)
+);
 
 export const AutocompleteSmallSizeTSXCode = (
   <pre className='language-jsx'>
@@ -1388,7 +1388,7 @@ const AutocompleteSmallSize = () => {
 export default AutocompleteSmallSize
 `}</code>
   </pre>
-)
+);
 
 export const AutocompleteVariantsTSXCode = (
   <pre className='language-jsx'>
@@ -1439,7 +1439,7 @@ const AutocompleteVariants = () => {
 export default AutocompleteVariants
 `}</code>
   </pre>
-)
+);
 
 export const AutocompletePropsTSXCode = (
   <pre className='language-jsx'>
@@ -1533,7 +1533,7 @@ const AutocompleteProps = () => {
 export default AutocompleteProps
 `}</code>
   </pre>
-)
+);
 
 export const AutocompleteDisabledOptionsTSXCode = (
   <pre className='language-jsx'>
@@ -1560,4 +1560,4 @@ const AutocompleteDisabledOptions = () => {
 export default AutocompleteDisabledOptions
 `}</code>
   </pre>
-)
+);

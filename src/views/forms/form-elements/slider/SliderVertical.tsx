@@ -1,6 +1,6 @@
 // ** MUI Imports
-import Box from '@mui/material/Box'
-import Slider from '@mui/material/Slider'
+import Box from '@mui/material/Box';
+import Slider from '@mui/material/Slider';
 
 const marks = [
   {
@@ -19,11 +19,11 @@ const marks = [
     value: 100,
     label: '100°'
   }
-]
+];
 
 const valuetext = (value: number) => {
-  return `${value}°C`
-}
+  return `${value}°C`;
+};
 
 const SliderVertical = () => {
   return (
@@ -44,7 +44,7 @@ const SliderVertical = () => {
         aria-labelledby='vertical-marks-slider'
       />
     </Box>
-  )
-}
+  );
+};
 
-export default SliderVertical
+export default SliderVertical;

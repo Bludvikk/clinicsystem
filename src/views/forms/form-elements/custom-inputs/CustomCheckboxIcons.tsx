@@ -1,18 +1,18 @@
 // ** React Imports
-import { useState } from 'react'
+import { useState } from 'react';
 
 // ** MUI Imports
-import Grid from '@mui/material/Grid'
+import Grid from '@mui/material/Grid';
 
 // ** Type Import
-import { CustomCheckboxIconsData, CustomCheckboxIconsProps } from 'src/@core/components/custom-checkbox/types'
+import { CustomCheckboxIconsData, CustomCheckboxIconsProps } from 'src/@core/components/custom-checkbox/types';
 
 // ** Demo Components Imports
-import CustomCheckboxIcons from 'src/@core/components/custom-checkbox/icons'
+import CustomCheckboxIcons from 'src/@core/components/custom-checkbox/icons';
 
 interface IconType {
-  icon: CustomCheckboxIconsProps['icon']
-  iconProps: CustomCheckboxIconsProps['iconProps']
+  icon: CustomCheckboxIconsProps['icon'];
+  iconProps: CustomCheckboxIconsProps['iconProps'];
 }
 
 const data: CustomCheckboxIconsData[] = [
@@ -32,28 +32,28 @@ const data: CustomCheckboxIconsData[] = [
     title: 'Site Lock',
     content: 'Security tool to protect your website.'
   }
-]
+];
 
 const icons: IconType[] = [
   { icon: 'mdi:server', iconProps: { fontSize: '2rem', style: { marginBottom: 8 } } },
   { icon: 'mdi:shield-outline', iconProps: { fontSize: '2rem', style: { marginBottom: 8 } } },
   { icon: 'mdi:lock-outline', iconProps: { fontSize: '2rem', style: { marginBottom: 8 } } }
-]
+];
 
 const CustomCheckboxWithIcons = () => {
-  const initialSelected: string[] = data.filter(item => item.isSelected).map(item => item.value)
+  const initialSelected: string[] = data.filter(item => item.isSelected).map(item => item.value);
 
   // ** State
-  const [selected, setSelected] = useState<string[]>(initialSelected)
+  const [selected, setSelected] = useState<string[]>(initialSelected);
 
   const handleChange = (value: string) => {
     if (selected.includes(value)) {
-      const updatedArr = selected.filter(item => item !== value)
-      setSelected(updatedArr)
+      const updatedArr = selected.filter(item => item !== value);
+      setSelected(updatedArr);
     } else {
-      setSelected([...selected, value])
+      setSelected([...selected, value]);
     }
-  }
+  };
 
   return (
     <Grid container spacing={4}>
@@ -70,7 +70,7 @@ const CustomCheckboxWithIcons = () => {
         />
       ))}
     </Grid>
-  )
-}
+  );
+};
 
-export default CustomCheckboxWithIcons
+export default CustomCheckboxWithIcons;

@@ -1,8 +1,8 @@
 // ** MUI Imports
-import InputLabel from '@mui/material/InputLabel'
-import FormControl from '@mui/material/FormControl'
-import { alpha, styled } from '@mui/material/styles'
-import MuiInputBase, { InputBaseProps } from '@mui/material/InputBase'
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import { alpha, styled } from '@mui/material/styles';
+import MuiInputBase, { InputBaseProps } from '@mui/material/InputBase';
 
 // Styled InputBase component
 const InputBase = styled(MuiInputBase)<InputBaseProps>(({ theme }) => ({
@@ -33,7 +33,7 @@ const InputBase = styled(MuiInputBase)<InputBaseProps>(({ theme }) => ({
       boxShadow: `${alpha(theme.palette.primary.main, 0.25)} 0 0 0 0.2rem`
     }
   }
-}))
+}));
 
 const TextFieldCustomized = () => {
   return (
@@ -45,7 +45,7 @@ const TextFieldCustomized = () => {
         <InputBase defaultValue='react-bootstrap' id='bootstrap-input' />
       </FormControl>
     </form>
-  )
-}
+  );
+};
 
-export default TextFieldCustomized
+export default TextFieldCustomized;

@@ -1,7 +1,7 @@
 // ** MUI Imports
-import Select from '@mui/material/Select'
-import InputLabel from '@mui/material/InputLabel'
-import FormControl from '@mui/material/FormControl'
+import Select from '@mui/material/Select';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
 
 const SelectNative = () => {
   return (
@@ -58,7 +58,7 @@ const SelectNative = () => {
         </Select>
       </FormControl>
     </div>
-  )
-}
+  );
+};
 
-export default SelectNative
+export default SelectNative;

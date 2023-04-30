@@ -18,7 +18,7 @@ const SliderBasic = () => {
 export default SliderBasic
 `}</code>
   </pre>
-)
+);
 
 export const SliderColorsJSXCode = (
   <pre className='language-jsx'>
@@ -40,7 +40,7 @@ const SliderColors = () => {
 export default SliderColors
 `}</code>
   </pre>
-)
+);
 
 export const SliderControlledUncontrolledJSXCode = (
   <pre className='language-jsx'>
@@ -68,7 +68,7 @@ const SliderControlledUncontrolled = () => {
 export default SliderControlledUncontrolled
 `}</code>
   </pre>
-)
+);
 
 export const SliderCustomizedJSXCode = (
   <pre className='language-jsx'>
@@ -149,7 +149,7 @@ const SliderCustomized = () => (
 export default SliderCustomized
 `}</code>
   </pre>
-)
+);
 
 export const SliderCustomMarksJSXCode = (
   <pre className='language-jsx'>
@@ -195,7 +195,7 @@ const SliderCustomMarks = () => {
 export default SliderCustomMarks
 `}</code>
   </pre>
-)
+);
 
 export const SliderCustomColorsJSXCode = (
   <pre className='language-jsx'>
@@ -289,7 +289,7 @@ const SliderCustomColors = () => {
 export default SliderCustomColors
 `}</code>
   </pre>
-)
+);
 
 export const SliderDiscreteJSXCode = (
   <pre className='language-jsx'>
@@ -318,7 +318,7 @@ const SliderDiscrete = () => {
 export default SliderDiscrete
 `}</code>
   </pre>
-)
+);
 
 export const SliderInvertedTrackJSXCode = (
   <pre className='language-jsx'>
@@ -363,7 +363,7 @@ const SliderInvertedTrack = () => {
 export default SliderInvertedTrack
 `}</code>
   </pre>
-)
+);
 
 export const SliderLabelAlwaysVisibleJSXCode = (
   <pre className='language-jsx'>
@@ -409,7 +409,7 @@ const SliderLabelAlwaysVisible = () => {
 export default SliderLabelAlwaysVisible
 `}</code>
   </pre>
-)
+);
 
 export const SliderRangeJSXCode = (
   <pre className='language-jsx'>
@@ -434,7 +434,7 @@ const SliderRange = () => {
 export default SliderRange
 `}</code>
   </pre>
-)
+);
 
 export const SliderRemovedTrackJSXCode = (
   <pre className='language-jsx'>
@@ -479,7 +479,7 @@ const SliderRemovedTrack = () => {
 export default SliderRemovedTrack
 `}</code>
   </pre>
-)
+);
 
 export const SliderSizesJSXCode = (
   <pre className='language-jsx'>
@@ -501,7 +501,7 @@ const SliderSizes = () => {
 export default SliderSizes
 `}</code>
   </pre>
-)
+);
 
 export const SliderSmallStepsJSXCode = (
   <pre className='language-jsx'>
@@ -528,7 +528,7 @@ const SliderSmallSteps = () => {
 export default SliderSmallSteps
 `}</code>
   </pre>
-)
+);
 
 export const SliderRestrictedValuesJSXCode = (
   <pre className='language-jsx'>
@@ -579,7 +579,7 @@ const SliderRestrictedValues = () => {
 export default SliderRestrictedValues
 `}</code>
   </pre>
-)
+);
 
 export const SliderVerticalJSXCode = (
   <pre className='language-jsx'>
@@ -635,7 +635,7 @@ const SliderVertical = () => {
 export default SliderVertical
 `}</code>
   </pre>
-)
+);
 
 export const SliderMinimumDistanceJSXCode = (
   <pre className='language-jsx'>
@@ -708,7 +708,7 @@ const SliderMinimumDistance = () => {
 export default SliderMinimumDistance
 `}</code>
   </pre>
-)
+);
 
 export const SliderBasicTSXCode = (
   <pre className='language-jsx'>
@@ -730,7 +730,7 @@ const SliderBasic = () => {
 export default SliderBasic
 `}</code>
   </pre>
-)
+);
 
 export const SliderColorsTSXCode = (
   <pre className='language-jsx'>
@@ -752,7 +752,7 @@ const SliderColors = () => {
 export default SliderColors
 `}</code>
   </pre>
-)
+);
 
 export const SliderControlledUncontrolledTSXCode = (
   <pre className='language-jsx'>
@@ -784,7 +784,7 @@ const SliderControlledUncontrolled = () => {
 export default SliderControlledUncontrolled
 `}</code>
   </pre>
-)
+);
 
 export const SliderCustomizedTSXCode = (
   <pre className='language-jsx'>
@@ -865,7 +865,7 @@ const SliderCustomized = () => (
 export default SliderCustomized
 `}</code>
   </pre>
-)
+);
 
 export const SliderCustomColorsTSXCode = (
   <pre className='language-jsx'>
@@ -959,7 +959,7 @@ const SliderCustomColors = () => {
 export default SliderCustomColors
 `}</code>
   </pre>
-)
+);
 
 export const SliderCustomMarksTSXCode = (
   <pre className='language-jsx'>
@@ -1005,7 +1005,7 @@ const SliderCustomMarks = () => {
 export default SliderCustomMarks
 `}</code>
   </pre>
-)
+);
 
 export const SliderLabelAlwaysVisibleTSXCode = (
   <pre className='language-jsx'>
@@ -1051,7 +1051,7 @@ const SliderLabelAlwaysVisible = () => {
 export default SliderLabelAlwaysVisible
 `}</code>
   </pre>
-)
+);
 
 export const SliderMinimumDistanceTSXCode = (
   <pre className='language-jsx'>
@@ -1127,7 +1127,7 @@ const SliderMinimumDistance = () => {
 export default SliderMinimumDistance
 `}</code>
   </pre>
-)
+);
 
 export const SliderDiscreteTSXCode = (
   <pre className='language-jsx'>
@@ -1156,7 +1156,7 @@ const SliderDiscrete = () => {
 export default SliderDiscrete
 `}</code>
   </pre>
-)
+);
 
 export const SliderInvertedTrackTSXCode = (
   <pre className='language-jsx'>
@@ -1201,7 +1201,7 @@ const SliderInvertedTrack = () => {
 export default SliderInvertedTrack
 `}</code>
   </pre>
-)
+);
 
 export const SliderRemovedTrackTSXCode = (
   <pre className='language-jsx'>
@@ -1246,7 +1246,7 @@ const SliderRemovedTrack = () => {
 export default SliderRemovedTrack
 `}</code>
   </pre>
-)
+);
 
 export const SliderRestrictedValuesTSXCode = (
   <pre className='language-jsx'>
@@ -1297,7 +1297,7 @@ const SliderRestrictedValues = () => {
 export default SliderRestrictedValues
 `}</code>
   </pre>
-)
+);
 
 export const SliderSizesTSXCode = (
   <pre className='language-jsx'>
@@ -1319,7 +1319,7 @@ const SliderSizes = () => {
 export default SliderSizes
 `}</code>
   </pre>
-)
+);
 
 export const SliderVerticalTSXCode = (
   <pre className='language-jsx'>
@@ -1375,7 +1375,7 @@ const SliderVertical = () => {
 export default SliderVertical
 `}</code>
   </pre>
-)
+);
 
 export const SliderRangeTSXCode = (
   <pre className='language-jsx'>
@@ -1400,7 +1400,7 @@ const SliderRange = () => {
 export default SliderRange
 `}</code>
   </pre>
-)
+);
 
 export const SliderSmallStepsTSXCode = (
   <pre className='language-jsx'>
@@ -1427,4 +1427,4 @@ const SliderSmallSteps = () => {
 export default SliderSmallSteps
 `}</code>
   </pre>
-)
+);
