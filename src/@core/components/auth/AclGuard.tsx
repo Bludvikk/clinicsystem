@@ -17,6 +17,7 @@ import { buildAbilityFor } from 'src/configs/acl';
 import NotAuthorized from 'src/pages/401';
 import BlankLayout from 'src/@core/layouts/BlankLayout';
 import { useSession } from 'next-auth/react';
+import Spinner from '../spinner';
 
 interface AclGuardProps {
   children: ReactNode;
@@ -59,7 +60,7 @@ const AclGuard = (props: AclGuardProps) => {
         </BlankLayout>
       </>
     );
-  } else return null;
+  } else return <Spinner />;
 };
 
 export default AclGuard;
