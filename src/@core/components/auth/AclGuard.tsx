@@ -36,13 +36,7 @@ const AclGuard = (props: AclGuardProps) => {
   }, [session]);
 
   // If user is not logged in or its an error page, render the page without checking access
-  if (
-    router.route === '/404' ||
-    router.route === '/500' ||
-    router.route === '/login' ||
-    router.route === '/register' ||
-    router.route === '/'
-  ) {
+  if (router.route === '/404' || router.route === '/500' || router.route === '/login' || router.route === '/') {
     return <>{children}</>;
   }
 
@@ -56,14 +50,16 @@ const AclGuard = (props: AclGuardProps) => {
     return <AbilityContext.Provider value={ability}>{children}</AbilityContext.Provider>;
   }
 
-  // Render Not Authorized component if the current user has limited access
-  return (
-    <>
-      <BlankLayout>
-        <NotAuthorized />
-      </BlankLayout>
-    </>
-  );
+  // only reder it if there is session and user,  render Not Authorized component if the current user has limited access
+  if (session && session.user) {
+    return (
+      <>
+        <BlankLayout>
+          <NotAuthorized />
+        </BlankLayout>
+      </>
+    );
+  } else return null;
 };
 
 export default AclGuard;
