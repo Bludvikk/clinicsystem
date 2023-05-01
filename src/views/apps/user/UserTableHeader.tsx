@@ -13,9 +13,7 @@ const UserTableHeader = () => {
   const filterTableHeader = new Map([['tableHeader', [6, 7, 8]]]).get('tableHeader');
   const dataLoaded = !!filterTableHeader;
 
-  const handleCreate = () => {
-    onAdd();
-  };
+  const handleCreate = () => onAdd();
 
   useEffect(() => {
     setSearchFilter(searchFilter);

@@ -1,25 +1,25 @@
 import { Grid } from '@mui/material';
 import { requireAuth } from '@/common/requireAuth';
-import CheckupTableList from '@/views/apps/checkup/list/CheckupTableList';
+import PatientTableList from '@/views/apps/patient/PatientTableList';
 import { NextPage } from 'next';
 
 export const getServerSideProps = requireAuth(async () => {
   return { props: {} };
 });
 
-const CheckupPage: NextPage = () => {
+const PatientPage: NextPage = () => {
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
-        <CheckupTableList />
+        <PatientTableList />
       </Grid>
     </Grid>
   );
 };
 
-CheckupPage.acl = {
+PatientPage.acl = {
   action: 'read',
-  subject: 'checkup-vital-signs'
+  subject: 'patient'
 };
 
-export default CheckupPage;
+export default PatientPage;

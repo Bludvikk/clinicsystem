@@ -1,5 +1,5 @@
 import { getCheckup } from '@/server/hooks/checkup';
-import { CheckupsType, ReferencesEntityType } from '@/utils/db.type';
+import { ReferencesEntityType } from '@/utils/db.type';
 
 import InterRegular from '@/assets/fonts/Inter-Regular.ttf';
 import InterBold from '@/assets/fonts/Inter-Bold.ttf';

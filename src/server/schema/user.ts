@@ -42,3 +42,4 @@ export type LoginUserDtoSchemaType = z.infer<typeof loginUserDtoSchema>;
 export type PostUserDtoType = z.infer<typeof postUserDtoSchema>;
 
 export type UserUnionFieldType = keyof UserDtoSchemaType;
+export type LoginUserFieldType = keyof LoginUserDtoSchemaType;

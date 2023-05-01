@@ -1,25 +1,25 @@
 import { Grid } from '@mui/material';
+import UserTableList from '@/views/apps/user/UserTableList';
 import { requireAuth } from '@/common/requireAuth';
-import PatientTableList from '@/views/apps/patient/list/PatientTableList';
 import { NextPage } from 'next';
 
 export const getServerSideProps = requireAuth(async () => {
   return { props: {} };
 });
 
-const PatientPage: NextPage = () => {
+const UserPage: NextPage = () => {
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
-        <PatientTableList />
+        <UserTableList />
       </Grid>
     </Grid>
   );
 };
 
-PatientPage.acl = {
+UserPage.acl = {
   action: 'read',
-  subject: 'patient'
+  subject: 'user'
 };
 
-export default PatientPage;
+export default UserPage;

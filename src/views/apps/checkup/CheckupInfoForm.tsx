@@ -1,4 +1,4 @@
-import { useState, useEffect, SyntheticEvent, useContext, FC, FormEvent } from 'react';
+import { useEffect, SyntheticEvent, useContext, FC } from 'react';
 
 import {
   Box,
@@ -19,7 +19,8 @@ import {
   DialogContent,
   DialogTitle,
   DialogActions,
-  Button
+  Button,
+  InputAdornment
 } from '@mui/material';
 
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
@@ -163,7 +164,10 @@ const CheckupInfoForm = ({ formId }: FormPropsType) => {
             disabled:
               ability.cannot('update', 'checkup-vital-signs') ||
               (id !== 0 && checkupData?.receptionistId !== session?.user.id),
-            inputProps: { min: 0 }
+            inputProps: { min: 0, step: '0.01' },
+            InputProps: {
+              endAdornment: <InputAdornment position='end'>°C</InputAdornment>
+            }
           }
         }
       },
@@ -177,7 +181,10 @@ const CheckupInfoForm = ({ formId }: FormPropsType) => {
           textFieldAttribute: {
             disabled:
               ability.cannot('update', 'checkup-vital-signs') ||
-              (id !== 0 && checkupData?.receptionistId !== session?.user.id)
+              (id !== 0 && checkupData?.receptionistId !== session?.user.id),
+            InputProps: {
+              endAdornment: <InputAdornment position='end'>mmHg</InputAdornment>
+            }
           }
         }
       },
@@ -193,7 +200,10 @@ const CheckupInfoForm = ({ formId }: FormPropsType) => {
             disabled:
               ability.cannot('update', 'checkup-vital-signs') ||
               (id !== 0 && checkupData?.receptionistId !== session?.user.id),
-            inputProps: { min: 0 }
+            inputProps: { min: 0, step: '0.01' },
+            InputProps: {
+              endAdornment: <InputAdornment position='end'>mg/dL</InputAdornment>
+            }
           }
         }
       },
@@ -209,7 +219,10 @@ const CheckupInfoForm = ({ formId }: FormPropsType) => {
             disabled:
               ability.cannot('update', 'checkup-vital-signs') ||
               (id !== 0 && checkupData?.receptionistId !== session?.user.id),
-            inputProps: { min: 0 }
+            inputProps: { min: 0, step: '0.01' },
+            InputProps: {
+              endAdornment: <InputAdornment position='end'>bpm</InputAdornment>
+            }
           }
         }
       },
@@ -225,7 +238,10 @@ const CheckupInfoForm = ({ formId }: FormPropsType) => {
             disabled:
               ability.cannot('update', 'checkup-vital-signs') ||
               (id !== 0 && checkupData?.receptionistId !== session?.user.id),
-            inputProps: { min: 0 }
+            inputProps: { min: 0, step: '0.01' },
+            InputProps: {
+              endAdornment: <InputAdornment position='end'>kg</InputAdornment>
+            }
           }
         }
       },
@@ -241,7 +257,10 @@ const CheckupInfoForm = ({ formId }: FormPropsType) => {
             disabled:
               ability.cannot('update', 'checkup-vital-signs') ||
               (id !== 0 && checkupData?.receptionistId !== session?.user.id),
-            inputProps: { min: 0 }
+            inputProps: { min: 0, step: '0.01' },
+            InputProps: {
+              endAdornment: <InputAdornment position='end'>cm</InputAdornment>
+            }
           }
         }
       },
@@ -257,7 +276,10 @@ const CheckupInfoForm = ({ formId }: FormPropsType) => {
             disabled:
               ability.cannot('update', 'checkup-vital-signs') ||
               (id !== 0 && checkupData?.receptionistId !== session?.user.id),
-            inputProps: { min: 0 }
+            inputProps: { min: 0, step: '0.01' },
+            InputProps: {
+              endAdornment: <InputAdornment position='end'>bpm</InputAdornment>
+            }
           }
         }
       }

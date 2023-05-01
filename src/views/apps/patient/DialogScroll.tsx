@@ -1,9 +1,8 @@
-import { Button, Dialog, DialogTitle, DialogContent, DialogActions, IconButton } from '@mui/material';
+import { Dialog } from '@mui/material';
 
-import Icon from '@/@core/components/icon';
 import { FormPropsType } from '@/utils/common.type';
 import { usePatientFormStore } from '@/stores/patient.store';
-import PatientInfoForm from '../PatientInfoForm';
+import PatientInfoForm from './PatientInfoForm';
 
 const DialogScroll = ({ formId, maxWidth }: FormPropsType) => {
   const { showDialog } = usePatientFormStore();

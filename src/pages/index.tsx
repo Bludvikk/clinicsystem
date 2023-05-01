@@ -10,19 +10,19 @@ export const getHomeRoute = (role: String) => {
 
   switch (role) {
     case 'admin':
-      homeRoute = '/dashboard';
+      homeRoute = '/apps/dashboard';
       break;
     case 'user':
-      homeRoute = '/dashboard';
+      homeRoute = '/apps/dashboard';
       break;
     case 'receptionist':
-      homeRoute = '/apps/patient/list';
+      homeRoute = '/apps/patient';
       break;
     case 'physician':
-      homeRoute = '/apps/physician/checkup/list';
+      homeRoute = '/apps/physician/checkup';
       break;
     default:
-      homeRoute = '/dashboard';
+      homeRoute = '/apps/dashboard';
       break;
   }
 

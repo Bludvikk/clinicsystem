@@ -1,6 +1,6 @@
 import { Grid } from '@mui/material';
 import { requireAuth } from '@/common/requireAuth';
-import CheckupTableList from '@/views/apps/checkup/list/CheckupTableList';
+import CheckupTableList from '@/views/apps/checkup/CheckupTableList';
 import { NextPage } from 'next';
 import { useSession } from 'next-auth/react';
 

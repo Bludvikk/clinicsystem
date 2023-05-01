@@ -2,7 +2,7 @@ import { Button, Dialog, DialogTitle, DialogContent, DialogActions, IconButton }
 
 import Icon from '@/@core/components/icon';
 
-import UserInfoForm from '../UserInfoForm';
+import UserInfoForm from './UserInfoForm';
 import { FormPropsType } from '@/utils/common.type';
 import { useUserFormStore } from '@/stores/user.store';
 

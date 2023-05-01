@@ -9,12 +9,11 @@ import CustomChip from '@/@core/components/mui/chip';
 import Icon from 'src/@core/components/icon';
 import { ThemeColor } from '@/@core/layouts/types';
 
-import toast from 'react-hot-toast';
 import moment from 'moment';
 
-import { deleteCheckup, getCheckups } from '@/server/hooks/checkup';
+import { getCheckups } from '@/server/hooks/checkup';
 import { CheckupsType } from '@/utils/db.type';
-import CheckupTableHeader from '@/views/apps/checkup/list/CheckupTableHeader';
+import CheckupTableHeader from '@/views/apps/checkup/CheckupTableHeader';
 import { useCheckupFormStore } from '@/stores/checkup.store';
 import { useSession } from 'next-auth/react';
 
@@ -95,7 +94,7 @@ const PhysicianCheckupTableList = () => {
       renderCell: ({ row }: CellType) => {
         return (
           <Typography noWrap variant='body2'>
-            {moment(row.createAt).format('LL')}
+            {moment(row.createdAt).format('LL')}
           </Typography>
         );
       }

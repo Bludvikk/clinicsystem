@@ -1,8 +1,8 @@
-import { MouseEvent, useEffect, useRef, useState } from 'react';
+import { MouseEvent, useRef, useState } from 'react';
 
 import Link from 'next/link';
 
-import { Menu, Grid, Card, Box, MenuItem, IconButton, Typography } from '@mui/material';
+import { Menu, Grid, Card, MenuItem, IconButton, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
 import CustomChip from '@/@core/components/mui/chip';
@@ -21,7 +21,7 @@ import DialogScroll from './DialogScroll';
 import { useSession } from 'next-auth/react';
 import { usePDF } from '@react-pdf/renderer';
 import { handlePrintPDF } from '@/utils/helper';
-import PrescriptionPDF from '../PrescriptionPDF';
+import PrescriptionPDF from './PrescriptionPDF';
 import { getReferences } from '@/server/hooks/reference';
 
 interface CheckupStatusType {

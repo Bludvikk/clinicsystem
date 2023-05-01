@@ -743,6 +743,8 @@ const PatientInfoForm = ({ formId }: FormPropsType) => {
   const handleClose = () => {
     onClosing();
     setActiveStep(0);
+    clear();
+    reset();
   };
 
   const medicationOnSubmit: SubmitHandler<MedicationDtoSchemaType> = (data: MedicationDtoSchemaType) => {
@@ -1156,21 +1158,21 @@ const PatientInfoForm = ({ formId }: FormPropsType) => {
           <DialogActions
             sx={{
               display: 'flex',
-              justifyContent: !id ? 'flex-end' : 'space-between',
+              justifyContent: !id ? 'flex-end' : activeStep < 5 ? 'space-between' : 'flex-end',
               width: '100%',
               px: 0,
               pb: 0,
               pt: theme => `${theme.spacing(5)} !important`
             }}
           >
-            {id ? (
+            {id && activeStep < 5 ? (
               <Box>
                 <Button
                   form={`form-step-${activeStep}`}
                   variant='contained'
                   type='submit'
                   disabled={isSaving}
-                  onClick={handleSubmit(onSubmit)}
+                  onClick={() => setActiveStep(5)}
                 >
                   Edit
                 </Button>
@@ -1211,8 +1213,9 @@ const PatientInfoForm = ({ formId }: FormPropsType) => {
   return (
     <>
       <DialogTitle textAlign='center'>
-        {dialogTitle} Patient Health Record
-        <Box mt={5}>
+        <Box textAlign='left'>{dialogTitle} Patient Health Record</Box>
+        <Divider style={{ margin: 0, paddingTop: 20 }} />
+        <Box pt={5}>
           <StepperWrapper>
             <Stepper activeStep={activeStep} alternativeLabel>
               {steps.map((title, i) => {
@@ -1240,7 +1243,6 @@ const PatientInfoForm = ({ formId }: FormPropsType) => {
         >
           <Icon icon='mdi:close' />
         </IconButton>
-        <Divider sx={{ m: '0 !important' }} />
         <Box sx={{ mt: 5, px: 5 }}>{renderContent()}</Box>
       </DialogContent>
     </>

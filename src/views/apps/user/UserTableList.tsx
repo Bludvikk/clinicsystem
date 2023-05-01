@@ -15,8 +15,8 @@ import toast from 'react-hot-toast';
 
 import { deleteUser, getUsers } from '@/server/hooks/user';
 import { UsersType } from '@/utils/db.type';
-import UserTableHeader from 'src/views/apps/user/list/UserTableHeader';
 import { useUserFormStore } from '@/stores/user.store';
+import UserTableHeader from './UserTableHeader';
 import DialogScroll from './DialogScroll';
 
 interface UserRoleType {

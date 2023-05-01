@@ -1,7 +1,7 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material';
 
 import Icon from '@/@core/components/icon';
-import CheckupInfoForm from '../CheckupInfoForm';
+import CheckupInfoForm from './CheckupInfoForm';
 
 import { useCheckupFormStore, useDiagnosisFormStore, useTreatmentFormStore } from '@/stores/checkup.store';
 import { FormPropsType } from '@/utils/common.type';

@@ -14,7 +14,7 @@ import { deletePatient, getPatients } from '@/server/hooks/patient';
 import { PatientsType } from '@/utils/db.type';
 import PatientTableHeader from './PatientTableHeader';
 import PatientDialogScroll from './DialogScroll';
-import CheckupDialogScroll from '@/views/apps/checkup/list/DialogScroll';
+import CheckupDialogScroll from '@/views/apps/checkup/DialogScroll';
 import { usePatientFormStore } from '@/stores/patient.store';
 import { useCheckupFormStore } from '@/stores/checkup.store';
 import CanView from '@/layouts/components/acl/CanView';

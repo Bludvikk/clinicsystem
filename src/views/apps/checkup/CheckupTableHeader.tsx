@@ -1,7 +1,7 @@
-import { Box, Button, CardContent, CardHeader, Divider, Grid, MenuItem, TextField } from '@mui/material';
+import { Button, CardContent, CardHeader, Divider, Grid, MenuItem } from '@mui/material';
 import Icon from '@/@core/components/icon';
 
-import { MouseEventHandler, RefObject, forwardRef, useEffect } from 'react';
+import { forwardRef, useEffect } from 'react';
 import { useFilterControlChange } from '@/utils/helper';
 import { useCheckupFormStore } from '@/stores/checkup.store';
 import { DateRangeInputSearch, DropdownData, TextInputSearch } from '@/utils/form.component';
