@@ -24,7 +24,7 @@ const Avatar = styled(CustomAvatar)<AvatarProps>(({ theme }) => ({
 
 const CardStatsHorizontal = (props: CardStatsHorizontalProps) => {
   // ** Props
-  const { title, icon, stats, trendNumber, color = 'primary', trend = 'positive' } = props;
+  const { title, icon, stats, trendNumber, color = 'primary', trend } = props;
 
   return (
     <Card>
@@ -38,10 +38,10 @@ const CardStatsHorizontal = (props: CardStatsHorizontalProps) => {
               <Typography variant='h6'>{stats}</Typography>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <Box sx={{ display: 'inline-flex', color: trend === 'positive' ? 'success.main' : 'error.main' }}>
-                  <Icon icon={trend === 'positive' ? 'mdi:chevron-up' : 'mdi:chevron-down'} />
+                  {trend && <Icon icon={trend === 'positive' ? 'mdi:chevron-up' : 'mdi:chevron-down'} />}
                 </Box>
                 <Typography variant='caption' sx={{ color: trend === 'positive' ? 'success.main' : 'error.main' }}>
-                  {trendNumber}
+                  {trendNumber && trendNumber}
                 </Typography>
               </Box>
             </Box>

@@ -1,32 +1,22 @@
-// ** React Imports
 import { useState, SyntheticEvent, Fragment } from 'react';
 
-// ** Next Import
 import { useRouter } from 'next/router';
 import { signOut, useSession } from 'next-auth/react';
 
-// ** MUI Imports
-import Box from '@mui/material/Box';
-import Menu from '@mui/material/Menu';
-import Badge from '@mui/material/Badge';
-import Avatar from '@mui/material/Avatar';
-import Divider from '@mui/material/Divider';
-import MenuItem from '@mui/material/MenuItem';
-import { styled } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
+import { Box, Menu, MenuItem, Badge, Avatar, Divider, styled, Typography } from '@mui/material';
 
-// ** Icon Imports
 import Icon from 'src/@core/components/icon';
+import CustomChip from 'src/@core/components/mui/chip';
 
-// ** Type Imports
-import { Settings } from 'src/@core/context/settingsContext';
 import { toast } from 'react-hot-toast';
+
+import { Settings } from 'src/@core/context/settingsContext';
+import { getClinic } from '@/server/hooks/clinic';
 
 interface Props {
   settings: Settings;
 }
 
-// ** Styled Components
 const BadgeContentSpan = styled('span')(({ theme }) => ({
   width: 8,
   height: 8,
@@ -36,18 +26,14 @@ const BadgeContentSpan = styled('span')(({ theme }) => ({
 }));
 
 const UserDropdown = (props: Props) => {
-  // ** Props
   const { settings } = props;
+  const { direction } = settings;
 
-  // ** States
-  const [anchorEl, setAnchorEl] = useState<Element | null>(null);
-  const { data, status } = useSession();
-
-  // ** Hooks
+  const { data: session, status } = useSession();
+  const clinicData = getClinic({ id: session?.user.clinicId });
   const router = useRouter();
 
-  // ** Vars
-  const { direction } = settings;
+  const [anchorEl, setAnchorEl] = useState<Element | null>(null);
 
   const handleDropdownOpen = (event: SyntheticEvent) => {
     setAnchorEl(event.currentTarget);
@@ -94,7 +80,7 @@ const UserDropdown = (props: Props) => {
         }}
       >
         <Avatar
-          alt={status === 'loading' ? 'Loading...' : data?.user.userName}
+          alt={status === 'loading' ? 'Loading...' : session?.user.userName}
           onClick={handleDropdownOpen}
           sx={{ width: 40, height: 40 }}
           src='/images/avatars/1.png'
@@ -125,7 +111,7 @@ const UserDropdown = (props: Props) => {
               }}
             >
               <Avatar
-                alt={status === 'loading' ? 'Loading...' : data?.user.userName}
+                alt={status === 'loading' ? 'Loading...' : session?.user.userName}
                 src='/images/avatars/1.png'
                 sx={{ width: '2.5rem', height: '2.5rem' }}
               />
@@ -139,11 +125,14 @@ const UserDropdown = (props: Props) => {
               }}
             >
               <Typography sx={{ fontWeight: 600 }}>
-                {status === 'loading' ? 'Loading...' : data?.user.userName}
+                {status === 'loading' ? 'Loading...' : session?.user.userName}
               </Typography>
               <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'text.disabled' }}>
-                {status === 'loading' ? 'Loading...' : data?.user.role.name}
+                {status === 'loading' ? 'Loading...' : session?.user.role.name}
               </Typography>
+              {clinicData && (
+                <CustomChip label={clinicData.code} skin='light' color='primary' size='small' sx={{ mt: 1.5 }} />
+              )}
             </Box>
           </Box>
         </Box>
