@@ -1,26 +1,38 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 
-import { Box, Grid } from '@mui/material';
+import { Box, Divider, Grid, Typography } from '@mui/material';
 
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm, SubmitHandler, UseFormHandleSubmit } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
 
 import { FormControlPropsType, FormPropsType } from '@/utils/common.type';
-import { userDtoSchema, UserDtoSchemaType, UserUnionFieldType } from '@/server/schema/user';
+import {
+  physicianProfileDtoSchema,
+  PhysicianProfileDtoSchemaType,
+  PhysicianProfileUnionFieldType,
+  receptionistProfileDtoSchema,
+  ReceptionistProfileDtoSchemaType,
+  ReceptionistProfileUnionFieldType,
+  userDtoSchema,
+  UserDtoSchemaType,
+  UserUnionFieldType
+} from '@/server/schema/user';
 import { getUser, postUser } from '@/server/hooks/user';
-import { errorUtil } from '@/utils/helper';
-import { FormObjectComponent } from '@/utils/form.component';
+import { errorUtil, isObjEmpty } from '@/utils/helper';
+import { CleaveInput, FormObjectComponent } from '@/utils/form.component';
 import { useUserFormStore } from '@/stores/user.store';
 import { getReferences } from '@/server/hooks/reference';
+import { getClinics } from '@/server/hooks/clinic';
 
 const UserInfoForm = ({ formId }: FormPropsType) => {
   const { id, onClosing, onSaving } = useUserFormStore();
 
   const userData = getUser({ id });
   const { data: referencesData } = getReferences({ entities: [6, 8] });
+  const { data: clinicData, isLoading: clinicDataIsLoading } = getClinics();
 
-  const emptyField = {
+  const defaultValues = {
     firstName: '',
     lastName: '',
     middleInitial: '',
@@ -29,22 +41,67 @@ const UserInfoForm = ({ formId }: FormPropsType) => {
     password: '',
     departmentId: 0,
     roleId: 0,
-    statusId: 0
+    statusId: 0,
+    physicianProfile: null,
+    receptionistProfile: null
   };
-  const [defaultValues, setDefaultValues] = useState<UserDtoSchemaType>(emptyField);
+
   const { mutate: postUserMutate, isLoading: postUserIsLoading } = postUser();
 
   const {
     control,
     handleSubmit,
     reset,
-    setError,
+    watch,
     setValue,
+    getValues,
     formState: { errors }
   } = useForm<UserDtoSchemaType>({
     defaultValues,
-    resolver: zodResolver(userDtoSchema),
-    mode: 'onChange'
+    mode: 'onChange',
+    resolver: zodResolver(userDtoSchema)
+  });
+
+  const {
+    control: physicianProfileControl,
+    handleSubmit: physicianProfileHandleSubmit,
+    reset: physicianProfileReset,
+    setValue: physicianProfileSetValue,
+    getValues: physicianProfileGetValues,
+    formState: { errors: physicianProfileErrors }
+  } = useForm<PhysicianProfileDtoSchemaType>({
+    defaultValues: {
+      qualification: '',
+      specialistIn: '',
+      specializedTreatment: '',
+      languages: [],
+      yearOfExp: 0,
+      licenseNumber: 0,
+      deaNumber: '',
+      ptrNumber: 0,
+      address: '',
+      contactNumber: [],
+      clinics: []
+    },
+    mode: 'onChange',
+    resolver: zodResolver(physicianProfileDtoSchema)
+  });
+
+  const {
+    control: receptionistProfileControl,
+    handleSubmit: receptionistProfileHandleSubmit,
+    reset: receptionistProfileReset,
+    setValue: receptionistProfileSetValue,
+    getValues: receptionistProfileGetValues,
+    formState: { errors: receptionistProfileErrors }
+  } = useForm<ReceptionistProfileDtoSchemaType>({
+    defaultValues: {
+      address: '',
+      contactNumber: '',
+      clinics: []
+    },
+    mode: 'onChange',
+    resolver: zodResolver(receptionistProfileDtoSchema)
   });
 
   const USER_PANEL = ['General'] as const;
@@ -112,9 +169,195 @@ const UserInfoForm = ({ formId }: FormPropsType) => {
     ]
   };
 
+  const PHYSICIAN_PROFILE_PANEL = ['General'] as const;
+  const PHYSICIAN_PROFILE_FIELDS: Record<
+    (typeof PHYSICIAN_PROFILE_PANEL)[number],
+    FormControlPropsType<PhysicianProfileUnionFieldType>[]
+  > = {
+    General: [
+      {
+        label: 'Qualification',
+        dbField: 'qualification',
+        type: 'textField',
+        required: true,
+        extendedProps: { gridAttribute: { xs: 12, md: 6 } }
+      },
+      {
+        label: 'Specialist In',
+        dbField: 'specialistIn',
+        type: 'textField',
+        required: true,
+        extendedProps: { gridAttribute: { xs: 12, md: 6 } }
+      },
+      {
+        label: 'Specialized Treatment',
+        dbField: 'specializedTreatment',
+        type: 'textField',
+        required: true,
+        extendedProps: { gridAttribute: { xs: 12, md: 6 } }
+      },
+      {
+        label: 'Years of Experience',
+        dbField: 'yearOfExp',
+        type: 'textField',
+        required: true,
+        extendedProps: {
+          gridAttribute: { xs: 12, md: 6 },
+          textFieldAttribute: { type: 'number', inputProps: { min: 0 } }
+        }
+      },
+      {
+        label: 'License Number',
+        dbField: 'licenseNumber',
+        type: 'textField',
+        extendedProps: {
+          gridAttribute: { xs: 12, md: 6 },
+          textFieldAttribute: { type: 'number', inputProps: { min: 0 } }
+        }
+      },
+      {
+        label: 'DEA Number',
+        dbField: 'deaNumber',
+        type: 'textField',
+        extendedProps: {
+          gridAttribute: { xs: 12, md: 6 },
+          textFieldAttribute: {
+            InputProps: {
+              inputComponent: CleaveInput
+            },
+            inputProps: {
+              options: { delimiter: '-', blocks: [4, 3, 5], uppercase: true }
+            }
+          }
+        }
+      },
+      {
+        label: 'PTR Number',
+        dbField: 'ptrNumber',
+        type: 'textField',
+        extendedProps: {
+          gridAttribute: { xs: 12, md: 6 },
+          textFieldAttribute: { type: 'number', inputProps: { min: 0 } }
+        }
+      },
+      {
+        label: 'Address',
+        dbField: 'address',
+        type: 'textField',
+        required: true,
+        extendedProps: {
+          gridAttribute: { xs: 12 },
+          textFieldAttribute: { multiline: true, rows: 3 }
+        }
+      },
+      {
+        label: 'Contact Number',
+        dbField: 'contactNumber',
+        type: 'auto-complete',
+        required: true,
+        extendedProps: {
+          autoCompleteAttribute: {
+            fullWidth: true,
+            freeSolo: true,
+            multiple: true,
+            options: [],
+            renderInput: params => null
+          },
+          customInputComponent: CleaveInput,
+          cleaveOptions: { phone: true, phoneRegionCode: 'PH' },
+          gridAttribute: { xs: 12 }
+        }
+      },
+      {
+        label: 'Languages',
+        dbField: 'languages',
+        type: 'dropDown',
+        entityId: 14,
+        required: true,
+        extendedProps: {
+          dropDownAttribute: {
+            multiple: true
+          },
+          gridAttribute: { xs: 12 }
+        }
+      },
+      {
+        label: 'Clinic',
+        dbField: 'clinics',
+        type: 'dropDownNonEntityReference',
+        required: true,
+        extendedProps: {
+          gridAttribute: { xs: 12 },
+          dropDownAttribute: {
+            multiple: true
+          },
+          dropDownNonEntityReferenceAttribute: {
+            data: clinicData && clinicData.length > 0 ? clinicData : [],
+            dataIsloading: clinicDataIsLoading,
+            menuItemTextPath: ['name']
+          }
+        }
+      }
+    ]
+  };
+
+  const RECEPTIONIST_PROFILE_PANEL = ['General'] as const;
+  const RECEPTIONIST_PROFILE_FIELDS: Record<
+    (typeof RECEPTIONIST_PROFILE_PANEL)[number],
+    FormControlPropsType<ReceptionistProfileUnionFieldType>[]
+  > = {
+    General: [
+      {
+        label: 'Address',
+        dbField: 'address',
+        type: 'textField',
+        required: true,
+        extendedProps: {
+          gridAttribute: { xs: 12 },
+          textFieldAttribute: { multiline: true, rows: 3 }
+        }
+      },
+      {
+        label: 'Contact Number',
+        dbField: 'contactNumber',
+        type: 'textField',
+        extendedProps: {
+          gridAttribute: { xs: 12 },
+          textFieldAttribute: {
+            InputProps: {
+              inputComponent: CleaveInput
+            },
+            inputProps: {
+              options: { phone: true, phoneRegionCode: 'PH' }
+            }
+          }
+        }
+      },
+      {
+        label: 'Clinic',
+        dbField: 'clinics',
+        type: 'dropDownNonEntityReference',
+        required: true,
+        extendedProps: {
+          gridAttribute: { xs: 12 },
+          dropDownAttribute: {
+            multiple: true
+          },
+          dropDownNonEntityReferenceAttribute: {
+            data: clinicData && clinicData.length > 0 ? clinicData : [],
+            dataIsloading: clinicDataIsLoading,
+            menuItemTextPath: ['name']
+          }
+        }
+      }
+    ]
+  };
+
   const handleClose = () => {
     onClosing();
     reset();
+    physicianProfileReset();
+    receptionistProfileReset();
   };
 
   const onSubmit: SubmitHandler<UserDtoSchemaType> = data => {
@@ -138,6 +381,38 @@ const UserInfoForm = ({ formId }: FormPropsType) => {
     );
   };
 
+  const physicianProfileOnSubmit: SubmitHandler<PhysicianProfileDtoSchemaType> = data => {
+    setValue('physicianProfile', data);
+    handleSubmit(onSubmit)();
+  };
+
+  const receptionistProfileOnSubmit: SubmitHandler<ReceptionistProfileDtoSchemaType> = data => {
+    setValue('receptionistProfile', data);
+    handleSubmit(onSubmit)();
+  };
+
+  type UserFormSubmit = {
+    event: FormEvent<HTMLFormElement>;
+    role: number;
+    handleSubmit: UseFormHandleSubmit<UserDtoSchemaType>;
+    physicianProfileHandleSubmit: UseFormHandleSubmit<PhysicianProfileDtoSchemaType>;
+  };
+
+  const userFormSubmit = ({ event, role, handleSubmit, physicianProfileHandleSubmit }: UserFormSubmit) => {
+    event.preventDefault();
+
+    switch (role) {
+      case 15:
+        physicianProfileHandleSubmit(physicianProfileOnSubmit)();
+        return;
+      case 16:
+        receptionistProfileHandleSubmit(receptionistProfileOnSubmit)();
+        return;
+    }
+
+    handleSubmit(onSubmit)();
+  };
+
   useEffect(() => {
     if (referencesData && referencesData?.length > 0 && !id) {
       setValue('roleId', referencesData.filter(ref => ref.entityId === 6).find(ref => ref.isDefault)!.id);
@@ -146,22 +421,109 @@ const UserInfoForm = ({ formId }: FormPropsType) => {
   }, [referencesData]);
 
   useEffect(() => {
-    if (id && userData) reset(userData);
+    if (id && userData) {
+      const { profile, ...data } = userData;
+
+      if (profile?.physicianProfile) {
+        const { clinics, ...physicianProfileData } = profile.physicianProfile;
+
+        physicianProfileReset({ ...physicianProfileData, clinics: clinics.map(clinic => clinic.id) });
+      } else if (profile?.receptionistProfile) {
+        const { clinics, ...receptionistProfileData } = profile.receptionistProfile;
+
+        receptionistProfileReset({ ...receptionistProfileData, clinics: clinics.map(clinic => clinic.id) });
+      }
+
+      reset(data);
+    }
   }, [id]);
 
   useEffect(() => {
     onSaving(postUserIsLoading);
   }, [postUserIsLoading]);
 
+  const renderProfileInfoForm = () => {
+    switch (watch('roleId')) {
+      case 15:
+        return (
+          <Grid item container spacing={6} xs={12}>
+            <Grid item xs={12}>
+              <Divider sx={{ width: '100%' }} />
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant='h6' color='text.primary' fontWeight='600'>
+                Physician Profile
+              </Typography>
+            </Grid>
+            {PHYSICIAN_PROFILE_FIELDS['General'].map((obj, i) => (
+              <Grid item key={obj.dbField} {...obj.extendedProps?.gridAttribute}>
+                <FormObjectComponent
+                  key={i}
+                  objFieldProp={obj}
+                  control={physicianProfileControl}
+                  errors={physicianProfileErrors}
+                  getValues={physicianProfileGetValues}
+                  setValue={physicianProfileSetValue}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        );
+
+      case 16:
+        return (
+          <Grid item container spacing={6} xs={12}>
+            <Grid item xs={12}>
+              <Divider sx={{ width: '100%' }} />
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant='h6' color='text.primary' fontWeight='600'>
+                Receptionist Profile
+              </Typography>
+            </Grid>
+            {RECEPTIONIST_PROFILE_FIELDS['General'].map((obj, i) => (
+              <Grid item key={obj.dbField} {...obj.extendedProps?.gridAttribute}>
+                <FormObjectComponent
+                  key={i}
+                  objFieldProp={obj}
+                  control={receptionistProfileControl}
+                  errors={receptionistProfileErrors}
+                  getValues={receptionistProfileGetValues}
+                  setValue={receptionistProfileSetValue}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        );
+
+      default:
+        return null;
+    }
+  };
+
   return (
     <Box>
-      <form id={formId} onSubmit={handleSubmit(onSubmit)}>
+      <form
+        id={formId}
+        onSubmit={e => userFormSubmit({ event: e, role: watch('roleId'), handleSubmit, physicianProfileHandleSubmit })}
+      >
         <Grid container spacing={6}>
-          {USER_FIELDS['General'].map((obj, i) => (
-            <Grid item key={obj.dbField} {...obj.extendedProps?.gridAttribute}>
-              <FormObjectComponent key={i} objFieldProp={obj} control={control} errors={errors} />
-            </Grid>
-          ))}
+          <Grid item container spacing={6} xs={12}>
+            {USER_FIELDS['General'].map((obj, i) => (
+              <Grid item key={obj.dbField} {...obj.extendedProps?.gridAttribute}>
+                <FormObjectComponent
+                  key={i}
+                  objFieldProp={obj}
+                  control={control}
+                  errors={errors}
+                  getValues={getValues}
+                  setValue={setValue}
+                />
+              </Grid>
+            ))}
+          </Grid>
+
+          {renderProfileInfoForm()}
         </Grid>
       </form>
     </Box>
