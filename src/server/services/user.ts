@@ -1,16 +1,18 @@
 import { TRPCError } from '@trpc/server';
 import { Context } from '@/server/context';
 import { Prisma as prismaCli } from '@prisma/client';
-import { ParamsInput } from '@/utils/common.type';
+import { FilterQueryInputType, ParamsInput } from '@/utils/common.type';
 import { hash } from 'argon2';
-import { PostUserDtoType } from '../schema/user';
+import { PostUserDtoSchemaType } from '../schema/user';
 import { RecordDoesExist } from '@/utils/http.message';
+import _ from 'lodash';
 
 export type UsersAsyncType = typeof getUsers;
 
-export const getUsers = async (ctx: Context) => {
+export const getUsers = async (ctx: Context, filterQuery?: FilterQueryInputType) => {
   try {
     return await ctx.prisma.user.findMany({
+      ...(filterQuery && filterQuery.ids ? { where: { id: { in: filterQuery.ids } } } : {}),
       include: {
         role: {
           select: {
@@ -32,6 +34,20 @@ export const getUsers = async (ctx: Context) => {
             code: true,
             name: true
           }
+        },
+        profile: {
+          include: {
+            physicianProfile: {
+              include: {
+                clinics: true
+              }
+            },
+            receptionistProfile: {
+              include: {
+                clinics: true
+              }
+            }
+          }
         }
       },
       orderBy: {
@@ -43,45 +59,160 @@ export const getUsers = async (ctx: Context) => {
   }
 };
 
-export const postUser = async (ctx: Context, postUserDto: PostUserDtoType) => {
+export const postUser = async (ctx: Context, postUserDto: PostUserDtoSchemaType) => {
   try {
     const { params, body } = postUserDto;
+
+    const { physicianProfile, receptionistProfile, ...userData } = body;
 
     const hashedPassword = await hash(body.password);
 
     // ** UPDATE data
     if (params.id) {
       let isPasswordMatch = false;
+
       const user = await ctx.prisma.user.findUnique({
-        where: { id: params.id }
+        where: { id: params.id },
+        include: {
+          profile: {
+            include: {
+              physicianProfile: {
+                include: {
+                  clinics: true
+                }
+              },
+              receptionistProfile: {
+                include: {
+                  clinics: true
+                }
+              }
+            }
+          }
+        }
       });
 
       if (user) isPasswordMatch = user.password === body.password;
 
-      if (isPasswordMatch) {
-        return {
-          data: await ctx.prisma.user.update({
-            where: { id: params.id },
-            data: body
-          }),
-          message: 'User updated successfully.',
-          status: 'success'
-        };
-      } else {
-        return {
-          data: await ctx.prisma.user.update({
-            where: { id: params.id },
-            data: { ...body, password: hashedPassword }
-          }),
-          message: 'User updated successfully.',
-          status: 'success'
-        };
-      }
+      return {
+        data: await ctx.prisma.user.update({
+          where: { id: params.id },
+          data: {
+            ...userData,
+            ...(!isPasswordMatch && { password: hashedPassword }),
+
+            ...(!physicianProfile &&
+              !receptionistProfile &&
+              (user?.profile?.physicianProfile || user?.profile?.receptionistProfile) && {
+                profile: {
+                  delete: true
+                }
+              }),
+
+            ...(physicianProfile && {
+              profile: {
+                ...(user?.profile?.receptionistProfile && {
+                  delete: true
+                }),
+                upsert: {
+                  create: {
+                    physicianProfile: {
+                      create: {
+                        ..._.omit(physicianProfile, 'clinics'),
+                        clinics: {
+                          connect: _.get(physicianProfile, 'clinics').map(id => ({ id }))
+                        }
+                      }
+                    }
+                  },
+                  update: {
+                    physicianProfile: {
+                      update: {
+                        ..._.omit(physicianProfile, 'clinics'),
+                        clinics: {
+                          disconnect: user?.profile?.physicianProfile?.clinics?.length
+                            ? user?.profile?.physicianProfile?.clinics.map(clinic => ({ id: clinic.id }))
+                            : [],
+                          connect: _.get(physicianProfile, 'clinics').map(id => ({ id }))
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }),
+            ...(receptionistProfile && {
+              profile: {
+                ...(user?.profile?.physicianProfile && {
+                  delete: true
+                }),
+                upsert: {
+                  create: {
+                    receptionistProfile: {
+                      create: {
+                        ..._.omit(receptionistProfile, 'clinics'),
+                        clinics: {
+                          connect: _.get(receptionistProfile, 'clinics').map(id => ({ id }))
+                        }
+                      }
+                    }
+                  },
+                  update: {
+                    receptionistProfile: {
+                      update: {
+                        ..._.omit(receptionistProfile, 'clinics'),
+                        clinics: {
+                          disconnect: user?.profile?.receptionistProfile?.clinics?.length
+                            ? user?.profile?.receptionistProfile?.clinics.map(clinic => ({ id: clinic.id }))
+                            : [],
+                          connect: _.get(receptionistProfile, 'clinics').map(id => ({ id }))
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            })
+          }
+        }),
+        message: 'User updated successfully.',
+        status: 'success'
+      };
     }
 
     return {
       data: await ctx.prisma.user.create({
-        data: { ...body, password: hashedPassword }
+        data: {
+          ...userData,
+          password: hashedPassword,
+          ...(physicianProfile && {
+            profile: {
+              create: {
+                physicianProfile: {
+                  create: {
+                    ..._.omit(physicianProfile, 'clinics'),
+                    clinics: {
+                      connect: _.get(physicianProfile, 'clinics').map(id => ({ id }))
+                    }
+                  }
+                }
+              }
+            }
+          }),
+          ...(receptionistProfile && {
+            profile: {
+              create: {
+                receptionistProfile: {
+                  create: {
+                    ..._.omit(receptionistProfile, 'clinics'),
+                    clinics: {
+                      connect: _.get(receptionistProfile, 'clinics').map(id => ({ id }))
+                    }
+                  }
+                }
+              }
+            }
+          })
+        }
       }),
       message: 'User created successfully.',
       status: 'success'

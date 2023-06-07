@@ -40,9 +40,7 @@ const RowOptions = ({ id }: { id: number }) => {
   const { onAdd } = useCheckupFormStore();
   const { mutate: deletePatientMutate } = deletePatient();
 
-  const handleRowOptionsClick = (e: MouseEvent<HTMLElement>) => {
-    setAnchorEl(e.currentTarget);
-  };
+  const handleRowOptionsClick = (e: MouseEvent<HTMLElement>) => setAnchorEl(e.currentTarget);
   const handleRowOptionsClose = () => setAnchorEl(null);
 
   const handleEdit = (id: number) => onEdit(id);
@@ -78,7 +76,12 @@ const RowOptions = ({ id }: { id: number }) => {
         }}
         PaperProps={{ style: { minWidth: '8rem' } }}
       >
-        <MenuItem component={Link} sx={{ '& svg': { mr: 2 } }} onClick={handleRowOptionsClose} href='/'>
+        <MenuItem
+          component={Link}
+          sx={{ '& svg': { mr: 2 } }}
+          onClick={handleRowOptionsClose}
+          href={`/apps/patient/${id}`}
+        >
           <Icon icon='mdi:eye-outline' fontSize={20} />
           View
         </MenuItem>

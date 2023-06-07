@@ -64,9 +64,7 @@ const RowOptions = ({ id }: { id: number }) => {
   const { onEdit } = useUserFormStore();
   const { mutate: deleteUserMutate } = deleteUser();
 
-  const handleRowOptionsClick = (e: MouseEvent<HTMLElement>) => {
-    setAnchorEl(e.currentTarget);
-  };
+  const handleRowOptionsClick = (e: MouseEvent<HTMLElement>) => setAnchorEl(e.currentTarget);
   const handleRowOptionsClose = () => setAnchorEl(null);
 
   const handleEdit = (id: number) => onEdit(id);
@@ -101,7 +99,12 @@ const RowOptions = ({ id }: { id: number }) => {
         }}
         PaperProps={{ style: { minWidth: '8rem' } }}
       >
-        <MenuItem component={Link} sx={{ '& svg': { mr: 2 } }} onClick={handleRowOptionsClose} href='/'>
+        <MenuItem
+          component={Link}
+          sx={{ '& svg': { mr: 2 } }}
+          onClick={handleRowOptionsClose}
+          href={`/apps/user/${id}`}
+        >
           <Icon icon='mdi:eye-outline' fontSize={20} />
           View
         </MenuItem>
@@ -121,9 +124,7 @@ const RowOptions = ({ id }: { id: number }) => {
 const UserTableList = () => {
   const { showDialog, searchFilter } = useUserFormStore();
 
-  const { data: usersData, status: usersDataStatus } = getUsers({
-    searchFilter
-  });
+  const { data: usersData, status: usersDataStatus } = getUsers({ searchFilter });
 
   const [paginationModel, setPaginationModel] = useState<{
     pageSize: number;
@@ -154,7 +155,7 @@ const UserTableList = () => {
                 noWrap
                 component={Link}
                 variant='subtitle2'
-                href='/apps/user/view/overview/'
+                href={`/apps/user/${row.id}`}
                 sx={{
                   fontWeight: 600,
                   color: 'text.primary',

@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 export const params = z.object({
   id: z.number().optional(),
+  ids: z.array(z.number()).optional(),
   module: z.string().optional()
 });
 

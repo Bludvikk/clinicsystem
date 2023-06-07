@@ -139,20 +139,21 @@ export class FilterData<TData extends DynamicType> implements FilterInf<TData> {
         const dateValue = _.get(row, 'createdAt');
         const timeframe = _.get(this.dropDownValue, 'timeframe');
 
+        // checks the timeframe reference id
         switch (timeframe) {
-          case 'today':
+          case 36:
             return checkDate(dateValue).isToday();
 
-          case 'yesterday':
+          case 37:
             return checkDate(dateValue).isYesterday();
 
-          case 'this week':
+          case 38:
             return checkDate(dateValue).isWithinThisWeek();
 
-          case 'this month':
+          case 39:
             return checkDate(dateValue).isWithinThisMonth();
 
-          case 'this year':
+          case 40:
             return checkDate(dateValue).isWithinThisYear();
 
           default:
@@ -161,7 +162,10 @@ export class FilterData<TData extends DynamicType> implements FilterInf<TData> {
       }) as TData[];
     }
 
-    return (this.data = _.filter(this.data, _.omit(this.dropDownValue, ['timeframe'])) as TData[]);
+    return (this.data = _.filter(
+      this.data,
+      _.omit(this.dropDownValue, ['timeframe', 'dateRangeInputValue'])
+    ) as TData[]);
   }
 
   dateRange() {

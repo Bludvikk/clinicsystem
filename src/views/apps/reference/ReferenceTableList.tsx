@@ -90,7 +90,20 @@ const ReferenceTableList = () => {
     page: 0
   });
 
-  const columns = [
+  const columns: GridColDef[] = [
+    {
+      flex: 0.2,
+      minWidth: 250,
+      field: 'createdAt',
+      headerName: 'Date',
+      renderCell: ({ row }: CellType) => {
+        return (
+          <Typography variant='body2' noWrap>
+            {moment(row.createdAt).format('LL')}
+          </Typography>
+        );
+      }
+    },
     {
       flex: 0.2,
       minWidth: 250,
@@ -113,19 +126,6 @@ const ReferenceTableList = () => {
         return (
           <Typography variant='body2' noWrap>
             {row.name}
-          </Typography>
-        );
-      }
-    },
-    {
-      flex: 0.2,
-      minWidth: 250,
-      field: 'createdAt',
-      headerName: 'Created At',
-      renderCell: ({ row }: CellType) => {
-        return (
-          <Typography variant='body2' noWrap>
-            {moment(row.createdAt).format('LL')}
           </Typography>
         );
       }

@@ -27,6 +27,7 @@ export function getRandomNumber(min: number, max: number) {
 
 export function useFilterControlChange() {
   const [searchFilter, setSearchFilter] = useState<DynamicType>({});
+  const [open, setOpen] = useState<boolean>(false);
 
   const handleSearchFilter = useCallback((e: SelectChangeEvent) => {
     const { name, value } = e.target;
@@ -45,26 +46,28 @@ export function useFilterControlChange() {
     setSearchFilter(prev => {
       prev[key] = { ...prev[key], [name]: value };
 
+      prev['dropDown'] = _.omit(prev['dropDown'], name === 'timeframe' ? ['dateRangeInputValue'] : []);
+
       return { ...prev };
     });
   }, []);
 
   const handleDateRangeFilter = (date: Date[]) => {
     setSearchFilter(prev => {
-      prev['dateRangeInputValue'] = { start: date[0], end: date[1] };
+      prev['dropDown'] = { ...prev['dropDown'], dateRangeInputValue: { start: date[0], end: date[1] } };
 
       return { ...prev };
     });
   };
 
-  return { searchFilter, setSearchFilter, handleSearchFilter, handleDateRangeFilter };
+  return { searchFilter, setSearchFilter, open, setOpen, handleSearchFilter, handleDateRangeFilter };
 }
 
 export function getFilterObjValue(objVal?: FilterQueryInputType) {
   const searchFilter = _.get(objVal, 'searchFilter');
   const dropDownValue = _.get(objVal, 'dropDown');
   const inputValue = _.get(objVal, 'textField.inputValue');
-  const dateRangeInputValue = _.get(objVal, 'dateRangeInputValue');
+  const dateRangeInputValue = _.get(objVal, 'dropDown.dateRangeInputValue');
 
   return { searchFilter, dropDownValue, inputValue, dateRangeInputValue };
 }

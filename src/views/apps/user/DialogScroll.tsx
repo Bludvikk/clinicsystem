@@ -6,8 +6,6 @@ import UserInfoForm from './UserInfoForm';
 import { FormPropsType } from '@/utils/common.type';
 import { useUserFormStore } from '@/stores/user.store';
 
-import React from 'react';
-
 const DialogScroll = ({ formId, maxWidth }: FormPropsType) => {
   const { onClosing, showDialog, dialogTitle, isSaving } = useUserFormStore();
 
@@ -34,7 +32,7 @@ const DialogScroll = ({ formId, maxWidth }: FormPropsType) => {
             Cancel
           </Button>
           <Button type='submit' form={formId} disabled={isSaving} variant='contained'>
-            Save
+            Submit
           </Button>
         </DialogActions>
       </DialogContent>

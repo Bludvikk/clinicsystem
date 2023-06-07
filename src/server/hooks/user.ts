@@ -1,10 +1,12 @@
-import { FilterQueryInputType } from '@/utils/common.type';
+import { FilterQueryInputType, ParamsInput } from '@/utils/common.type';
 import { FilterData, InvalidateQueries, SetQueryDataDeleted } from '@/utils/rq.context';
 import { trpc } from '@/utils/trpc';
 
-export const getUsers = (filterQuery?: FilterQueryInputType) => {
+export const getUsers = (filterQuery?: FilterQueryInputType, params?: ParamsInput) => {
   const result = trpc.user.list.useQuery(
-    {},
+    {
+      ...(params && params.ids && { ids: params.ids })
+    },
     {
       staleTime: Infinity,
       select: data => new FilterData(data, filterQuery).filter()

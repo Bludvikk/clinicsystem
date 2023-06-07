@@ -13,9 +13,7 @@ const PatientTableHeader = () => {
   const filterTableHeader = new Map([['tableHeader', [1, 2, 3]]]).get('tableHeader');
   const dataLoaded = !!filterTableHeader;
 
-  const handleCreate = () => {
-    onAdd();
-  };
+  const handleCreate = () => onAdd();
 
   useEffect(() => {
     setSearchFilter(searchFilter);

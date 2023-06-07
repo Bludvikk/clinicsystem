@@ -1,25 +1,12 @@
 import { create } from 'zustand';
 import { DiagnosisDtoSchemaType, TreatmentDtoSchemaType } from '@/server/schema/checkup';
-import { DynamicType } from '@/utils/common.type';
+import type { FormAction } from '@/utils/common.type';
+import type { FormStore } from '@/utils/common.type';
 
-type FormAction = 'Add' | 'Edit';
-
-type FormStore = {
-  id: number;
-  dialogTitle: FormAction;
-  showDialog: boolean;
-  isSaving: boolean;
-  onAdd: (patientId: number) => void;
-  onEdit: (id: number) => void;
-  onSaving: (stat: boolean) => void;
-  onClosing: () => void;
-  searchFilter: DynamicType | undefined;
-  setSearchFilter: (value: DynamicType) => void;
-};
-
-type CheckupFormStoreType = FormStore & {
+type CheckupFormStoreType = Omit<FormStore, 'onAdd'> & {
   patientId: number;
   tabsValue: string;
+  onAdd: (patientId: number) => void;
   setTabsValue: (value: string) => void;
 };
 
@@ -32,7 +19,7 @@ export const useCheckupFormStore = create<CheckupFormStoreType>(set => ({
   onAdd: patientId => {
     set({ patientId, showDialog: true, dialogTitle: 'Add' });
   },
-  onEdit: id => set({ id, showDialog: true, dialogTitle: 'Edit' }),
+  onEdit: id => set({ id, patientId: 0, showDialog: true, dialogTitle: 'Edit' }),
   onSaving: stat => set({ isSaving: stat }),
   onClosing: () => set({ id: 0, showDialog: false, isSaving: false }),
   searchFilter: undefined,
