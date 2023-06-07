@@ -8,24 +8,25 @@ datasource db {
 }
 
 model User {
-  id            Int        @id @default(autoincrement())
-  userName      String     @unique
-  email         String     @unique
-  password      String
-  firstName     String
-  lastName      String
-  middleInitial String?
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @default(now()) @updatedAt
-  deletedAt     DateTime?
-  roleId        Int
-  statusId      Int
-  departmentId  Int?
-  role          Reference  @relation("user_roleIdToReference", fields: [roleId], references: [id])
-  department    Reference? @relation("user_departmentIdToReference", fields: [departmentId], references: [id])
-  status        Reference  @relation("user_statusIdToReference", fields: [statusId], references: [id])
-  checkup       Checkup[]  @relation("checkup_physicianIdToUser")
-  receptionist  Checkup[]  @relation("checkup_receptionistIdToUser")
+  id                   Int        @id @default(autoincrement())
+  userName             String     @unique
+  email                String     @unique
+  password             String
+  firstName            String
+  lastName             String
+  middleInitial        String?
+  createdAt            DateTime   @default(now())
+  updatedAt            DateTime   @default(now()) @updatedAt
+  deletedAt            DateTime?
+  roleId               Int
+  statusId             Int
+  departmentId         Int?
+  role                 Reference  @relation("user_roleIdToReference", fields: [roleId], references: [id])
+  department           Reference? @relation("user_departmentIdToReference", fields: [departmentId], references: [id])
+  status               Reference  @relation("user_statusIdToReference", fields: [statusId], references: [id])
+  physicianCheckups    Checkup[]  @relation("checkup_physicianIdToUser")
+  receptionistCheckups Checkup[]  @relation("checkup_receptionistIdToUser")
+  profile              Profile?   @relation("profile_userIdtoUser")
 }
 
 model Entity {
@@ -62,7 +63,7 @@ model Reference {
   user_roleId           User[]    @relation("user_roleIdToReference")
   user_departmentId     User[]    @relation("user_departmentIdToReference")
   user_statusId         User[]    @relation("user_statusIdToReference")
-  checkup               Checkup[] @relation("checkup_statusIdtoReference")
+  checkups              Checkup[] @relation("checkup_statusIdtoReference")
 }
 
 model Patient {
@@ -82,11 +83,11 @@ model Patient {
   pastMedicalHistory Json
   obGyne             Json?
   createdAt          DateTime   @default(now())
-  updatedAt          DateTime   @updatedAt
+  updatedAt          DateTime   @default(now()) @updatedAt
   gender             Reference  @relation("patient_genderIdToReference", fields: [genderId], references: [id])
   occupation         Reference? @relation("patient_occupationIdToReference", fields: [occupationId], references: [id])
   civilStatus        Reference  @relation("patient_civilStatusIdToReference", fields: [civilStatusId], references: [id])
-  checkup            Checkup[]  @relation("checkup_patientIdToPatient")
+  checkups           Checkup[]  @relation("checkup_patientIdToPatient")
 }
 
 model Checkup {
@@ -94,6 +95,7 @@ model Checkup {
   patientId          Int
   physicianId        Int
   receptionistId     Int
+  clinicId           Int
   vitalSigns         Json
   diagnoses          Json?
   treatments         Json?
@@ -106,6 +108,62 @@ model Checkup {
   physician          User      @relation("checkup_physicianIdToUser", fields: [physicianId], references: [id])
   receptionist       User      @relation("checkup_receptionistIdToUser", fields: [receptionistId], references: [id])
   status             Reference @relation("checkup_statusIdtoReference", fields: [statusId], references: [id])
+  clinic             Clinic    @relation("checkup_clinicIdToClinic", fields: [clinicId], references: [id], onDelete: Cascade)
 
   @@unique([patientId, date])
+}
+
+model Profile {
+  userId              Int                  @id @unique
+  user                User                 @relation("profile_userIdtoUser", fields: [userId], references: [id], onDelete: Cascade)
+  physicianProfile    PhysicianProfile?    @relation("physicianProfile_profileIdToProfile")
+  receptionistProfile ReceptionistProfile? @relation("receptionistProfile_profileIdToProfile")
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @default(now()) @updatedAt
+}
+
+model PhysicianProfile {
+  id                   Int      @id @default(autoincrement())
+  profileId            Int      @unique
+  qualification        String
+  specialistIn         String
+  specializedTreatment String
+  address              String
+  languages            Int[]
+  contactNumber        String[]
+  yearOfExp            Int
+  licenseNumber        Int
+  deaNumber            String
+  ptrNumber            Int
+  clinics              Clinic[]
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @default(now()) @updatedAt
+  profile              Profile? @relation("physicianProfile_profileIdToProfile", fields: [profileId], references: [userId], onDelete: Cascade)
+}
+
+model ReceptionistProfile {
+  id            Int      @id @default(autoincrement())
+  profileId     Int      @unique
+  address       String
+  contactNumber String
+  clinics       Clinic[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now()) @updatedAt
+  profile       Profile? @relation("receptionistProfile_profileIdToProfile", fields: [profileId], references: [userId], onDelete: Cascade)
+}
+
+model Clinic {
+  id            Int                   @id @default(autoincrement())
+  code          String                @unique
+  name          String
+  address       String
+  contactNumber String[]
+  daysOpen      String
+  openingTime   DateTime              @db.Time()
+  closingTime   DateTime              @db.Time()
+  createdAt     DateTime              @default(now())
+  updatedAt     DateTime              @default(now()) @updatedAt
+  physicians    PhysicianProfile[]
+  receptionist  ReceptionistProfile[]
+  checkups      Checkup[]             @relation("checkup_clinicIdToClinic")
 }
