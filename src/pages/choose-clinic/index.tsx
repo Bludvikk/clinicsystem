@@ -1,12 +1,9 @@
-import { ReactNode, useState } from 'react';
-
-import Link from 'next/link';
+import { ReactNode, useEffect, useState } from 'react';
 
 import {
   Box,
-  Button,
-  Checkbox,
   Grid,
+  Button,
   Typography,
   CardContent,
   styled,
@@ -14,110 +11,98 @@ import {
   Card as MuiCard,
   CardProps
 } from '@mui/material';
-import MuiFormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel';
 
-import { useForm } from 'react-hook-form';
-
+import Icon from 'src/@core/components/icon';
 import themeConfig from 'src/configs/themeConfig';
 import BlankLayout from 'src/@core/layouts/BlankLayout';
 import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustrationsV1';
 
-import { signIn, useSession } from 'next-auth/react';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { LoginUserDtoSchemaType, LoginUserFieldType, loginUserDtoSchema } from '@/server/schema/user';
-import { toast } from 'react-hot-toast';
+import { useSession } from 'next-auth/react';
+
+import { SubmitHandler, useForm } from 'react-hook-form';
+
+import { FormControlPropsType } from '@/utils/common.type';
+import { ChooseClinicDtoSchemaType, ChooseClinicUnionFieldType, chooseClinicDtoSchema } from '@/server/schema/clinic';
+import { ClinicsType, UsersType } from '@/utils/db.type';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { FormObjectComponent } from '@/utils/form.component';
 import { getHomeRoute } from '..';
 
 const Card = styled(MuiCard)<CardProps>(({ theme }) => ({
   [theme.breakpoints.up('sm')]: { width: 450 }
 }));
 
-const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ theme }) => ({
-  '& .MuiFormControlLabel-label': {
-    fontSize: '0.875rem',
-    color: theme.palette.text.secondary
-  }
-}));
-
-import React from 'react';
-import { FormControlPropsType } from '@/utils/common.type';
-import { FormObjectComponent } from '@/utils/form.component';
-
-const LoginPage = () => {
+const ChooseClinicPage: NextPage = () => {
   const theme = useTheme();
 
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const { data: session, status, update } = useSession();
 
-  const [rememberMe, setRememberMe] = useState<boolean>(false);
-  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [clinicsData, setClinicsData] = useState<Omit<ClinicsType, 'physicians'>[]>([]);
 
   const {
-    handleSubmit,
     control,
+    handleSubmit,
+    reset,
+    getValues,
+    setValue,
     formState: { errors }
-  } = useForm<LoginUserDtoSchemaType>({
+  } = useForm<ChooseClinicDtoSchemaType>({
     defaultValues: {
-      email: '',
-      password: ''
+      clinicId: 0
     },
     mode: 'onChange',
-    resolver: zodResolver(loginUserDtoSchema)
+    resolver: zodResolver(chooseClinicDtoSchema)
   });
 
-  const LOGIN_PANEL = ['General'] as const;
-  const LOGIN_FIELDS: Record<(typeof LOGIN_PANEL)[number], FormControlPropsType<LoginUserFieldType>[]> = {
+  useEffect(() => {
+    if (session && session.user) {
+      // prettier-ignore
+      if(session.user.role.code !== 'admin' && session.user.role.code !== 'user') {
+        const roleCode = session.user.role.code;
+        const profile = session.user.profile as UsersType['profile'] & { [key: string]: { clinics: ClinicsType[] } } | undefined;
+        const clinics = profile?.[`${roleCode}Profile`]?.clinics;
+        
+        setClinicsData(clinics ? clinics : []);
+      }
+    }
+  }, [session]);
+
+  const CHOOSE_CLINIC_PANEL = ['General'] as const;
+  const CHOOSE_CLINIC_FIELD: Record<
+    (typeof CHOOSE_CLINIC_PANEL)[number],
+    FormControlPropsType<ChooseClinicUnionFieldType>[]
+  > = {
     General: [
       {
-        label: 'Email',
-        dbField: 'email',
-        type: 'textField',
-        required: true,
-        autoFocus: true,
-        extendedProps: {
-          gridAttribute: { xs: 12 }
-        }
-      },
-      {
-        label: 'Password',
-        dbField: 'password',
-        type: 'textField',
+        label: 'Clinic',
+        dbField: 'clinicId',
+        type: 'dropDownNonEntityReference',
         required: true,
         extendedProps: {
           gridAttribute: { xs: 12 },
-          textFieldAttribute: { type: 'password' }
+          dropDownNonEntityReferenceAttribute: {
+            data: clinicsData && clinicsData.length > 0 ? clinicsData : [],
+            dataIsloading: status === 'loading',
+            menuItemTextPath: ['name']
+          }
         }
       }
     ]
   };
 
-  const onSubmit = async (data: LoginUserDtoSchemaType) => {
-    try {
-      const res = await signIn('credentials', {
-        ...data,
-        redirect: false
-      });
+  useEffect(() => {
+    if (session && session.user && session.user.clinicId) router.push(getHomeRoute(session.user.role.code));
+  }, [session?.user.clinicId]);
 
-      if (!res?.error) toast.success('Logged in successfully.');
-      else toast.error(res.error);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  if (status === 'authenticated') {
-    const roleCode = session.user.role.code;
-    const chosenClinic = session.user.clinicId;
-
-    if (roleCode !== 'user' && roleCode !== 'admin' && !chosenClinic) router.push('/choose-clinic');
-    else router.replace(getHomeRoute(session.user.role.code));
-  }
+  const onSubmit: SubmitHandler<ChooseClinicDtoSchemaType> = data => update({ clinicId: data.clinicId });
 
   return (
     <Box className='content-center'>
       <Card sx={{ zIndex: 1 }}>
-        <CardContent sx={{ p: theme => `${theme.spacing(13, 7, 6.5)} !important` }}>
+        <CardContent sx={{ p: theme => `${theme.spacing(15.5, 7, 8)} !important` }}>
           <Box sx={{ mb: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <svg width={47} fill='none' height={26} viewBox='0 0 268 150' xmlns='http://www.w3.org/2000/svg'>
               <rect
@@ -193,59 +178,46 @@ const LoginPage = () => {
               {themeConfig.templateName}
             </Typography>
           </Box>
-          <Box sx={{ mb: 6 }}>
-            <Typography variant='h5' sx={{ mb: 1.5, fontWeight: 600, letterSpacing: '0.18px' }}>
-              {`Welcome to ${themeConfig.templateName}! 👋🏻`}
-            </Typography>
-            <Typography variant='body2'>Please enter your credentials.</Typography>
+          <Box sx={{ mb: 6.5 }}>
+            <Box display='flex' alignItems='flex-end' sx={{ mb: 1.5 }}>
+              <Typography variant='h5' sx={{ letterSpacing: '0.18px', fontWeight: 600, mr: 3 }}>
+                Choose a Clinic
+              </Typography>
+              <Icon icon='mdi:home-city-outline' fontSize={32} />
+            </Box>
+            <Typography variant='body2'>Please select your preferred clinic.</Typography>
           </Box>
-
           <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
-            <Grid container rowGap={3}>
-              {LOGIN_FIELDS['General'].map((obj, i) => (
+            <Grid container spacing={6} sx={{ mb: 4 }}>
+              {CHOOSE_CLINIC_FIELD['General'].map((obj, i) => (
                 <Grid item key={obj.dbField} {...obj.extendedProps?.gridAttribute}>
-                  <FormObjectComponent key={i} objFieldProp={obj} control={control} errors={errors} />
+                  <FormObjectComponent
+                    key={i}
+                    objFieldProp={obj}
+                    control={control}
+                    errors={errors}
+                    getValues={getValues}
+                    setValue={setValue}
+                  />
                 </Grid>
               ))}
             </Grid>
 
-            <Box
-              sx={{
-                mb: 4,
-                display: 'flex',
-                alignItems: 'center',
-                flexWrap: 'wrap',
-                justifyContent: 'space-between'
-              }}
-            >
-              <FormControlLabel
-                label='Remember Me'
-                control={<Checkbox />}
-                sx={{
-                  '& .MuiFormControlLabel-label': { color: 'text.primary' }
-                }}
-              />
-              <Typography
-                variant='body2'
-                component={Link}
-                href='/pages/auth/forgot-password-v2'
-                sx={{ color: 'primary.main', textDecoration: 'none' }}
-              >
-                Forgot Password?
-              </Typography>
-            </Box>
-
-            <Button fullWidth size='large' type='submit' variant='contained' sx={{ mb: 7 }}>
-              Login
+            <Button fullWidth size='large' type='submit' variant='contained'>
+              Proceed
             </Button>
           </form>
         </CardContent>
       </Card>
-      <FooterIllustrationsV1 />
+      <FooterIllustrationsV1 image={`/images/pages/auth-v1-forgot-password-mask-${theme.palette.mode}.png`} />
     </Box>
   );
 };
 
-LoginPage.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>;
+ChooseClinicPage.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>;
+ChooseClinicPage.acl = {
+  action: 'read',
+  subject: 'choose-clinic'
+};
 
-export default LoginPage;
+export default ChooseClinicPage;

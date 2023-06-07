@@ -1,10 +1,9 @@
-import { NextAuthOptions } from 'next-auth';
+import { NextAuthOptions, User } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { verify } from 'argon2';
 
 import { prisma } from './prisma';
 import { loginUserDtoSchema } from '../server/schema/user';
-import { AuthenticatedUserType } from 'types/next-auth';
 
 export const nextAuthOptions: NextAuthOptions = {
   providers: [
@@ -39,6 +38,20 @@ export const nextAuthOptions: NextAuthOptions = {
                   code: true,
                   name: true
                 }
+              },
+              profile: {
+                include: {
+                  physicianProfile: {
+                    include: {
+                      clinics: true
+                    }
+                  },
+                  receptionistProfile: {
+                    include: {
+                      clinics: true
+                    }
+                  }
+                }
               }
             }
           });
@@ -53,7 +66,8 @@ export const nextAuthOptions: NextAuthOptions = {
             userName: user.userName,
             role: user.role,
             department: user.department,
-            status: user.status
+            status: user.status,
+            profile: user.profile
           };
         } catch (err) {
           throw err;
@@ -62,8 +76,9 @@ export const nextAuthOptions: NextAuthOptions = {
     })
   ],
   callbacks: {
-    jwt: async ({ token, user }) => {
-      if (user) token.user = user as AuthenticatedUserType;
+    jwt: async ({ token, user, trigger, session }) => {
+      if (user) token.user = user as User;
+      if (trigger === 'update' && session.clinicId) token.user.clinicId = session.clinicId;
       return token;
     },
     session: async ({ session, token }) => {
