@@ -8,7 +8,8 @@ export const diagnosisDtoSchema = z.object({
 
 export const treatmentDtoSchema = z.object({
   medicineId: z.coerce.number().min(1, { message: 'Please select a treatment.' }),
-  signa: z.string().min(1, { message: 'Please enter a signa.' })
+  signa: z.string().min(1, { message: 'Please enter a signa.' }),
+  quantity: z.coerce.number().min(1, { message: 'Please enter a quantity.' })
 });
 
 export const vitalSignsDtoSchema = z.object({
@@ -22,6 +23,7 @@ export const vitalSignsDtoSchema = z.object({
 });
 
 export const checkupDtoSchema = z.object({
+  clinicId: z.coerce.number().min(1, { message: 'Please enter a clinic id.' }),
   patientId: z.coerce.number().min(1, { message: 'Please enter a patient id.' }),
   physicianId: z.coerce.number().min(1, { message: 'Please select a physician.' }),
   receptionistId: z.coerce.number().min(1, { message: 'please enter a receptionist id.' }),

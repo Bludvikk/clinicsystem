@@ -1,4 +1,4 @@
-import { MouseEvent, useRef, useState } from 'react';
+import { MouseEvent, MutableRefObject, useEffect, useRef, useState } from 'react';
 
 import Link from 'next/link';
 
@@ -44,20 +44,19 @@ const checkupStatusObj: CheckupStatusType = {
 
 const RowOptions = ({
   id,
+  receptionistId,
   checkupStatus,
   medicinesData
 }: {
   id: number;
+  receptionistId: number;
   checkupStatus?: string;
   medicinesData: ReferencesEntityType[];
 }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const rowOptionsOpen = Boolean(anchorEl);
 
-  const iframeRef = useRef(null);
-  const [instance, updateInstance] = usePDF({
-    document: PrescriptionPDF({ id, medicinesData })
-  });
+  const { data: session } = useSession();
 
   const { onEdit } = useCheckupFormStore();
   const { mutate: deleteCheckupMutate } = deleteCheckup();
@@ -67,7 +66,10 @@ const RowOptions = ({
   };
   const handleRowOptionsClose = () => setAnchorEl(null);
 
-  const handleEdit = (id: number) => onEdit(id);
+  const handleEdit = (id: number) => {
+    onEdit(id);
+    handleRowOptionsClose();
+  };
   const handleDelete = (id: number) => {
     deleteCheckupMutate(
       { id, module: 'Checkup' },
@@ -75,6 +77,36 @@ const RowOptions = ({
         onSuccess: data => toast.success(data.message),
         onError: err => toast.error(`Error deleting: ${err}`)
       }
+    );
+    handleRowOptionsClose();
+  };
+
+  const MenuItemPrint = () => {
+    const iframeRef = useRef(null);
+    const [trigger, setTrigger] = useState<number>(0);
+
+    // create pdf and automatically print
+    const PDF = ({ iframeRef }: { iframeRef: MutableRefObject<null> }) => {
+      const [instance, updateInstance] = usePDF({
+        document: PrescriptionPDF({ id, medicinesData })
+      });
+
+      useEffect(() => {
+        if (iframeRef && !instance.loading && instance.blob) {
+          handlePrintPDF({ pdfDocument: instance, iframeRef });
+        }
+      }, [instance, iframeRef]);
+
+      return <iframe ref={iframeRef} style={{ display: 'none' }}></iframe>;
+    };
+
+    // make sure to only create/render pdf when print button of specific record is clicked then only that record will have the pdf rendered
+    return (
+      <MenuItem sx={{ '& svg': { mr: 2 } }} onClick={() => setTrigger(prev => prev + 1)}>
+        <Icon icon='mdi:prescription' fontSize={20} />
+        Print
+        {trigger > 0 && <PDF iframeRef={iframeRef} />}
+      </MenuItem>
     );
   };
 
@@ -99,11 +131,11 @@ const RowOptions = ({
         }}
         PaperProps={{ style: { minWidth: '8rem' } }}
       >
-        <MenuItem component={Link} sx={{ '& svg': { mr: 2 } }} href='/'>
+        <MenuItem component={Link} sx={{ '& svg': { mr: 2 } }} href={`/apps/checkup/${id}`}>
           <Icon icon='mdi:eye-outline' fontSize={20} />
           View
         </MenuItem>
-        {checkupStatus && checkupStatus !== 'completed' && (
+        {checkupStatus && checkupStatus !== 'completed' && session?.user.id === receptionistId && (
           <CanView action='update' subject='checkup-vital-signs'>
             <MenuItem sx={{ '& svg': { mr: 2 } }} onClick={() => handleEdit(id)}>
               <Icon icon='mdi:pencil-outline' fontSize={20} />
@@ -121,13 +153,7 @@ const RowOptions = ({
             CheckUp
           </MenuItem>
         </CanView>
-        {checkupStatus && checkupStatus === 'completed' && (
-          <MenuItem sx={{ '& svg': { mr: 2 } }} onClick={() => handlePrintPDF({ pdfDocument: instance, iframeRef })}>
-            <Icon icon='mdi:prescription' fontSize={20} />
-            Print
-            <iframe ref={iframeRef} style={{ display: 'none' }}></iframe>
-          </MenuItem>
-        )}
+        {checkupStatus && checkupStatus === 'completed' && <MenuItemPrint />}
       </Menu>
     </>
   );
@@ -138,7 +164,16 @@ const CheckupTableList = ({ physicianId }: CheckupTableListPropsType) => {
   const [paginationModel, setPaginationModel] = useState<{ pageSize: number; page: number }>({ pageSize: 10, page: 0 });
 
   const { showDialog, searchFilter } = useCheckupFormStore();
-  const { data: checkupsData, status: checkupsDataStatus } = getCheckups({ searchFilter });
+  const { data: checkupsData, status: checkupsDataStatus } = getCheckups({
+    searchFilter: {
+      ...searchFilter,
+      dropDown: {
+        ...searchFilter?.dropDown,
+        ...(session?.user.clinicId && { clinicId: session?.user.clinicId }),
+        ...(physicianId && { physicianId })
+      }
+    }
+  });
   const { data: medicinesData, status: medicinesDataStatus } = getReferences({ entities: [9] });
 
   const columns: GridColDef[] = [
@@ -250,6 +285,7 @@ const CheckupTableList = ({ physicianId }: CheckupTableListPropsType) => {
       renderCell: ({ row }: CellType) => (
         <RowOptions
           id={row.id}
+          receptionistId={row.receptionistId}
           checkupStatus={row.status.code}
           medicinesData={
             medicinesDataStatus === 'loading'
@@ -265,11 +301,11 @@ const CheckupTableList = ({ physicianId }: CheckupTableListPropsType) => {
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
-          <CheckupTableHeader physicianId={physicianId} />
+          <CheckupTableHeader />
 
           <DataGrid
             autoHeight
-            loading={checkupsDataStatus === 'loading'}
+            loading={!searchFilter?.dropDown?.timeframe && checkupsDataStatus === 'loading'}
             rows={checkupsData && checkupsData.length > 0 ? checkupsData : []}
             columns={columns}
             disableRowSelectionOnClick

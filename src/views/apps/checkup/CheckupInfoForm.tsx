@@ -2,16 +2,12 @@ import { useEffect, SyntheticEvent, useContext, FC } from 'react';
 
 import {
   Box,
-  FormControl,
   FormHelperText,
   Grid,
   IconButton,
-  InputLabel,
   List,
   ListItem,
   ListItemText,
-  MenuItem,
-  Select,
   Tab,
   Paper,
   Breakpoint,
@@ -23,7 +19,7 @@ import {
   InputAdornment
 } from '@mui/material';
 
-import { useForm, SubmitHandler, Controller } from 'react-hook-form';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import isDeepEqual from 'fast-deep-equal/react';
 import toast from 'react-hot-toast';
@@ -47,23 +43,33 @@ import { FormObjectComponent } from '@/utils/form.component';
 import { useCheckupFormStore, useDiagnosisFormStore, useTreatmentFormStore } from '@/stores/checkup.store';
 import { useSession } from 'next-auth/react';
 import { getReferences } from '@/server/hooks/reference';
-import { getUsers } from '@/server/hooks/user';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { AbilityContext } from '@/layouts/components/acl/Can';
 import Icon from '@/@core/components/icon';
 import moment from 'moment';
+import { getPatient } from '@/server/hooks/patient';
+import { getClinic } from '@/server/hooks/clinic';
+
+interface PatientGenderType {
+  [key: string]: { icon: string; color: string };
+}
+
+const patientGenderObj: PatientGenderType = {
+  male: { icon: 'mdi:gender-male', color: 'info.main' },
+  female: { icon: 'mdi:gender-female', color: 'error.light' }
+};
 
 const CheckupInfoForm = ({ formId }: FormPropsType) => {
   const ability = useContext(AbilityContext);
 
   const { id, patientId, onClosing, onSaving, tabsValue, setTabsValue } = useCheckupFormStore();
 
+  const { data: session, status } = useSession();
+
   const checkupData = getCheckup({ id });
-  const { data: session } = useSession();
+  const clinicData = getClinic({ id: session?.user.clinicId });
+  const patientData = getPatient({ id: patientId });
   const { data: referencesData } = getReferences({ entities: [11, 9] });
-  const { data: physiciansData, status: physiciansDataStatus } = getUsers({
-    searchFilter: { dropDown: { roleId: 15 } }
-  });
 
   const { mutate: postCheckupMutate, isLoading: postCheckupIsLoading } = postCheckup();
 
@@ -71,6 +77,7 @@ const CheckupInfoForm = ({ formId }: FormPropsType) => {
     patientId: patientId,
     physicianId: 0,
     receptionistId: session?.user.id,
+    clinicId: session?.user.clinicId,
     vitalSigns: {
       t: 0,
       p: 0,
@@ -113,7 +120,6 @@ const CheckupInfoForm = ({ formId }: FormPropsType) => {
     setValue,
     getValues,
     reset,
-    watch,
     setError,
     formState: { errors }
   } = useForm<CheckupDtoSchemaType>({
@@ -143,11 +149,43 @@ const CheckupInfoForm = ({ formId }: FormPropsType) => {
   } = useForm<TreatmentDtoSchemaType>({
     defaultValues: {
       medicineId: 0,
-      signa: ''
+      signa: '',
+      quantity: 0
     },
     mode: 'onChange',
     resolver: zodResolver(treatmentDtoSchema)
   });
+
+  const CHECKUP_HEADER_PANEL = ['General'] as const;
+  const CHECKUP_HEADER_FIELDS: Record<
+    (typeof CHECKUP_HEADER_PANEL)[number],
+    FormControlPropsType<CheckupUnionFieldType>[]
+  > = {
+    General: [
+      {
+        label: 'Physician',
+        dbField: 'physicianId',
+        type: 'dropDownNonEntityReference',
+        required: true,
+        extendedProps: {
+          gridAttribute: { xs: 5, mt: 5, ml: 'auto' },
+          dropDownAttribute: {
+            disabled:
+              ability.cannot('update', 'checkup-vital-signs') ||
+              (id !== 0 && checkupData?.receptionistId !== session?.user.id)
+          },
+          dropDownNonEntityReferenceAttribute: {
+            data:
+              clinicData && clinicData.physicians.length > 0
+                ? clinicData.physicians.map(physician => physician.profile?.user)
+                : [],
+            dataIsloading: status === 'loading',
+            menuItemTextPath: ['lastName', 'firstName']
+          }
+        }
+      }
+    ]
+  };
 
   const CHECKUP_PANELS = ['vitalSigns', 'dietaryAdviseFollowup'] as const;
   const CHECKUP_FIELDS: Record<(typeof CHECKUP_PANELS)[number], FormControlPropsType<CheckupUnionFieldType>[]> = {
@@ -161,9 +199,7 @@ const CheckupInfoForm = ({ formId }: FormPropsType) => {
           gridAttribute: { xs: 12, md: 6, lg: 4 },
           textFieldAttribute: {
             type: 'number',
-            disabled:
-              ability.cannot('update', 'checkup-vital-signs') ||
-              (id !== 0 && checkupData?.receptionistId !== session?.user.id),
+            disabled: ability.cannot('update', 'checkup-vital-signs'),
             inputProps: { min: 0, step: '0.01' },
             InputProps: {
               endAdornment: <InputAdornment position='end'>°C</InputAdornment>
@@ -179,9 +215,7 @@ const CheckupInfoForm = ({ formId }: FormPropsType) => {
         extendedProps: {
           gridAttribute: { xs: 12, md: 6, lg: 4 },
           textFieldAttribute: {
-            disabled:
-              ability.cannot('update', 'checkup-vital-signs') ||
-              (id !== 0 && checkupData?.receptionistId !== session?.user.id),
+            disabled: ability.cannot('update', 'checkup-vital-signs'),
             InputProps: {
               endAdornment: <InputAdornment position='end'>mmHg</InputAdornment>
             }
@@ -197,9 +231,7 @@ const CheckupInfoForm = ({ formId }: FormPropsType) => {
           gridAttribute: { xs: 12, md: 6, lg: 4 },
           textFieldAttribute: {
             type: 'number',
-            disabled:
-              ability.cannot('update', 'checkup-vital-signs') ||
-              (id !== 0 && checkupData?.receptionistId !== session?.user.id),
+            disabled: ability.cannot('update', 'checkup-vital-signs'),
             inputProps: { min: 0, step: '0.01' },
             InputProps: {
               endAdornment: <InputAdornment position='end'>mg/dL</InputAdornment>
@@ -216,9 +248,7 @@ const CheckupInfoForm = ({ formId }: FormPropsType) => {
           gridAttribute: { xs: 12, md: 6, lg: 4 },
           textFieldAttribute: {
             type: 'number',
-            disabled:
-              ability.cannot('update', 'checkup-vital-signs') ||
-              (id !== 0 && checkupData?.receptionistId !== session?.user.id),
+            disabled: ability.cannot('update', 'checkup-vital-signs'),
             inputProps: { min: 0, step: '0.01' },
             InputProps: {
               endAdornment: <InputAdornment position='end'>bpm</InputAdornment>
@@ -235,9 +265,7 @@ const CheckupInfoForm = ({ formId }: FormPropsType) => {
           gridAttribute: { xs: 12, md: 6, lg: 4 },
           textFieldAttribute: {
             type: 'number',
-            disabled:
-              ability.cannot('update', 'checkup-vital-signs') ||
-              (id !== 0 && checkupData?.receptionistId !== session?.user.id),
+            disabled: ability.cannot('update', 'checkup-vital-signs'),
             inputProps: { min: 0, step: '0.01' },
             InputProps: {
               endAdornment: <InputAdornment position='end'>kg</InputAdornment>
@@ -254,9 +282,7 @@ const CheckupInfoForm = ({ formId }: FormPropsType) => {
           gridAttribute: { xs: 12, md: 6, lg: 4 },
           textFieldAttribute: {
             type: 'number',
-            disabled:
-              ability.cannot('update', 'checkup-vital-signs') ||
-              (id !== 0 && checkupData?.receptionistId !== session?.user.id),
+            disabled: ability.cannot('update', 'checkup-vital-signs'),
             inputProps: { min: 0, step: '0.01' },
             InputProps: {
               endAdornment: <InputAdornment position='end'>cm</InputAdornment>
@@ -273,9 +299,7 @@ const CheckupInfoForm = ({ formId }: FormPropsType) => {
           gridAttribute: { xs: 12, md: 6, lg: 4 },
           textFieldAttribute: {
             type: 'number',
-            disabled:
-              ability.cannot('update', 'checkup-vital-signs') ||
-              (id !== 0 && checkupData?.receptionistId !== session?.user.id),
+            disabled: ability.cannot('update', 'checkup-vital-signs'),
             inputProps: { min: 0, step: '0.01' },
             InputProps: {
               endAdornment: <InputAdornment position='end'>bpm</InputAdornment>
@@ -331,15 +355,23 @@ const CheckupInfoForm = ({ formId }: FormPropsType) => {
         required: true,
         type: 'dropDown',
         entityId: 9,
-        extendedProps: {}
+        extendedProps: { gridAttribute: { xs: 12 } }
       },
       {
         label: 'Signa',
         dbField: 'signa',
         type: 'textField',
         required: true,
+        extendedProps: { gridAttribute: { xs: 10 } }
+      },
+      {
+        label: 'Quantity',
+        dbField: 'quantity',
+        type: 'textField',
+        required: true,
         extendedProps: {
-          textFieldAttribute: { sx: { mt: 2 } }
+          textFieldAttribute: { type: 'number', inputProps: { min: 1 } },
+          gridAttribute: { xs: 2 }
         }
       }
     ]
@@ -444,39 +476,70 @@ const CheckupInfoForm = ({ formId }: FormPropsType) => {
     <Box>
       <form id={formId} onSubmit={handleSubmit(onSubmit)}>
         <Grid container>
-          <Grid item xs={5} mt={5} ml='auto'>
-            <Controller
-              control={control}
-              name='physicianId'
-              render={({ field }) => (
-                <FormControl fullWidth>
-                  <InputLabel id='physicianId-label'>Physician</InputLabel>
-                  <Select
-                    label='Physician'
-                    defaultValue={0}
-                    labelId='physicianId-label'
-                    disabled={
-                      physiciansDataStatus === 'loading' ||
-                      ability.cannot('update', 'checkup-vital-signs') ||
-                      (id !== 0 && checkupData?.receptionistId !== session?.user.id)
-                    }
-                    error={Boolean(errors.physicianId)}
-                    {...field}
+          <Grid item>
+            {patientData && (
+              <ListItemText
+                primary={`${patientData.firstName} ${patientData?.lastName}`}
+                primaryTypographyProps={{
+                  fontWeight: 600,
+                  variant: 'h6',
+                  color: 'text.primary'
+                }}
+                secondary={
+                  <Box
+                    component='span'
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      '& svg': { color: patientGenderObj[patientData.gender.code].color }
+                    }}
                   >
-                    <MenuItem value={0}>Select Physician</MenuItem>
-                    {physiciansData &&
-                      physiciansData?.length > 0 &&
-                      physiciansData.map(physician => (
-                        <MenuItem key={physician.id} value={physician.id}>
-                          {physician.lastName} {physician.firstName},
-                        </MenuItem>
-                      ))}
-                  </Select>
-                  <FormHelperText sx={{ color: 'error.main' }}>{errors['physicianId']?.message}</FormHelperText>
-                </FormControl>
-              )}
-            />
+                    <Icon icon={patientGenderObj[patientData.gender.code].icon} fontSize={25} /> &nbsp;
+                    {patientData?.gender.name} • {patientData?.age} yrs old •{' '}
+                    {moment(patientData?.dateOfBirth).format('LL')}
+                  </Box>
+                }
+              />
+            )}
+
+            {checkupData && (
+              <ListItemText
+                primary={`${checkupData.patient?.firstName} ${checkupData.patient?.lastName}`}
+                primaryTypographyProps={{
+                  fontWeight: 600,
+                  variant: 'h6',
+                  color: 'text.primary'
+                }}
+                secondary={
+                  <Box
+                    component='span'
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      '& svg': { color: patientGenderObj[checkupData.patient.gender.code].color }
+                    }}
+                  >
+                    <Icon icon={patientGenderObj[checkupData.patient.gender.code].icon} fontSize={25} /> &nbsp;
+                    {checkupData.patient.gender.name} • {checkupData.patient.age} yrs old •{' '}
+                    {moment(checkupData.patient?.dateOfBirth).format('LL')}
+                  </Box>
+                }
+              />
+            )}
           </Grid>
+
+          {CHECKUP_HEADER_FIELDS['General'].map((obj, i) => (
+            <Grid item key={obj.dbField} {...obj.extendedProps?.gridAttribute}>
+              <FormObjectComponent
+                key={i}
+                objFieldProp={obj}
+                control={control}
+                errors={errors}
+                getValues={getValues}
+                setValue={setValue}
+              />
+            </Grid>
+          ))}
 
           <Grid item xs={12} mt={3}>
             <TabContext value={tabsValue}>
@@ -535,6 +598,7 @@ const CheckupInfoForm = ({ formId }: FormPropsType) => {
                       <List
                         sx={{
                           height: 180,
+                          paddingY: 0,
                           overflowY: 'auto'
                         }}
                         dense
@@ -544,6 +608,7 @@ const CheckupInfoForm = ({ formId }: FormPropsType) => {
                           diagnoses.map((diagnosis, i) => (
                             <ListItem
                               key={i}
+                              sx={{ px: 1 }}
                               secondaryAction={
                                 <Grid item>
                                   <IconButton type='button' color='secondary' onClick={() => onEditDiagnosis(i)}>
@@ -558,9 +623,7 @@ const CheckupInfoForm = ({ formId }: FormPropsType) => {
                               <ListItemText
                                 sx={{ m: 0, width: '50%' }}
                                 primary={diagnosis.name}
-                                primaryTypographyProps={{
-                                  sx: { fontWeight: 'bold' }
-                                }}
+                                primaryTypographyProps={{ sx: { fontWeight: 600, color: 'text.primary' } }}
                               />
                             </ListItem>
                           ))}
@@ -574,14 +637,16 @@ const CheckupInfoForm = ({ formId }: FormPropsType) => {
 
                   <TabPanel value='3' sx={{ pb: 0, px: 0 }}>
                     <Grid container mt={1} alignItems='center'>
-                      <Grid item flex={3}>
+                      <Grid item container spacing={2} flex={3}>
                         {TREATMENT_FIELDS['treatment'].map((obj, i) => (
-                          <FormObjectComponent
-                            key={i}
-                            objFieldProp={obj}
-                            control={treatmentControl}
-                            errors={treatmentErrors}
-                          />
+                          <Grid item key={obj.dbField} {...obj.extendedProps?.gridAttribute}>
+                            <FormObjectComponent
+                              key={i}
+                              objFieldProp={obj}
+                              control={treatmentControl}
+                              errors={treatmentErrors}
+                            />
+                          </Grid>
                         ))}
                       </Grid>
 
@@ -611,6 +676,7 @@ const CheckupInfoForm = ({ formId }: FormPropsType) => {
                       <List
                         sx={{
                           height: 180,
+                          paddingY: 0,
                           overflowY: 'auto'
                         }}
                         dense
@@ -620,6 +686,7 @@ const CheckupInfoForm = ({ formId }: FormPropsType) => {
                           treatments.map((treatment, i) => (
                             <ListItem
                               key={i}
+                              sx={{ px: 1 }}
                               secondaryAction={
                                 <Grid item>
                                   <IconButton type='button' color='secondary' onClick={() => onEditTreatment(i)}>
@@ -633,18 +700,13 @@ const CheckupInfoForm = ({ formId }: FormPropsType) => {
                             >
                               <ListItemText
                                 sx={{ m: 0, width: '50%' }}
-                                primary={
+                                primary={`[${treatment.quantity}x] ${
                                   referencesData
                                     ?.filter(ref => ref.entityId === 9)
                                     .find(medicine => medicine.id === treatment.medicineId)?.name
-                                }
-                                primaryTypographyProps={{
-                                  sx: { fontWeight: 'bold' }
-                                }}
+                                }`}
+                                primaryTypographyProps={{ sx: { fontWeight: 600, color: 'text.primary' } }}
                                 secondary={treatment.signa}
-                                secondaryTypographyProps={{
-                                  variant: 'body2'
-                                }}
                               />
                             </ListItem>
                           ))}
@@ -706,9 +768,7 @@ const EditDiagnosisDialog: FC<PropsType> = ({ maxWidth }) => {
         type: 'textField',
         autoFocus: true,
         required: true,
-        extendedProps: {
-          gridAttribute: { xs: 12 }
-        }
+        extendedProps: { gridAttribute: { xs: 12 } }
       }
     ]
   };
@@ -790,11 +850,16 @@ const EditTreatmentDialog: FC<PropsType> = ({ maxWidth }) => {
         dbField: 'signa',
         type: 'textField',
         required: true,
+        extendedProps: { gridAttribute: { xs: 10 } }
+      },
+      {
+        label: 'Quantity',
+        dbField: 'quantity',
+        type: 'textField',
+        required: true,
         extendedProps: {
-          gridAttribute: { xs: 12 },
-          textFieldAttribute: {
-            sx: { mt: 2 }
-          }
+          textFieldAttribute: { type: 'number', inputProps: { min: 1 } },
+          gridAttribute: { xs: 2 }
         }
       }
     ]
@@ -821,11 +886,13 @@ const EditTreatmentDialog: FC<PropsType> = ({ maxWidth }) => {
           <DialogTitle textAlign='center'>{dialogTitle} Diagnosis</DialogTitle>
 
           <Grid container alignItems='center'>
-            {TREATMENT_FIELDS['treatment'].map((obj, i) => (
-              <Grid item key={obj.dbField} {...obj.extendedProps?.gridAttribute}>
-                <FormObjectComponent key={i} objFieldProp={obj} control={control} errors={errors} />
-              </Grid>
-            ))}
+            <Grid item container spacing={2} flex={3}>
+              {TREATMENT_FIELDS['treatment'].map((obj, i) => (
+                <Grid item key={obj.dbField} {...obj.extendedProps?.gridAttribute}>
+                  <FormObjectComponent key={i} objFieldProp={obj} control={control} errors={errors} />
+                </Grid>
+              ))}
+            </Grid>
           </Grid>
 
           <DialogActions

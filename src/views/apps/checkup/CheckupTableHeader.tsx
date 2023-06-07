@@ -1,16 +1,23 @@
+import { forwardRef, useContext, useEffect, useState } from 'react';
+
 import { Button, CardContent, CardHeader, Divider, Grid, MenuItem } from '@mui/material';
+
 import Icon from '@/@core/components/icon';
 
-import { forwardRef, useEffect } from 'react';
 import { useFilterControlChange } from '@/utils/helper';
 import { useCheckupFormStore } from '@/stores/checkup.store';
-import { DateRangeInputSearch, DropdownData, TextInputSearch } from '@/utils/form.component';
+import {
+  DateRangeInputSearch,
+  DropdownData,
+  DropdownNonEntityReferenceData,
+  TextInputSearch
+} from '@/utils/form.component';
+import { getReferences } from '@/server/hooks/reference';
+import { getClinics } from '@/server/hooks/clinic';
+import { CheckupUnionFieldType } from '@/server/schema/checkup';
+import { AbilityContext } from '@/layouts/components/acl/Can';
 
-interface CheckupTableHeaderProsType {
-  physicianId?: number;
-}
-
-const CheckupTableHeader = ({ physicianId }: CheckupTableHeaderProsType) => {
+const CheckupTableHeader = () => {
   const {
     searchFilter,
     setSearchFilter: filterControlSetSearchFilter,
@@ -19,6 +26,11 @@ const CheckupTableHeader = ({ physicianId }: CheckupTableHeaderProsType) => {
   } = useFilterControlChange();
   const { setSearchFilter } = useCheckupFormStore();
 
+  const ability = useContext(AbilityContext);
+  const [open, setOpen] = useState<boolean>(false);
+
+  const { data: referencesData } = getReferences({ entities: [13] });
+  const { data: clinicData, isLoading: clinicDataIsLoading } = getClinics();
   const filterTableHeader = new Map([['tableHeader', [13, 11]]]).get('tableHeader');
   const dataLoaded = !!filterTableHeader;
 
@@ -27,30 +39,13 @@ const CheckupTableHeader = ({ physicianId }: CheckupTableHeaderProsType) => {
   }, [searchFilter]);
 
   useEffect(() => {
-    if (physicianId) filterControlSetSearchFilter(prev => ({ ...prev, dropDown: { physicianId } }));
-  }, [physicianId]);
-
-  interface CustomMenuItemProps {
-    value?: string;
-    onClick?: any;
-  }
-
-  const CustomMenuItem = forwardRef(({ value, onClick }: CustomMenuItemProps, ref) => {
-    const handleClick = () => {
-      if (searchFilter.dropDown) {
-        const newSearchFilter = searchFilter;
-        delete searchFilter.dropDown.timeframe;
-        filterControlSetSearchFilter(newSearchFilter);
-      }
-      onClick();
-    };
-
-    return (
-      <MenuItem value='dateRange' onClick={handleClick}>
-        {value ? value : 'Date Range'}
-      </MenuItem>
-    );
-  });
+    if (referencesData && referencesData.length > 0) {
+      filterControlSetSearchFilter(prev => ({
+        ...prev,
+        dropDown: { ...prev['dropDown'], timeframe: referencesData.find(ref => ref.isDefault)?.id }
+      }));
+    }
+  }, [referencesData]);
 
   return (
     <Grid container spacing={6}>
@@ -67,23 +62,55 @@ const CheckupTableHeader = ({ physicianId }: CheckupTableHeaderProsType) => {
                     handleSearchFilter={handleSearchFilter}
                     searchFilterValue={searchFilter}
                     customMenuItem={{
-                      dateRange: (
-                        <DateRangeInputSearch
-                          reactDatePickerAttribute={{
-                            popperPlacement: 'auto-start',
-                            popperProps: {
-                              strategy: 'fixed'
-                            }
-                          }}
-                          handleDateRangeFilter={handleDateRangeFilter}
-                          searchFilterValue={searchFilter}
-                          customInput={<CustomMenuItem />}
-                        />
-                      )
+                      dateRange: {
+                        render: childProps => (
+                          <MenuItem
+                            key={childProps?.key}
+                            value={childProps?.value}
+                            onClick={() => setOpen(prev => !prev)}
+                          >
+                            Date Range
+                          </MenuItem>
+                        )
+                      }
                     }}
                   />
                 </Grid>
               ))}
+
+              <Grid item sm={4} xs={12}>
+                <DropdownNonEntityReferenceData<CheckupUnionFieldType>
+                  type='filter'
+                  label='Clinic'
+                  filterFieldProp='clinicId'
+                  handleSearchFilter={handleSearchFilter}
+                  searchFilterValue={searchFilter}
+                  formControlAttribute={{
+                    sx: { display: ability.can('read', 'filter-checkups-by-clinic') ? 'block' : 'none' }
+                  }}
+                  dropDownNonEntityReferenceAttribute={{
+                    data: clinicData && clinicData.length > 0 ? clinicData : [],
+                    dataIsloading: clinicDataIsLoading,
+                    menuItemTextPath: ['name']
+                  }}
+                />
+              </Grid>
+
+              <Grid item xs={12} sx={{ padding: '0 !important' }}>
+                <DateRangeInputSearch
+                  boxAttribute={{
+                    width: '100%',
+                    position: 'absolute'
+                  }}
+                  reactDatePickerAttribute={{
+                    className: 'hidden'
+                  }}
+                  open={open}
+                  setOpen={setOpen}
+                  handleDateRangeFilter={handleDateRangeFilter}
+                  searchFilterValue={searchFilter}
+                />
+              </Grid>
             </Grid>
           </CardContent>
         ) : null}
