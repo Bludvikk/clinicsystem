@@ -13,7 +13,45 @@ export const getPatients = async (ctx: Context) => {
       include: {
         civilStatus: true,
         gender: true,
-        occupation: true
+        occupation: true,
+        checkups: {
+          include: {
+            clinic: true,
+            status: true,
+            physician: {
+              select: {
+                firstName: true,
+                lastName: true,
+                middleInitial: true,
+                profile: {
+                  include: {
+                    physicianProfile: {
+                      include: {
+                        clinics: true
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            receptionist: {
+              select: {
+                firstName: true,
+                lastName: true,
+                middleInitial: true,
+                profile: {
+                  include: {
+                    receptionistProfile: {
+                      include: {
+                        clinics: true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       },
       orderBy: {
         createdAt: 'desc'

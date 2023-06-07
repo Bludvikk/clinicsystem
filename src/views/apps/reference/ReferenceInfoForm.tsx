@@ -5,12 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
 
 import { FormControlPropsType, FormPropsType } from '@/utils/common.type';
-import {
-  createReferenceDtoSchema,
-  CreateReferenceDtoType,
-  PostReferenceDtoType,
-  ReferenceUnionFieldType
-} from '@/server/schema/reference';
+import { createReferenceDtoSchema, CreateReferenceDtoType, ReferenceUnionFieldType } from '@/server/schema/reference';
 import { getReference, postReference } from '@/server/hooks/reference';
 import { errorUtil } from '@/utils/helper';
 import { FormObjectComponent } from '@/utils/form.component';
@@ -48,7 +43,6 @@ const ReferenceInfoForm = ({ formId }: FormPropsType) => {
         dbField: 'code',
         type: 'textField',
         required: true,
-        autoFocus: true,
         extendedProps: {
           gridAttribute: { xs: 12, sm: 12 }
         }
@@ -58,7 +52,6 @@ const ReferenceInfoForm = ({ formId }: FormPropsType) => {
         dbField: 'name',
         type: 'textField',
         required: true,
-        autoFocus: true,
         extendedProps: {
           gridAttribute: { xs: 12, sm: 12 }
         }

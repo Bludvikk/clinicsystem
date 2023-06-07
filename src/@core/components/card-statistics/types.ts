@@ -10,7 +10,7 @@ export type CardStatsHorizontalProps = {
   stats: string;
   icon: ReactNode;
   color?: ThemeColor;
-  trendNumber: string;
+  trendNumber?: string;
   trend?: 'positive' | 'negative';
 };
 

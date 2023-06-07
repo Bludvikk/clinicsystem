@@ -11,6 +11,7 @@ export const getCheckups = async (ctx: Context) => {
   try {
     return await ctx.prisma.checkup.findMany({
       include: {
+        clinic: true,
         patient: {
           select: {
             firstName: true,
@@ -18,6 +19,7 @@ export const getCheckups = async (ctx: Context) => {
             middleInitial: true,
             address: true,
             age: true,
+            dateOfBirth: true,
             gender: {
               select: {
                 id: true,
@@ -31,14 +33,32 @@ export const getCheckups = async (ctx: Context) => {
           select: {
             firstName: true,
             lastName: true,
-            middleInitial: true
+            middleInitial: true,
+            profile: {
+              include: {
+                receptionistProfile: {
+                  include: {
+                    clinics: true
+                  }
+                }
+              }
+            }
           }
         },
         physician: {
           select: {
             firstName: true,
             lastName: true,
-            middleInitial: true
+            middleInitial: true,
+            profile: {
+              include: {
+                physicianProfile: {
+                  include: {
+                    clinics: true
+                  }
+                }
+              }
+            }
           }
         },
         status: {

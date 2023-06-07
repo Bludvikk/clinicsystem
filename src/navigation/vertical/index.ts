@@ -4,7 +4,7 @@ const navigation = (): VerticalNavItemsType => {
   return [
     {
       title: 'Dashboard',
-      path: '/dashboard',
+      path: '/apps/dashboard',
       icon: 'mdi:home-outline',
       action: 'read',
       subject: 'dashboard'
@@ -18,45 +18,31 @@ const navigation = (): VerticalNavItemsType => {
     },
     {
       title: 'User',
+      path: '/apps/user',
       icon: 'mdi:account-outline',
       action: 'read',
-      subject: 'user',
-      children: [
-        {
-          title: 'List',
-          path: '/apps/user/list',
-          action: 'read',
-          subject: 'user'
-        }
-      ]
+      subject: 'user'
+    },
+    {
+      title: 'Clinic',
+      path: '/apps/clinic',
+      icon: 'mdi:home-city-outline',
+      action: 'read',
+      subject: 'clinic'
     },
     {
       title: 'Patient',
+      path: '/apps/patient',
       icon: 'mdi:patient-outline',
       action: 'read',
-      subject: 'patient',
-      children: [
-        {
-          title: 'List',
-          path: '/apps/patient/list',
-          action: 'read',
-          subject: 'patient'
-        }
-      ]
+      subject: 'patient'
     },
     {
       title: 'Checkup',
+      path: '/apps/checkup',
       icon: 'tabler:checkup-list',
       action: 'read',
-      subject: 'checkup-vital-signs',
-      children: [
-        {
-          title: 'List',
-          path: '/apps/checkup/list',
-          action: 'read',
-          subject: 'checkup-vital-signs'
-        }
-      ]
+      subject: 'checkup-vital-signs'
     },
     {
       title: 'Physician',
@@ -66,26 +52,19 @@ const navigation = (): VerticalNavItemsType => {
       children: [
         {
           title: 'checkup',
+          path: '/apps/physician/checkup',
           action: 'read',
-          subject: 'checkup',
-          children: [
-            {
-              title: 'List',
-              path: '/apps/physician/checkup/list',
-              action: 'read',
-              subject: 'checkup'
-            }
-          ]
+          subject: 'checkup'
         }
       ]
-    },
-    {
-      title: 'Appointment',
-      path: '/appointment',
-      action: 'read',
-      subject: 'appointment',
-      icon: 'mdi:calendar-today-outline'
     }
+    // {
+    //   title: 'Appointment',
+    //   path: '/appointment',
+    //   action: 'read',
+    //   subject: 'appointment',
+    //   icon: 'mdi:calendar-today-outline'
+    // }
   ];
 };
 

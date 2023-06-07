@@ -1,4 +1,5 @@
-import { getDependencyData } from '@/server/hooks/reference';
+import React, { ChangeEvent, Dispatch, SetStateAction } from 'react';
+
 import {
   InputLabel,
   Select,
@@ -16,16 +17,25 @@ import {
   Grid,
   ListItemTextProps,
   TextFieldProps,
-  BoxProps
+  BoxProps,
+  Autocomplete,
+  Chip,
+  FormHelperText,
+  SelectChangeEvent,
+  Typography
 } from '@mui/material';
-import FormHelperText from '@mui/material/FormHelperText';
+
+import moment from 'moment';
+import DatePicker, { ReactDatePickerProps } from 'react-datepicker';
 import { Controller, ControllerFieldState, ControllerRenderProps, FieldErrors } from 'react-hook-form';
+import Cleave from 'cleave.js/react';
+import 'cleave.js/dist/addons/cleave-phone.ph';
+
+import { getDependencyData } from '@/server/hooks/reference';
 import { ExtendedPropsType, FormControlPropsType } from './common.type';
 import { getFilterObjValue } from './helper';
-import React, { ChangeEvent } from 'react';
-import DatePicker, { ReactDatePickerProps } from 'react-datepicker';
 import DatePickerWrapper from '@/@core/styles/libs/react-datepicker';
-import moment from 'moment';
+import _ from 'lodash';
 
 type FormContextType<TUnion> = {
   objFieldProp: FormControlPropsType<TUnion>;
@@ -78,7 +88,11 @@ export function FormContextType<TUnion>(props: FormContextType<TUnion>) {
     dropDownAttribute,
     reactDatePickerAttribute,
     gridAttribute,
-    checkboxAttribute
+    checkboxAttribute,
+    autoCompleteAttribute,
+    customInputComponent,
+    cleaveOptions,
+    dropDownNonEntityReferenceAttribute
   } = objFieldProp.extendedProps as ExtendedPropsType;
 
   const label = objFieldProp.required ? objFieldProp.label + '*' : objFieldProp.label;
@@ -93,10 +107,30 @@ export function FormContextType<TUnion>(props: FormContextType<TUnion>) {
           field={field}
           fieldState={fieldState}
           label={label}
+          setValue={setValue}
+          getValues={getValues}
           handleSearchFilter={field.onChange}
           searchFilterValue={field.value}
           dropDownAttribute={dropDownAttribute}
           formControlAttribute={formControlAttribute}
+        />
+      );
+
+    case 'dropDownNonEntityReference':
+      return (
+        <DropdownNonEntityReferenceData
+          type='control'
+          objFieldProp={objFieldProp}
+          field={field}
+          fieldState={fieldState}
+          label={label}
+          setValue={setValue}
+          getValues={getValues}
+          handleSearchFilter={field.onChange}
+          searchFilterValue={field.value}
+          dropDownAttribute={dropDownAttribute}
+          formControlAttribute={formControlAttribute}
+          dropDownNonEntityReferenceAttribute={dropDownNonEntityReferenceAttribute!}
         />
       );
 
@@ -106,11 +140,8 @@ export function FormContextType<TUnion>(props: FormContextType<TUnion>) {
           <DatePicker
             {...reactDatePickerAttribute}
             id={field.name}
-            popperPlacement='bottom-start'
             selected={moment(field.value).isValid() ? field.value : null}
             onChange={field.onChange}
-            placeholderText='MM/DD/YYYY'
-            isClearable
             customInput={
               <TextField
                 {...textFieldAttribute}
@@ -161,6 +192,43 @@ export function FormContextType<TUnion>(props: FormContextType<TUnion>) {
         />
       );
 
+    case 'auto-complete':
+      return (
+        <FormControl {...(formControlAttribute ? formControlAttribute : { fullWidth: true })}>
+          <Autocomplete
+            {...autoCompleteAttribute}
+            id={field.name}
+            defaultValue={autoCompleteAttribute?.defaultValue ? autoCompleteAttribute?.defaultValue : []}
+            options={autoCompleteAttribute?.options ? autoCompleteAttribute?.options : []}
+            value={field.value}
+            onChange={(event, newValue) => field.onChange(newValue)}
+            renderInput={params => (
+              <TextField
+                {...params}
+                {...textFieldAttribute}
+                autoFocus={objFieldProp.autoFocus}
+                label={label}
+                placeholder={label}
+                error={!objFieldProp.disabledErrors && Boolean(fieldState.error)}
+                InputProps={{
+                  ...params.InputProps,
+                  ...(customInputComponent ? { inputComponent: customInputComponent } : {})
+                }}
+                inputProps={{
+                  ...params.inputProps,
+                  ...(customInputComponent && cleaveOptions ? { options: cleaveOptions } : {})
+                }}
+              />
+            )}
+            renderTags={(value: any[], getTagProps) => {
+              return value.map((option: string, index: number) => (
+                <Chip variant='outlined' label={option} {...(getTagProps({ index }) as {})} key={index} />
+              ));
+            }}
+          />
+        </FormControl>
+      );
+
     default:
       return (
         <FormControl {...(formControlAttribute ? formControlAttribute : { fullWidth: true })}>
@@ -202,9 +270,15 @@ type DropdownProps<TUnion> = {
   objFieldProp?: FormControlPropsType<TUnion>;
   field?: ControllerRenderProps;
   fieldState?: ControllerFieldState;
+  setValue?: any;
+  getValues?: any;
   dropDownAttribute?: SelectProps;
   formControlAttribute?: FormControlProps;
-  customMenuItem?: { [key: string]: React.ReactNode };
+  customMenuItem?: {
+    [key: string]: {
+      render: (childProps: { key: number; value: string | number; text: string }) => React.ReactNode;
+    };
+  };
 };
 
 export function DropdownData<TUnion>(props: DropdownProps<TUnion>) {
@@ -216,6 +290,8 @@ export function DropdownData<TUnion>(props: DropdownProps<TUnion>) {
     searchFilterValue,
     fieldState,
     label,
+    setValue,
+    getValues,
     dropDownAttribute,
     formControlAttribute,
     customMenuItem
@@ -242,9 +318,28 @@ export function DropdownData<TUnion>(props: DropdownProps<TUnion>) {
     currentValue = searchFilterValue ? searchFilterValue : 0;
   }
 
+  const handleChange = (e: SelectChangeEvent<unknown>) => {
+    handleSearchFilter(e);
+
+    const value = e.target.value as (string | number)[];
+
+    if (dropDownAttribute?.multiple) {
+      if (value.includes(-1)) {
+        if (value.length === references.data?.length! + 1) {
+          setValue(objFieldProp?.dbField, []);
+        } else {
+          setValue(
+            objFieldProp?.dbField,
+            references.data?.map(d => d.id)
+          );
+        }
+      }
+    }
+  };
+
   return (
     <>
-      {dataLoaded && entity && entity.code !== 'timeframe' && (
+      {dataLoaded && entity && (
         <FormControl {...(formControlAttribute ? formControlAttribute : { fullWidth: true })}>
           <InputLabel id={`${entity.fieldProp}-select`}>{currentLabel}</InputLabel>
           <Select
@@ -255,38 +350,28 @@ export function DropdownData<TUnion>(props: DropdownProps<TUnion>) {
             labelId={`${entity.fieldProp}-select`}
             autoFocus={objFieldProp?.autoFocus}
             error={fieldState && Boolean(fieldState.error)}
-            onChange={handleSearchFilter}
+            onChange={handleChange}
             value={currentValue}
           >
-            <MenuItem value={0}>Select {currentLabel}</MenuItem>
-            {references.data.map(item => (
-              <MenuItem key={item.id} value={item.id}>
-                {item.name}
+            <MenuItem value={0} disabled={dropDownAttribute?.multiple}>
+              Select {currentLabel}
+            </MenuItem>
+
+            {dropDownAttribute?.multiple && entity && (
+              <MenuItem value={-1}>
+                {references.data.length === getValues(entity?.fieldProp).length ? 'Deselect All' : 'Select All'}
               </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      )}
-      {dataLoaded && entity && entity.code === 'timeframe' && (
-        <FormControl {...(formControlAttribute ? formControlAttribute : { fullWidth: true })}>
-          <InputLabel id={`${entity.fieldProp}-select`}>{currentLabel}</InputLabel>
-          <Select
-            {...(dropDownAttribute ? dropDownAttribute : { fullWidth: true })}
-            id={`select-${entity.fieldProp}`}
-            name={entity.fieldProp}
-            label={currentLabel}
-            labelId={`${entity.fieldProp}-select`}
-            autoFocus={objFieldProp?.autoFocus}
-            error={fieldState && Boolean(fieldState.error)}
-            onChange={handleSearchFilter}
-            value={currentValue}
-          >
-            <MenuItem value={0}>Select {currentLabel}</MenuItem>
+            )}
+
             {references.data.map(item =>
               customMenuItem && customMenuItem[item.code] ? (
-                <div key={item.id}>{customMenuItem[item.code]}</div>
+                customMenuItem[item.code].render({
+                  key: item.id,
+                  value: item.id,
+                  text: item.name
+                })
               ) : (
-                <MenuItem key={item.id} value={item.code}>
+                <MenuItem key={item.id} value={item.id}>
                   {item.name}
                 </MenuItem>
               )
@@ -298,9 +383,126 @@ export function DropdownData<TUnion>(props: DropdownProps<TUnion>) {
   );
 }
 
+type DropdownNonEntityReferenceDataProps<TUnion> = {
+  type: 'filter' | 'control';
+  filterFieldProp?: TUnion;
+  searchFilterValue: any;
+  handleSearchFilter: (...event: any[]) => void;
+  label?: string;
+  objFieldProp?: FormControlPropsType<TUnion>;
+  field?: ControllerRenderProps;
+  fieldState?: ControllerFieldState;
+  setValue?: any;
+  getValues?: any;
+  dropDownAttribute?: SelectProps;
+  formControlAttribute?: FormControlProps;
+  dropDownNonEntityReferenceAttribute: {
+    data: any[];
+    menuItemTextPath: string[];
+    dataIsloading: boolean;
+  };
+};
+
+export function DropdownNonEntityReferenceData<TUnion>(props: DropdownNonEntityReferenceDataProps<TUnion>) {
+  const {
+    type,
+    filterFieldProp,
+    objFieldProp,
+    handleSearchFilter,
+    searchFilterValue,
+    fieldState,
+    label,
+    setValue,
+    getValues,
+    dropDownAttribute,
+    formControlAttribute,
+    dropDownNonEntityReferenceAttribute
+  } = props;
+
+  const { data, dataIsloading, menuItemTextPath } = dropDownNonEntityReferenceAttribute;
+
+  const dataLoaded = !dataIsloading && !!data;
+
+  let currentValue = 0;
+
+  if (type === 'filter') {
+    const fieldProp = filterFieldProp ? (filterFieldProp as string) : '';
+    const { dropDownValue } = getFilterObjValue(searchFilterValue);
+    currentValue = dropDownValue && dropDownValue[fieldProp] ? dropDownValue[fieldProp] : 0;
+  }
+
+  if (type === 'control') {
+    currentValue = searchFilterValue ? searchFilterValue : 0;
+  }
+
+  const handleChange = (e: SelectChangeEvent<unknown>) => {
+    handleSearchFilter(e);
+
+    const value = e.target.value as (string | number)[];
+
+    if (dropDownAttribute?.multiple) {
+      if (value.includes(-1)) {
+        if (value.length === data.length + 1) {
+          setValue(objFieldProp?.dbField, []);
+        } else {
+          setValue(
+            objFieldProp?.dbField,
+            data.map(d => d.id)
+          );
+        }
+      }
+    }
+  };
+
+  return (
+    <>
+      {dataLoaded && (
+        <FormControl {...(formControlAttribute ? formControlAttribute : { fullWidth: true })}>
+          <InputLabel id={`${objFieldProp?.dbField}-select`}>{label}</InputLabel>
+          <Select
+            {...(dropDownAttribute ? dropDownAttribute : { fullWidth: true })}
+            id={`select-${objFieldProp?.dbField}`}
+            name={filterFieldProp ? (filterFieldProp as string) : (objFieldProp?.dbField as string)}
+            label={label}
+            labelId={`${objFieldProp?.dbField}-select`}
+            autoFocus={objFieldProp?.autoFocus}
+            error={fieldState && Boolean(fieldState.error)}
+            onChange={handleChange}
+            value={currentValue}
+            placeholder={`Select ${label}`}
+          >
+            <MenuItem value={0} disabled={dropDownAttribute?.multiple}>
+              Select {label}
+            </MenuItem>
+
+            {dropDownAttribute?.multiple && (
+              <MenuItem value={-1}>
+                {data.length === getValues(objFieldProp?.dbField).length ? 'Deselect All' : 'Select All'}
+              </MenuItem>
+            )}
+
+            {data.map(item => {
+              let text = '';
+
+              menuItemTextPath.forEach(path => {
+                text += _.get(item, path) + ' ';
+              });
+
+              return (
+                <MenuItem key={item.id} value={item.id}>
+                  {text}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        </FormControl>
+      )}
+    </>
+  );
+}
+
 type MultiCheckboxProps<TUnion> = {
   id: number;
-  type?: 'multi';
   label?: string;
   objFieldProp?: FormControlPropsType<TUnion>;
   field?: ControllerRenderProps;
@@ -315,7 +517,6 @@ type MultiCheckboxProps<TUnion> = {
 export function CheckBoxData<TUnion>(props: MultiCheckboxProps<TUnion>) {
   const {
     id,
-    type,
     objFieldProp,
     fieldState,
     label,
@@ -347,11 +548,15 @@ export function CheckBoxData<TUnion>(props: MultiCheckboxProps<TUnion>) {
     }
   };
 
-  //TODO: check type of checkbox
   return (
     <>
       {dataLoaded && entity ? (
         <>
+          <Grid xs={12} item>
+            <Typography width='100%' variant='body1' fontWeight={600} color='text.primary'>
+              {label}
+            </Typography>
+          </Grid>
           {references.data.map((item, i) => (
             <Grid key={i} item {...gridAttribute}>
               <FormControlLabel
@@ -424,11 +629,12 @@ type DateRangeInputSearchProps = {
   handleDateRangeFilter: (...event: any[]) => void;
   reactDatePickerAttribute?: Omit<ReactDatePickerProps, 'onChange'>;
   boxAttribute?: BoxProps;
-  customInput: React.ReactNode;
+  open: boolean;
+  setOpen: Dispatch<SetStateAction<boolean>>;
 };
 
 export function DateRangeInputSearch(props: DateRangeInputSearchProps) {
-  const { handleDateRangeFilter, searchFilterValue, reactDatePickerAttribute, boxAttribute, customInput } = props;
+  const { handleDateRangeFilter, searchFilterValue, reactDatePickerAttribute, boxAttribute, open, setOpen } = props;
   const { dateRangeInputValue } = getFilterObjValue(searchFilterValue);
   const { start, end } = dateRangeInputValue ? dateRangeInputValue : { start: null, end: null };
 
@@ -445,9 +651,13 @@ export function DateRangeInputSearch(props: DateRangeInputSearchProps) {
         selected={start}
         shouldCloseOnSelect={false}
         onChange={handleDateRangeFilter}
-        isClearable
-        customInput={customInput}
+        open={open}
+        onClickOutside={() => setOpen(prev => !prev)}
       />
     </DatePickerWrapper>
   );
 }
+
+export const CleaveInput = React.forwardRef((props: any, ref: React.Ref<HTMLInputElement>) => (
+  <Cleave {...props} htmlRef={ref} />
+));

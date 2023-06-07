@@ -4,6 +4,8 @@ import { EntitiesAsyncType } from '@/server/services/entity';
 import { ThemeColor } from 'src/@core/layouts/types';
 import { PatientsAsyncType } from '@/server/services/patient';
 import { CheckupsAsyncType } from '@/server/services/checkup';
+import { Prisma } from '@prisma/client';
+import { ClinicAsyncType } from '@/server/services/clinic';
 
 export type TGenerics<T extends (..._args: any) => Promise<any>> = RecursivelyConvertDatesToStrings<
   ArrayElement<AsyncReturnType<T>>
@@ -27,11 +29,12 @@ export type KnownKeys<T> = keyof {
   [K in keyof T as string extends K ? never : number extends K ? never : K]: never;
 };
 
-export type EntitiesType = TGenerics<EntitiesAsyncType>;
-export type ReferencesEntityType = TGenerics<ReferencesAsyncType>;
-export type UsersType = TGenerics<UsersAsyncType> & {
+export type EntitiesType = Prisma.PromiseReturnType<EntitiesAsyncType>[number];
+export type ReferencesEntityType = Prisma.PromiseReturnType<ReferencesAsyncType>[number];
+export type UsersType = Prisma.PromiseReturnType<UsersAsyncType>[number] & {
   avatars?: string | null;
   avatarColor?: ThemeColor;
 };
-export type PatientsType = TGenerics<PatientsAsyncType>;
-export type CheckupsType = TGenerics<CheckupsAsyncType>;
+export type PatientsType = Prisma.PromiseReturnType<PatientsAsyncType>[number];
+export type CheckupsType = Prisma.PromiseReturnType<CheckupsAsyncType>[number];
+export type ClinicsType = Prisma.PromiseReturnType<ClinicAsyncType>[number];

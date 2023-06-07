@@ -39,7 +39,7 @@ import {
 } from '@/server/schema/patient';
 import { FormControlPropsType, FormPropsType } from '@/utils/common.type';
 import { errorUtil, parseJSONWithDates } from '@/utils/helper';
-import { FormObjectComponent, ListItemTextData, ListItemTextType } from '@/utils/form.component';
+import { CleaveInput, FormObjectComponent, ListItemTextData, ListItemTextType } from '@/utils/form.component';
 import { getReferences } from '@/server/hooks/reference';
 import { useMedicationFormStore, usePatientFormStore } from '@/stores/patient.store';
 import { getPatient, postPatient } from '@/server/hooks/patient';
@@ -168,7 +168,15 @@ const PatientInfoForm = ({ formId }: FormPropsType) => {
         dbField: 'dateOfBirth',
         type: 'datePicker',
         required: true,
-        extendedProps: { gridAttribute: { xs: 12, md: 6, lg: 5 }, reactDatePickerAttribute: { maxDate: new Date() } }
+        extendedProps: {
+          gridAttribute: { xs: 12, md: 6, lg: 5 },
+          reactDatePickerAttribute: {
+            maxDate: new Date(),
+            popperPlacement: 'bottom-start',
+            placeholderText: 'MM/DD/YYYY',
+            isClearable: true
+          }
+        }
       },
       {
         label: 'Age',
@@ -218,7 +226,15 @@ const PatientInfoForm = ({ formId }: FormPropsType) => {
         dbField: 'contactNumber',
         type: 'textField',
         extendedProps: {
-          gridAttribute: { xs: 12, md: 6, lg: 5 }
+          gridAttribute: { xs: 12, md: 6, lg: 5 },
+          textFieldAttribute: {
+            InputProps: {
+              inputComponent: CleaveInput
+            },
+            inputProps: {
+              options: { phone: true, phoneRegionCode: 'PH' }
+            }
+          }
         }
       }
     ],
@@ -227,7 +243,6 @@ const PatientInfoForm = ({ formId }: FormPropsType) => {
         label: 'Diseases',
         dbField: 'familyHistory.diseases',
         type: 'multi-checkbox',
-        required: true,
         entityId: 10,
         extendedProps: {
           gridAttribute: { xs: 6, md: 4, lg: 3 }
@@ -402,93 +417,83 @@ const PatientInfoForm = ({ formId }: FormPropsType) => {
       {
         listItemTextAttribute: {
           primary: 'First Name',
-          primaryTypographyProps: { fontWeight: 'bold' },
-          secondary: getValues('firstName'),
-          secondaryTypographyProps: { variant: 'body2' }
+          primaryTypographyProps: { fontWeight: 600, variant: 'subtitle2', color: 'text.primary' },
+          secondary: getValues('firstName')
         },
         gridAttribute: { xs: 6, sm: 4, md: 3, lg: 2 }
       },
       {
         listItemTextAttribute: {
           primary: 'Last Name',
-          primaryTypographyProps: { fontWeight: 'bold' },
-          secondary: getValues('lastName'),
-          secondaryTypographyProps: { variant: 'body2' }
+          primaryTypographyProps: { fontWeight: 600, variant: 'subtitle2', color: 'text.primary' },
+          secondary: getValues('lastName')
         },
         gridAttribute: { xs: 6, sm: 4, md: 3, lg: 2 }
       },
       {
         listItemTextAttribute: {
           primary: 'Middle Initial',
-          primaryTypographyProps: { fontWeight: 'bold' },
-          secondary: getValues('middleInitial'),
-          secondaryTypographyProps: { variant: 'body2' }
+          primaryTypographyProps: { fontWeight: 600, variant: 'subtitle2', color: 'text.primary' },
+          secondary: getValues('middleInitial')
         },
         gridAttribute: { xs: 6, sm: 4, md: 3, lg: 2 }
       },
       {
         listItemTextAttribute: {
           primary: 'Date of Birth',
-          primaryTypographyProps: { fontWeight: 'bold' },
-          secondary: moment(getValues('dateOfBirth')).format('L'),
-          secondaryTypographyProps: { variant: 'body2' }
+          primaryTypographyProps: { fontWeight: 600, variant: 'subtitle2', color: 'text.primary' },
+          secondary: moment(getValues('dateOfBirth')).format('L')
         },
         gridAttribute: { xs: 6, sm: 4, md: 3, lg: 2 }
       },
       {
         listItemTextAttribute: {
           primary: 'Age',
-          primaryTypographyProps: { fontWeight: 'bold' },
-          secondary: getValues('age'),
-          secondaryTypographyProps: { variant: 'body2' }
+          primaryTypographyProps: { fontWeight: 600, variant: 'subtitle2', color: 'text.primary' },
+          secondary: getValues('age')
         },
         gridAttribute: { xs: 6, sm: 4, md: 3, lg: 2 }
       },
       {
         listItemTextAttribute: {
           primary: 'Gender',
-          primaryTypographyProps: { fontWeight: 'bold' },
-          secondary: referencesData?.find(ref => ref.id === getValues('genderId'))?.name,
-          secondaryTypographyProps: { variant: 'body2' }
+          primaryTypographyProps: { fontWeight: 600, variant: 'subtitle2', color: 'text.primary' },
+          secondary: referencesData?.find(ref => ref.id === getValues('genderId'))?.name
         },
         gridAttribute: { xs: 6, sm: 4, md: 3, lg: 2 }
       },
       {
         listItemTextAttribute: {
           primary: 'Civil Status',
-          primaryTypographyProps: { fontWeight: 'bold' },
-          secondary: referencesData?.find(ref => ref.id === getValues('civilStatusId'))?.name,
-          secondaryTypographyProps: { variant: 'body2' }
+          primaryTypographyProps: { fontWeight: 600, variant: 'subtitle2', color: 'text.primary' },
+          secondary: referencesData?.find(ref => ref.id === getValues('civilStatusId'))?.name
         },
         gridAttribute: { xs: 6, sm: 4, md: 3, lg: 2 }
       },
       {
         listItemTextAttribute: {
           primary: 'Occupation',
-          primaryTypographyProps: { fontWeight: 'bold' },
+          primaryTypographyProps: { fontWeight: 600, variant: 'subtitle2', color: 'text.primary' },
           secondary:
             getValues('occupationId') !== 0
               ? referencesData?.find(ref => ref.id === getValues('occupationId'))?.name
-              : 'N/A',
-          secondaryTypographyProps: { variant: 'body2' }
+              : 'N/A'
         },
         gridAttribute: { xs: 6, sm: 4, md: 3, lg: 2 }
       },
       {
         listItemTextAttribute: {
           primary: 'Contact Number',
-          primaryTypographyProps: { fontWeight: 'bold' },
-          secondary: getValues('contactNumber'),
-          secondaryTypographyProps: { variant: 'body2' }
+          primaryTypographyProps: { fontWeight: 600, variant: 'subtitle2', color: 'text.primary' },
+          secondary: getValues('contactNumber')
         },
         gridAttribute: { xs: 6, sm: 4, md: 3, lg: 2 }
       },
       {
         listItemTextAttribute: {
           primary: 'Address',
-          primaryTypographyProps: { fontWeight: 'bold' },
-          secondary: getValues('address'),
-          secondaryTypographyProps: { variant: 'body2' }
+          primaryTypographyProps: { fontWeight: 600, variant: 'subtitle2', color: 'text.primary' },
+          secondary: getValues('address')
         },
         gridAttribute: { xs: 12 }
       }
@@ -519,9 +524,8 @@ const PatientInfoForm = ({ formId }: FormPropsType) => {
         {
           listItemTextAttribute: {
             primary: 'Others',
-            primaryTypographyProps: { fontWeight: 'bold' },
-            secondary: getValues('familyHistory.others'),
-            secondaryTypographyProps: { variant: 'body2' }
+            primaryTypographyProps: { fontWeight: 600, variant: 'subtitle2', color: 'text.primary' },
+            secondary: getValues('familyHistory.others')
           },
           gridAttribute: { xs: 12 }
         }
@@ -531,43 +535,40 @@ const PatientInfoForm = ({ formId }: FormPropsType) => {
       {
         listItemTextAttribute: {
           primary: (
-            <Typography variant='body1' fontWeight='bold'>
+            <Typography variant='subtitle2' color='text.primary' fontWeight='600'>
               Smoking
               <Typography variant='caption' ml={1}>
                 (No. of sticks per day)
               </Typography>
             </Typography>
           ),
-          primaryTypographyProps: { fontWeight: 'bold' },
-          secondary: getValues('personalHistory.smoking') ? getValues('personalHistory.smoking') : 0,
-          secondaryTypographyProps: { variant: 'body2' }
+          primaryTypographyProps: { fontWeight: 600, variant: 'subtitle2', color: 'text.primary' },
+          secondary: getValues('personalHistory.smoking') ? getValues('personalHistory.smoking') : 0
         },
         gridAttribute: { xs: 4, lg: 2 }
       },
       {
         listItemTextAttribute: {
           primary: (
-            <Typography variant='body1' fontWeight='bold'>
+            <Typography variant='subtitle2' color='text.primary' fontWeight='600'>
               Alcohol
               <Typography variant='caption' ml={1}>
                 (No. of years)
               </Typography>
             </Typography>
           ),
-          primaryTypographyProps: { fontWeight: 'bold' },
-          secondary: getValues('personalHistory.alcohol') ? getValues('personalHistory.alcohol') : 0,
-          secondaryTypographyProps: { variant: 'body2' }
+          primaryTypographyProps: { fontWeight: 600, variant: 'subtitle2', color: 'text.primary' },
+          secondary: getValues('personalHistory.alcohol') ? getValues('personalHistory.alcohol') : 0
         },
         gridAttribute: { xs: 4, lg: 2 }
       },
       {
         listItemTextAttribute: {
           primary: 'Present Health Condition',
-          primaryTypographyProps: { fontWeight: 'bold' },
+          primaryTypographyProps: { fontWeight: 600, variant: 'subtitle2', color: 'text.primary' },
           secondary: getValues('personalHistory.currentHealthCondition')
             ? getValues('personalHistory.currentHealthCondition')
-            : 'N/A',
-          secondaryTypographyProps: { variant: 'body2' }
+            : 'N/A'
         },
         gridAttribute: { xs: 4, lg: 2 }
       }
@@ -576,65 +577,56 @@ const PatientInfoForm = ({ formId }: FormPropsType) => {
       {
         listItemTextAttribute: {
           primary: 'Have you ever been hospitalized? If yes, when and Why?',
-          primaryTypographyProps: { fontWeight: 'bold' },
-          secondary: getValues('pastMedicalHistory.hospitalized')
-            ? getValues('pastMedicalHistory.hospitalized')
-            : 'N/A',
-          secondaryTypographyProps: { variant: 'body2' }
+          primaryTypographyProps: { fontWeight: 600, variant: 'subtitle2', color: 'text.primary' },
+          secondary: getValues('pastMedicalHistory.hospitalized') ? getValues('pastMedicalHistory.hospitalized') : 'N/A'
         },
         gridAttribute: { xs: 12 }
       },
       {
         listItemTextAttribute: {
           primary: 'Have you had any serious injuries and/or broken bones? If yes, please specify.',
-          primaryTypographyProps: { fontWeight: 'bold' },
-          secondary: getValues('pastMedicalHistory.injuries') ? getValues('pastMedicalHistory.injuries') : 'N/A',
-          secondaryTypographyProps: { variant: 'body2' }
+          primaryTypographyProps: { fontWeight: 600, variant: 'subtitle2', color: 'text.primary' },
+          secondary: getValues('pastMedicalHistory.injuries') ? getValues('pastMedicalHistory.injuries') : 'N/A'
         },
         gridAttribute: { xs: 12 }
       },
       {
         listItemTextAttribute: {
           primary: 'Have you undergone any surgeries? If yes, please specify and when?',
-          primaryTypographyProps: { fontWeight: 'bold' },
-          secondary: getValues('pastMedicalHistory.surgeries') ? getValues('pastMedicalHistory.surgeries') : 'N/A',
-          secondaryTypographyProps: { variant: 'body2' }
+          primaryTypographyProps: { fontWeight: 600, variant: 'subtitle2', color: 'text.primary' },
+          secondary: getValues('pastMedicalHistory.surgeries') ? getValues('pastMedicalHistory.surgeries') : 'N/A'
         },
         gridAttribute: { xs: 12 }
       },
       {
         listItemTextAttribute: {
           primary: 'Do you have any allergies? If yes, please specify.',
-          primaryTypographyProps: { fontWeight: 'bold' },
-          secondary: getValues('pastMedicalHistory.allergies') ? getValues('pastMedicalHistory.allergies') : 'N/A',
-          secondaryTypographyProps: { variant: 'body2' }
+          primaryTypographyProps: { fontWeight: 600, variant: 'subtitle2', color: 'text.primary' },
+          secondary: getValues('pastMedicalHistory.allergies') ? getValues('pastMedicalHistory.allergies') : 'N/A'
         },
         gridAttribute: { xs: 12 }
       },
       {
         listItemTextAttribute: {
           primary: 'Have you had measles?',
-          primaryTypographyProps: { fontWeight: 'bold' },
-          secondary: getValues('pastMedicalHistory.measles') ? getValues('pastMedicalHistory.measles') : 'N/A',
-          secondaryTypographyProps: { variant: 'body2' }
+          primaryTypographyProps: { fontWeight: 600, variant: 'subtitle2', color: 'text.primary' },
+          secondary: getValues('pastMedicalHistory.measles') ? getValues('pastMedicalHistory.measles') : 'N/A'
         },
         gridAttribute: { xs: 12 }
       },
       {
         listItemTextAttribute: {
           primary: 'Have you had chicken pox?',
-          primaryTypographyProps: { fontWeight: 'bold' },
-          secondary: getValues('pastMedicalHistory.chickenPox') ? getValues('pastMedicalHistory.chickenPox') : 'N/A',
-          secondaryTypographyProps: { variant: 'body2' }
+          primaryTypographyProps: { fontWeight: 600, variant: 'subtitle2', color: 'text.primary' },
+          secondary: getValues('pastMedicalHistory.chickenPox') ? getValues('pastMedicalHistory.chickenPox') : 'N/A'
         },
         gridAttribute: { xs: 12 }
       },
       {
         listItemTextAttribute: {
           primary: 'Others',
-          primaryTypographyProps: { fontWeight: 'bold' },
-          secondary: getValues('pastMedicalHistory.others') ? getValues('pastMedicalHistory.others') : 'N/A',
-          secondaryTypographyProps: { variant: 'body2' }
+          primaryTypographyProps: { fontWeight: 600, variant: 'subtitle2', color: 'text.primary' },
+          secondary: getValues('pastMedicalHistory.others') ? getValues('pastMedicalHistory.others') : 'N/A'
         },
         gridAttribute: { xs: 12 }
       }
@@ -643,60 +635,46 @@ const PatientInfoForm = ({ formId }: FormPropsType) => {
       {
         listItemTextAttribute: {
           primary: 'Menstrual Cycle',
-          primaryTypographyProps: {
-            fontWeight: 'bold'
-          },
-          secondary: getValues('obGyne.menstrualCycle')
-            ? moment(getValues('obGyne.menstrualCycle')).format('L')
-            : 'N/A',
-          secondaryTypographyProps: { variant: 'body2' }
+          primaryTypographyProps: { fontWeight: 600, variant: 'subtitle2', color: 'text.primary' },
+          secondary: getValues('obGyne.menstrualCycle') ? moment(getValues('obGyne.menstrualCycle')).format('L') : 'N/A'
         },
         gridAttribute: { xs: 6 }
       },
       {
         listItemTextAttribute: {
           primary: 'Days',
-          primaryTypographyProps: {
-            fontWeight: 'bold'
-          },
-          secondary: getValues('obGyne.days') ? getValues('obGyne.days') : 0,
-          secondaryTypographyProps: { variant: 'body2' }
+          primaryTypographyProps: { fontWeight: 600, variant: 'subtitle2', color: 'text.primary' },
+          secondary: getValues('obGyne.days') ? getValues('obGyne.days') : 0
         },
         gridAttribute: { xs: 6 }
       },
       {
         listItemTextAttribute: {
           primary: (
-            <Typography variant='body1' fontWeight='bold'>
+            <Typography variant='subtitle2' color='text.primary' fontWeight='600'>
               OB Score:
               <Typography variant='caption' ml={1}>
                 G (Gravida)
               </Typography>
             </Typography>
           ),
-          primaryTypographyProps: {
-            fontWeight: 'bold'
-          },
-          secondary: getValues('obGyne.g') ? getValues('obGyne.g') : 0,
-          secondaryTypographyProps: { variant: 'body2' }
+          primaryTypographyProps: { fontWeight: 600, variant: 'subtitle2', color: 'text.primary' },
+          secondary: getValues('obGyne.g') ? getValues('obGyne.g') : 0
         },
         gridAttribute: { xs: 6 }
       },
       {
         listItemTextAttribute: {
           primary: (
-            <Typography variant='body1' fontWeight='bold'>
+            <Typography variant='subtitle2' color='text.primary' fontWeight='600'>
               OB Score:
               <Typography variant='caption' ml={1}>
                 P (Para)
               </Typography>
             </Typography>
           ),
-          primaryTypographyProps: {
-            fontWeight: 'bold'
-          },
-          secondary: getValues('obGyne.p') ? getValues('obGyne.p') : 0,
-          secondaryTypographyProps: { variant: 'body2' }
+          primaryTypographyProps: { fontWeight: 600, variant: 'subtitle2', color: 'text.primary' },
+          secondary: getValues('obGyne.p') ? getValues('obGyne.p') : 0
         },
         gridAttribute: { xs: 6 }
       }
@@ -743,6 +721,8 @@ const PatientInfoForm = ({ formId }: FormPropsType) => {
   const handleClose = () => {
     onClosing();
     setActiveStep(0);
+    clear();
+    reset();
   };
 
   const medicationOnSubmit: SubmitHandler<MedicationDtoSchemaType> = (data: MedicationDtoSchemaType) => {
@@ -873,7 +853,7 @@ const PatientInfoForm = ({ formId }: FormPropsType) => {
               </Grid>
               <Grid container item spacing={5} xs={12} md={6} alignItems='start'>
                 <Grid item xs={12}>
-                  <Typography variant='body1' fontWeight='bold'>
+                  <Typography variant='subtitle2' color='text.primary' fontWeight='600'>
                     Medication Taken Regularly
                   </Typography>
                 </Grid>
@@ -920,6 +900,7 @@ const PatientInfoForm = ({ formId }: FormPropsType) => {
                         medications.map((medication, i) => (
                           <ListItem
                             key={i}
+                            sx={{ px: 1 }}
                             secondaryAction={
                               <IconButton type='button' color='secondary' onClick={() => remove(i)}>
                                 <Icon icon='mdi:delete-outline' fontSize={20} />
@@ -930,12 +911,11 @@ const PatientInfoForm = ({ formId }: FormPropsType) => {
                               sx={{ m: 0, width: '50%' }}
                               primary={medication.brandName}
                               primaryTypographyProps={{
-                                sx: { fontWeight: 'bold' }
+                                sx: { fontWeight: 600, color: 'text.primary' }
                               }}
                               secondary={medication.generic}
-                              secondaryTypographyProps={{ variant: 'body2' }}
                             />
-                            <ListItemText primary={medication.dosage} primaryTypographyProps={{ variant: 'body2' }} />
+                            <ListItemText primary={medication.dosage} />
                           </ListItem>
                         ))}
                     </List>
@@ -989,16 +969,14 @@ const PatientInfoForm = ({ formId }: FormPropsType) => {
       case 5:
         return (
           <>
-            <Typography variant='body1' fontWeight='bold'>
-              {steps[0]}
-            </Typography>
+            <Typography fontWeight='600'>{steps[0]}</Typography>
             <Divider sx={{ width: '100%' }} />
             <Grid container>
               {REVIEW_PANELS['PersonalInformation'].map((obj, i) => (
                 <ListItemTextData key={i} {...obj} />
               ))}
             </Grid>
-            <Typography variant='body1' fontWeight='bold' mt={5}>
+            <Typography fontWeight='600' mt={5}>
               {steps[1]}
             </Typography>
             <Divider sx={{ width: '100%' }} />
@@ -1007,7 +985,7 @@ const PatientInfoForm = ({ formId }: FormPropsType) => {
                 <ListItemTextData key={i} {...obj} />
               ))}
             </Grid>
-            <Typography variant='body1' fontWeight='bold' mt={5}>
+            <Typography fontWeight='600' mt={5}>
               {steps[2]}
             </Typography>
             <Divider sx={{ width: '100%' }} />
@@ -1016,8 +994,11 @@ const PatientInfoForm = ({ formId }: FormPropsType) => {
                 <ListItemTextData key={i} {...obj} />
               ))}
               <Grid item xs={12} md={12} lg={6}>
-                <Typography variant='body1' fontWeight='bold'>
-                  Any Medication Taken Regularly
+                <Typography color='text.primary' fontWeight='600'>
+                  List of medications taken regularly
+                  <Typography variant='caption' ml={1}>
+                    (dosage, generic and brand name)
+                  </Typography>
                 </Typography>
                 <Box display='flex' width='100%'>
                   <Paper
@@ -1042,17 +1023,20 @@ const PatientInfoForm = ({ formId }: FormPropsType) => {
                       {medications &&
                         medications.length > 0 &&
                         medications.map((medication, i) => (
-                          <ListItem key={i}>
+                          <ListItem key={i} sx={{ px: 1 }}>
                             <ListItemText
                               sx={{ m: 0, width: '50%' }}
                               primary={medication.brandName}
                               primaryTypographyProps={{
-                                sx: { fontWeight: 'bold' }
+                                sx: { fontWeight: 600, color: 'text.primary' }
                               }}
                               secondary={medication.generic}
                               secondaryTypographyProps={{ variant: 'body2' }}
                             />
-                            <ListItemText primary={medication.dosage} primaryTypographyProps={{ variant: 'body2' }} />
+                            <ListItemText
+                              primary={medication.dosage}
+                              primaryTypographyProps={{ align: 'right', variant: 'body2' }}
+                            />
                           </ListItem>
                         ))}
                     </List>
@@ -1060,7 +1044,7 @@ const PatientInfoForm = ({ formId }: FormPropsType) => {
                 </Box>
               </Grid>
             </Grid>
-            <Typography variant='body1' fontWeight='bold' mt={5}>
+            <Typography fontWeight='600' mt={5}>
               {steps[3]}
             </Typography>
             <Divider sx={{ width: '100%' }} />
@@ -1069,7 +1053,7 @@ const PatientInfoForm = ({ formId }: FormPropsType) => {
                 <ListItemTextData key={i} {...obj} />
               ))}
             </Grid>
-            <Typography variant='body1' fontWeight='bold' mt={5}>
+            <Typography fontWeight='600' mt={5}>
               {steps[4]}
             </Typography>
             <Divider sx={{ width: '100%' }} />
@@ -1113,7 +1097,7 @@ const PatientInfoForm = ({ formId }: FormPropsType) => {
     if (activeStep === steps.length) {
       return (
         <>
-          <Typography variant='h5' textAlign='center' component='h2' fontWeight='bold'>
+          <Typography variant='h5' textAlign='center' component='h2' fontWeight='600'>
             ACTION COMPLETED!
           </Typography>
           <Typography variant='subtitle2' textAlign='center'>
@@ -1137,7 +1121,6 @@ const PatientInfoForm = ({ formId }: FormPropsType) => {
         <Grid container>
           <Grid item xs={12}>
             <Typography
-              variant='body1'
               sx={{
                 fontWeight: 600,
                 color: theme.palette.primary.main,
@@ -1156,21 +1139,21 @@ const PatientInfoForm = ({ formId }: FormPropsType) => {
           <DialogActions
             sx={{
               display: 'flex',
-              justifyContent: !id ? 'flex-end' : 'space-between',
+              justifyContent: !id ? 'flex-end' : activeStep < 5 ? 'space-between' : 'flex-end',
               width: '100%',
               px: 0,
               pb: 0,
               pt: theme => `${theme.spacing(5)} !important`
             }}
           >
-            {id ? (
+            {id && activeStep < 5 ? (
               <Box>
                 <Button
                   form={`form-step-${activeStep}`}
                   variant='contained'
                   type='submit'
                   disabled={isSaving}
-                  onClick={handleSubmit(onSubmit)}
+                  onClick={() => setActiveStep(5)}
                 >
                   Edit
                 </Button>
@@ -1211,8 +1194,9 @@ const PatientInfoForm = ({ formId }: FormPropsType) => {
   return (
     <>
       <DialogTitle textAlign='center'>
-        {dialogTitle} Patient Health Record
-        <Box mt={5}>
+        <Box textAlign='left'>{dialogTitle} Patient Health Record</Box>
+        <Divider style={{ margin: 0, paddingTop: 20 }} />
+        <Box pt={5}>
           <StepperWrapper>
             <Stepper activeStep={activeStep} alternativeLabel>
               {steps.map((title, i) => {
@@ -1240,7 +1224,6 @@ const PatientInfoForm = ({ formId }: FormPropsType) => {
         >
           <Icon icon='mdi:close' />
         </IconButton>
-        <Divider sx={{ m: '0 !important' }} />
         <Box sx={{ mt: 5, px: 5 }}>{renderContent()}</Box>
       </DialogContent>
     </>

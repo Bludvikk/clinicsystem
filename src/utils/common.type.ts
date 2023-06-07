@@ -10,9 +10,12 @@ import {
   GridProps,
   CheckboxProps,
   FormControlLabelProps,
-  BoxProps
+  BoxProps,
+  AutocompleteProps,
+  InputBaseComponentProps
 } from '@mui/material';
 import { ReactDatePickerProps } from 'react-datepicker';
+import { CleaveOptions } from 'cleave.js/options';
 
 export type ParamsInput = z.TypeOf<typeof params>;
 export type CommonDataInputType = z.TypeOf<typeof commonDataDtoSchema>;
@@ -35,7 +38,14 @@ export type TableHeaderPropsType = {
   handleSearchFilter: (...event: any[]) => void;
 };
 
-export type FormInputType = 'textField' | 'dropDown' | 'datePicker' | 'checkbox' | 'multi-checkbox';
+export type FormInputType =
+  | 'textField'
+  | 'dropDown'
+  | 'dropDownNonEntityReference'
+  | 'datePicker'
+  | 'checkbox'
+  | 'multi-checkbox'
+  | 'auto-complete';
 
 export type ExtendedPropsType = {
   formControlAttribute?: FormControlProps;
@@ -46,7 +56,15 @@ export type ExtendedPropsType = {
   checkboxAttribute?: CheckboxProps;
   listItemTextAttribute?: ListItemTextProps;
   reactDatePickerAttribute?: Omit<ReactDatePickerProps, 'onChange'>;
+  autoCompleteAttribute?: AutocompleteProps<any, boolean, boolean, boolean>;
   boxAttribute?: BoxProps;
+  customInputComponent?: React.ElementType<InputBaseComponentProps>;
+  cleaveOptions?: CleaveOptions;
+  dropDownNonEntityReferenceAttribute?: {
+    data: any[];
+    menuItemTextPath: string[];
+    dataIsloading: boolean;
+  };
 };
 
 export type FormControlPropsType<TUnionField> = {
@@ -60,4 +78,19 @@ export type FormControlPropsType<TUnionField> = {
   entityId?: number;
   disabledErrors?: boolean;
   extendedProps?: ExtendedPropsType;
+};
+
+// Form Store Types
+export type FormAction = 'Add' | 'Edit';
+export type FormStore = {
+  id: number;
+  dialogTitle: FormAction;
+  showDialog: boolean;
+  isSaving: boolean;
+  onAdd: () => void;
+  onEdit: (id: number) => void;
+  onSaving: (stat: boolean) => void;
+  onClosing: () => void;
+  searchFilter: DynamicType | undefined;
+  setSearchFilter: (value: DynamicType) => void;
 };

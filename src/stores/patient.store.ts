@@ -1,21 +1,6 @@
 import { create } from 'zustand';
-import { DynamicType } from '@/utils/common.type';
 import { MedicationDtoSchemaType } from '@/server/schema/patient';
-
-type FormAction = 'Add' | 'Edit';
-
-type FormStore = {
-  id: number;
-  dialogTitle: FormAction;
-  showDialog: boolean;
-  isSaving: boolean;
-  onAdd: () => void;
-  onEdit: (id: number) => void;
-  onSaving: (stat: boolean) => void;
-  onClosing: () => void;
-  searchFilter: DynamicType | undefined;
-  setSearchFilter: (value: DynamicType) => void;
-};
+import type { FormStore } from '@/utils/common.type';
 
 type PatientFormStoreType = FormStore & {
   steps: string[];

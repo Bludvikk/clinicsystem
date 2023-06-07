@@ -44,8 +44,6 @@ import '@/styles/globals.css';
 
 import type { Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
-import { LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import AclGuard from '@/@core/components/auth/AclGuard';
 
 // ** Extend App Props with Emotion
