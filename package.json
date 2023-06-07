@@ -41,6 +41,7 @@
     "age-calculator": "^1.0.0",
     "argon2": "^0.30.3",
     "bcrypt": "^5.1.0",
+    "cleave.js": "^1.6.0",
     "clipboard-copy": "^4.0.1",
     "eslint": "8.35.0",
     "eslint-config-next": "13.2.3",
@@ -49,7 +50,7 @@
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
     "next": "13.2.3",
-    "next-auth": "^4.20.1",
+    "next-auth": "^4.22.1",
     "nprogress": "^0.2.0",
     "prisma-zod-generator": "^0.8.11",
     "prismjs": "^1.29.0",
@@ -71,6 +72,7 @@
     "zustand": "^4.3.6"
   },
   "devDependencies": {
+    "@types/cleave.js": "^1.4.7",
     "@types/lodash": "^4.14.192",
     "@types/nprogress": "^0.2.0",
     "@types/prismjs": "^1.26.0",
