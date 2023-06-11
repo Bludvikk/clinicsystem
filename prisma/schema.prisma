@@ -114,56 +114,25 @@ model Checkup {
 }
 
 model Profile {
-  userId              Int                  @id @unique
-  user                User                 @relation("profile_userIdtoUser", fields: [userId], references: [id], onDelete: Cascade)
-  physicianProfile    PhysicianProfile?    @relation("physicianProfile_profileIdToProfile")
-  receptionistProfile ReceptionistProfile? @relation("receptionistProfile_profileIdToProfile")
-  createdAt           DateTime             @default(now())
-  updatedAt           DateTime             @default(now()) @updatedAt
-}
-
-model PhysicianProfile {
-  id                   Int      @id @default(autoincrement())
-  profileId            Int      @unique
-  qualification        String
-  specialistIn         String
-  specializedTreatment String
-  address              String
-  languages            Int[]
-  contactNumber        String[]
-  yearOfExp            Int
-  licenseNumber        Int
-  deaNumber            String
-  ptrNumber            Int
-  clinics              Clinic[]
-  createdAt            DateTime @default(now())
-  updatedAt            DateTime @default(now()) @updatedAt
-  profile              Profile? @relation("physicianProfile_profileIdToProfile", fields: [profileId], references: [userId], onDelete: Cascade)
-}
-
-model ReceptionistProfile {
-  id            Int      @id @default(autoincrement())
-  profileId     Int      @unique
-  address       String
-  contactNumber String
-  clinics       Clinic[]
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @default(now()) @updatedAt
-  profile       Profile? @relation("receptionistProfile_profileIdToProfile", fields: [profileId], references: [userId], onDelete: Cascade)
+  userId      Int      @id @unique
+  roleProfile Json?
+  clinics     Clinic[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+  user        User     @relation("profile_userIdtoUser", fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Clinic {
-  id            Int                   @id @default(autoincrement())
-  code          String                @unique
+  id            Int       @id @default(autoincrement())
+  code          String    @unique
   name          String
   address       String
   contactNumber String[]
   daysOpen      String
-  openingTime   DateTime              @db.Time()
-  closingTime   DateTime              @db.Time()
-  createdAt     DateTime              @default(now())
-  updatedAt     DateTime              @default(now()) @updatedAt
-  physicians    PhysicianProfile[]
-  receptionist  ReceptionistProfile[]
-  checkups      Checkup[]             @relation("checkup_clinicIdToClinic")
+  openingTime   DateTime  @db.Time()
+  closingTime   DateTime  @db.Time()
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @default(now()) @updatedAt
+  profile       Profile[]
+  checkups      Checkup[] @relation("checkup_clinicIdToClinic")
 }
