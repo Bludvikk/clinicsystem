@@ -18,9 +18,9 @@ export type CardStatsVerticalProps = {
   title: string;
   stats: string;
   icon: ReactNode;
-  chipText: string;
+  chipText?: string;
   color?: ThemeColor;
-  trendNumber: string;
+  trendNumber?: string;
   trend?: 'positive' | 'negative';
   optionsMenuProps?: OptionsMenuType;
 };
