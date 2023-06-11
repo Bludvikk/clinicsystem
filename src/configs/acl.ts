@@ -25,6 +25,7 @@ const defineRulesFor = (role: string, subject: string) => {
       break;
     case 'user':
       can('read', 'dashboard');
+      can('read', 'choose-clinic');
       break;
     case 'receptionist':
       can(['read', 'create', 'update'], ['patient', 'checkup-vital-signs']);

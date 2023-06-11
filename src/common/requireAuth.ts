@@ -10,7 +10,7 @@ export const requireAuth = (func: GetServerSideProps) => async (ctx: GetServerSi
     const roleCode = session.user.role.code;
     const chosenClinic = session.user.clinicId;
 
-    if (roleCode !== 'user' && roleCode !== 'admin' && !chosenClinic) {
+    if (roleCode !== 'admin' && !chosenClinic) {
       return {
         redirect: {
           destination: '/choose-clinic', // redirect to choose clinic page
