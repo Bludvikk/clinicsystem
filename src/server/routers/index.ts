@@ -5,8 +5,10 @@ import { entityRouter } from './entity';
 import { userRouter } from './user';
 import { checkupRouter } from './checkup';
 import { clinicRouter } from './clinic';
+import { dashboardRouter } from './dashboard';
 
 export const ServerRouter = router({
+  dashboard: dashboardRouter,
   entity: entityRouter,
   reference: referenceRouter,
   user: userRouter,
