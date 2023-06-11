@@ -89,16 +89,16 @@ const RowOptions = ({ id }: { id: number }) => {
           <Icon icon='mdi:pencil-outline' fontSize={20} />
           Edit
         </MenuItem>
-        <MenuItem sx={{ '& svg': { mr: 2 } }} onClick={() => handleDelete(id)}>
-          <Icon icon='mdi:delete-outline' fontSize={20} />
-          Delete
-        </MenuItem>
         <CanView action='create' subject='checkup-vital-signs'>
           <MenuItem sx={{ '& svg': { mr: 2 } }} onClick={() => handleCheckup(id)}>
             <Icon icon='tabler:checkup-list' fontSize={20} />
             CheckUp
           </MenuItem>
         </CanView>
+        <MenuItem sx={{ '& svg': { mr: 2 } }} onClick={() => handleDelete(id)}>
+          <Icon icon='mdi:delete-outline' fontSize={20} />
+          Delete
+        </MenuItem>
       </Menu>
     </>
   );

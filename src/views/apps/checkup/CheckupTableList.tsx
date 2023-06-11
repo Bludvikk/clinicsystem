@@ -143,16 +143,16 @@ const RowOptions = ({
             </MenuItem>
           </CanView>
         )}
-        <MenuItem sx={{ '& svg': { mr: 2 } }} onClick={() => handleDelete(id)}>
-          <Icon icon='mdi:delete-outline' fontSize={20} />
-          Delete
-        </MenuItem>
         <CanView action='create' subject='checkup'>
           <MenuItem sx={{ '& svg': { mr: 2 } }} onClick={() => handleEdit(id)}>
             <Icon icon='tabler:checkup-list' fontSize={20} />
             CheckUp
           </MenuItem>
         </CanView>
+        <MenuItem sx={{ '& svg': { mr: 2 } }} onClick={() => handleDelete(id)}>
+          <Icon icon='mdi:delete-outline' fontSize={20} />
+          Delete
+        </MenuItem>
         {checkupStatus && checkupStatus === 'completed' && <MenuItemPrint />}
       </Menu>
     </>

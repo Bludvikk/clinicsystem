@@ -35,13 +35,9 @@ const UserViewRight = ({ data }: UserViewRightPropsType) => {
   };
 
   useEffect(() => {
-    // prettier-ignore
-    if(data.role.code !== 'admin' && data.role.code !== 'user') {
-        const roleCode = data.role.code;
-        const profile = data.profile as UsersType['profile'] & { [key: string]: { clinics: ClinicsType[] } } | undefined;
-        const clinics = profile?.[`${roleCode}Profile`]?.clinics;
-        
-        setClinics(clinics ? clinics.map(c => c.id): [])
+    if (data.role.code !== 'admin') {
+      const clinics = data.profile?.clinics;
+      setClinics(clinics ? clinics.map(c => c.id) : []);
     }
   }, [data]);
 

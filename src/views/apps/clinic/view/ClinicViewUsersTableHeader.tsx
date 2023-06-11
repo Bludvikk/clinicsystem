@@ -8,11 +8,11 @@ import { useFilterControlChange } from '@/utils/helper';
 import { DropdownData, TextInputSearch } from '@/utils/form.component';
 import { useUserFormStore } from '@/stores/user.store';
 
-const ClinicViewPhysiciansTableHeader = () => {
+const ClinicViewUsersTableHeader = () => {
   const { searchFilter, handleSearchFilter } = useFilterControlChange();
   const { setSearchFilter } = useUserFormStore();
 
-  const filterTableHeader = new Map([['tableHeader', [7, 8]]]).get('tableHeader');
+  const filterTableHeader = new Map([['tableHeader', [6, 7, 8]]]).get('tableHeader');
   const dataLoaded = !!filterTableHeader;
 
   useEffect(() => {
@@ -27,7 +27,7 @@ const ClinicViewPhysiciansTableHeader = () => {
           <CardContent>
             <Grid container spacing={6}>
               {filterTableHeader.map(entityId => (
-                <Grid key={entityId} item sm={6} xs={12}>
+                <Grid key={entityId} item sm={4} xs={12}>
                   <DropdownData
                     type='filter'
                     id={entityId}
@@ -71,4 +71,4 @@ const ClinicViewPhysiciansTableHeader = () => {
   );
 };
 
-export default ClinicViewPhysiciansTableHeader;
+export default ClinicViewUsersTableHeader;
