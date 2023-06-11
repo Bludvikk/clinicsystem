@@ -6,8 +6,10 @@ import type { FormStore } from '@/utils/common.type';
 type CheckupFormStoreType = Omit<FormStore, 'onAdd'> & {
   patientId: number;
   tabsValue: string;
+  tabsIsError: boolean;
   onAdd: (patientId: number) => void;
   setTabsValue: (value: string) => void;
+  setTabsIsError: (value: boolean) => void;
 };
 
 export const useCheckupFormStore = create<CheckupFormStoreType>(set => ({
@@ -25,7 +27,9 @@ export const useCheckupFormStore = create<CheckupFormStoreType>(set => ({
   searchFilter: undefined,
   setSearchFilter: value => set(() => ({ searchFilter: value })),
   tabsValue: '1',
-  setTabsValue: value => set({ tabsValue: value })
+  tabsIsError: false,
+  setTabsValue: value => set({ tabsValue: value }),
+  setTabsIsError: value => set({ tabsIsError: value })
 }));
 
 type Assessment<TData> = {

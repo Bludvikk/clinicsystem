@@ -12,7 +12,77 @@ export const getClinics = async (ctx: Context, filterQuery?: FilterQueryInputTyp
     return await ctx.prisma.clinic.findMany({
       ...(filterQuery && filterQuery.ids ? { where: { id: { in: filterQuery.ids } } } : {}),
       include: {
-        physicians: {
+        profile: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                userName: true,
+                firstName: true,
+                lastName: true,
+                middleInitial: true,
+                status: true,
+                department: true,
+                role: true
+              }
+            }
+          }
+        }
+      }
+    });
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const postClinic = async (ctx: Context, postClinicDto: PostClinicDtoSchemaType) => {
+  try {
+    const { params, body } = postClinicDto;
+
+    const adminUsers = await ctx.prisma.user.findMany({
+      where: {
+        role: {
+          code: {
+            equals: 'admin'
+          }
+        }
+      },
+      include: {
+        role: {
+          select: {
+            id: true,
+            code: true,
+            name: true
+          }
+        },
+        department: {
+          select: {
+            id: true,
+            code: true,
+            name: true
+          }
+        },
+        status: {
+          select: {
+            id: true,
+            code: true,
+            name: true
+          }
+        },
+        profile: {
+          include: {
+            clinics: true
+          }
+        }
+      }
+    });
+
+    // ** UPDATE data
+    if (params.id) {
+      return {
+        data: await ctx.prisma.clinic.update({
+          where: { id: params.id },
+          data: body,
           include: {
             profile: {
               include: {
@@ -30,42 +100,6 @@ export const getClinics = async (ctx: Context, filterQuery?: FilterQueryInputTyp
               }
             }
           }
-        }
-      }
-    });
-  } catch (err) {
-    throw err;
-  }
-};
-
-export const postClinic = async (ctx: Context, postClinicDto: PostClinicDtoSchemaType) => {
-  try {
-    const { params, body } = postClinicDto;
-
-    // ** UPDATE data
-    if (params.id) {
-      return {
-        data: await ctx.prisma.clinic.update({
-          where: { id: params.id },
-          data: body,
-          include: {
-            physicians: {
-              include: {
-                profile: {
-                  include: {
-                    user: {
-                      select: {
-                        id: true,
-                        firstName: true,
-                        lastName: true,
-                        middleInitial: true
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
         }),
         message: 'Clinic updated successfully.',
         status: 'success'
@@ -74,20 +108,19 @@ export const postClinic = async (ctx: Context, postClinicDto: PostClinicDtoSchem
 
     return {
       data: await ctx.prisma.clinic.create({
-        data: body,
+        data: { ...body, profile: { connect: adminUsers.map(user => ({ userId: user.id })) } },
         include: {
-          physicians: {
+          profile: {
             include: {
-              profile: {
-                include: {
-                  user: {
-                    select: {
-                      id: true,
-                      firstName: true,
-                      lastName: true,
-                      middleInitial: true
-                    }
-                  }
+              user: {
+                select: {
+                  id: true,
+                  userName: true,
+                  firstName: true,
+                  lastName: true,
+                  middleInitial: true,
+                  status: true,
+                  department: true
                 }
               }
             }

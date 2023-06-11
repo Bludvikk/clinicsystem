@@ -18,13 +18,16 @@ export const physicianProfileDtoSchema = z.object({
   yearOfExp: z.coerce.number().min(0, { message: 'Please enter years of experience.' }),
   licenseNumber: z.coerce.number().min(1, { message: 'Please enter a license number.' }),
   deaNumber: z.string().min(1, { message: 'Please enter a DEA number.' }),
-  ptrNumber: z.coerce.number().min(1, { message: 'Please enter a PTR number.' }),
-  clinics: z.array(z.coerce.number()).min(1, { message: 'Please select atleast one clinic.' })
+  ptrNumber: z.coerce.number().min(1, { message: 'Please enter a PTR number.' })
 });
 
 export const receptionistProfileDtoSchema = z.object({
   address: z.string().min(1, { message: 'Please enter an address.' }),
-  contactNumber: z.string().min(1, { message: 'Please enter a contact number.' }),
+  contactNumber: z.string().min(1, { message: 'Please enter a contact number.' })
+});
+
+export const profileDtoSchema = z.object({
+  roleProfile: z.record(z.any()).nullable().optional(),
   clinics: z.array(z.coerce.number()).min(1, { message: 'Please select atleast one clinic.' })
 });
 
@@ -39,8 +42,7 @@ export const userDtoSchema = z
     roleId: z.coerce.number().min(1, { message: 'Please select a role.' }),
     statusId: z.coerce.number().min(1, { message: 'Please select a status.' }),
     departmentId: z.coerce.number().nullable().optional(),
-    physicianProfile: physicianProfileDtoSchema.nullable().optional(),
-    receptionistProfile: receptionistProfileDtoSchema.nullable().optional()
+    profile: profileDtoSchema
   })
   .refine(formObj => {
     for (const key in formObj) {
@@ -63,10 +65,12 @@ export const postUserDtoSchema = z.object({
 export type UserDtoSchemaType = z.infer<typeof userDtoSchema>;
 export type LoginUserDtoSchemaType = z.infer<typeof loginUserDtoSchema>;
 export type PostUserDtoSchemaType = z.infer<typeof postUserDtoSchema>;
+export type ProfileDtoSchemaType = z.infer<typeof profileDtoSchema>;
 export type PhysicianProfileDtoSchemaType = z.infer<typeof physicianProfileDtoSchema>;
 export type ReceptionistProfileDtoSchemaType = z.infer<typeof receptionistProfileDtoSchema>;
 
 export type UserUnionFieldType = NestedKey<UserDtoSchemaType>;
 export type LoginUserFieldType = keyof LoginUserDtoSchemaType;
+export type ProfileUnionFieldType = keyof ProfileDtoSchemaType;
 export type PhysicianProfileUnionFieldType = keyof PhysicianProfileDtoSchemaType;
 export type ReceptionistProfileUnionFieldType = keyof ReceptionistProfileDtoSchemaType;

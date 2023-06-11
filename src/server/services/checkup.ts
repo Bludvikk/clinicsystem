@@ -36,11 +36,7 @@ export const getCheckups = async (ctx: Context) => {
             middleInitial: true,
             profile: {
               include: {
-                receptionistProfile: {
-                  include: {
-                    clinics: true
-                  }
-                }
+                clinics: true
               }
             }
           }
@@ -52,11 +48,7 @@ export const getCheckups = async (ctx: Context) => {
             middleInitial: true,
             profile: {
               include: {
-                physicianProfile: {
-                  include: {
-                    clinics: true
-                  }
-                }
+                clinics: true
               }
             }
           }
@@ -89,25 +81,46 @@ export const postCheckup = async (ctx: Context, postCheckupDto: PostCheckupDtoSc
           where: { id: params.id },
           data: JSON.parse(JSON.stringify(body)),
           include: {
+            clinic: true,
             patient: {
               select: {
                 firstName: true,
                 lastName: true,
-                middleInitial: true
+                middleInitial: true,
+                address: true,
+                age: true,
+                dateOfBirth: true,
+                gender: {
+                  select: {
+                    id: true,
+                    code: true,
+                    name: true
+                  }
+                }
               }
             },
             receptionist: {
               select: {
                 firstName: true,
                 lastName: true,
-                middleInitial: true
+                middleInitial: true,
+                profile: {
+                  include: {
+                    clinics: true
+                  }
+                }
               }
             },
             physician: {
               select: {
                 firstName: true,
                 lastName: true,
-                middleInitial: true
+                middleInitial: true,
+                profile: {
+                  include: {
+                    clinics: true
+                  }
+                }
               }
             },
             status: {
@@ -128,25 +141,46 @@ export const postCheckup = async (ctx: Context, postCheckupDto: PostCheckupDtoSc
       data: await ctx.prisma.checkup.create({
         data: JSON.parse(JSON.stringify(body)),
         include: {
+          clinic: true,
           patient: {
             select: {
               firstName: true,
               lastName: true,
-              middleInitial: true
+              middleInitial: true,
+              address: true,
+              age: true,
+              dateOfBirth: true,
+              gender: {
+                select: {
+                  id: true,
+                  code: true,
+                  name: true
+                }
+              }
             }
           },
           receptionist: {
             select: {
               firstName: true,
               lastName: true,
-              middleInitial: true
+              middleInitial: true,
+              profile: {
+                include: {
+                  clinics: true
+                }
+              }
             }
           },
           physician: {
             select: {
               firstName: true,
               lastName: true,
-              middleInitial: true
+              middleInitial: true,
+              profile: {
+                include: {
+                  clinics: true
+                }
+              }
             }
           },
           status: {

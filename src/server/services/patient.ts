@@ -25,11 +25,7 @@ export const getPatients = async (ctx: Context) => {
                 middleInitial: true,
                 profile: {
                   include: {
-                    physicianProfile: {
-                      include: {
-                        clinics: true
-                      }
-                    }
+                    clinics: true
                   }
                 }
               }
@@ -41,11 +37,7 @@ export const getPatients = async (ctx: Context) => {
                 middleInitial: true,
                 profile: {
                   include: {
-                    receptionistProfile: {
-                      include: {
-                        clinics: true
-                      }
-                    }
+                    clinics: true
                   }
                 }
               }
