@@ -1,5 +1,5 @@
 import { FilterQueryInputType, ParamsInput } from '@/utils/common.type';
-import { FilterData, InvalidateQueries, SetQueryDataDeleted } from '@/utils/rq.context';
+import { FilterData, SetQueryDataDeleted } from '@/utils/rq.context';
 import { trpc } from '@/utils/trpc';
 
 export const getUsers = (filterQuery?: FilterQueryInputType, params?: ParamsInput) => {
@@ -21,11 +21,7 @@ export const getUser = ({ id }: FilterQueryInputType) => {
 };
 
 export const postUser = () => {
-  const mutation = trpc.user.post.useMutation({
-    onSuccess: () => {
-      InvalidateQueries({ queryKey: {}, routerKey: 'user' });
-    }
-  });
+  const mutation = trpc.user.post.useMutation();
   return mutation;
 };
 

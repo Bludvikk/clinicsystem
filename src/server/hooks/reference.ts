@@ -25,12 +25,7 @@ export const getReference = ({ id, entities }: FilterQueryInputType) => {
 };
 
 export const postReference = ({ entities }: FilterQueryInputType) => {
-  const mutation = trpc.reference.post.useMutation({
-    onSuccess: () => {
-      InvalidateQueries({ queryKey: { entities }, routerKey: 'reference' });
-    }
-  });
-
+  const mutation = trpc.reference.post.useMutation();
   return mutation;
 };
 
