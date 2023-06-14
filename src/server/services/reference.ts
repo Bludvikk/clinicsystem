@@ -6,7 +6,6 @@ import { PostReferenceDtoType } from '../schema/reference';
 import { RecordDoesExist } from '@/utils/http.message';
 
 export type ReferencesAsyncType = typeof getReferences;
-export type ReferencesEntityType2 = Awaited<ReturnType<typeof getReferences>>[number];
 
 export const getReferences = async (ctx: Context, filterQuery: FilterQueryInputType) => {
   try {

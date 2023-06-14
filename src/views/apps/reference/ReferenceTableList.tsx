@@ -1,8 +1,6 @@
-import { MouseEvent, useState } from 'react';
+import { MouseEvent, useEffect, useState } from 'react';
 
-import Link from 'next/link';
-
-import { Menu, Grid, Card, Box, MenuItem, IconButton, Typography } from '@mui/material';
+import { Menu, Grid, MenuItem, IconButton, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
 import Icon from 'src/@core/components/icon';
@@ -13,6 +11,8 @@ import { useReferenceFormStore } from '@/stores/reference.store';
 import moment from 'moment';
 import { toast } from 'react-hot-toast';
 import ReferenceTableHeader from './ReferenceTableHeader';
+import { supabase } from '@/utils/supabase';
+import { InvalidateQueries } from '@/utils/rq.context';
 
 interface CellType {
   row: ReferencesEntityType;
@@ -139,6 +139,19 @@ const ReferenceTableList = () => {
       renderCell: ({ row }: CellType) => <RowOptions id={row.id} />
     }
   ];
+
+  useEffect(() => {
+    const channel = supabase
+      .channel('reference-db-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'Reference' }, payload => {
+        InvalidateQueries({ queryKey: {}, routerKey: 'reference' });
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [supabase]);
 
   return (
     <Grid container spacing={6}>

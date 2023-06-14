@@ -294,13 +294,14 @@ const CheckupViewPage = ({ data }: CheckupViewPagePropsType) => {
             <Grid
               width='100%'
               container
+              alignItems='center'
               direction='column'
               sx={{
                 py: 5,
                 ml: 'auto',
                 backgroundColor: (theme: Theme) => theme.palette.primary.light,
                 borderRadius: 1,
-                display: 'block',
+                display: 'flex',
                 [theme.breakpoints.up('md')]: {
                   display: 'none'
                 }

@@ -1,7 +1,7 @@
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { Box, CircularProgress, Tab as MuiTab, TabProps, Typography, styled } from '@mui/material';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { ClinicsType } from '@/utils/db.type';
 import Icon from '@/@core/components/icon';
@@ -11,6 +11,8 @@ import { useUserFormStore } from '@/stores/user.store';
 import ClinicViewCheckupHistory from './ClinicViewCheckupHistory';
 import { getCheckups } from '@/server/hooks/checkup';
 import { useCheckupFormStore } from '@/stores/checkup.store';
+import { supabase } from '@/utils/supabase';
+import { InvalidateQueries } from '@/utils/rq.context';
 
 interface ClinicViewRightPropsType {
   data: ClinicsType;
@@ -48,6 +50,22 @@ const ClinicViewRight = ({ data }: ClinicViewRightPropsType) => {
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setActiveTab(newValue);
   };
+
+  useEffect(() => {
+    const channel = supabase
+      .channel('db-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'User' }, payload => {
+        InvalidateQueries({ queryKey: {}, routerKey: 'user' });
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'Checkup' }, payload => {
+        InvalidateQueries({ queryKey: {}, routerKey: 'checkup' });
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [supabase]);
 
   if (data) {
     return (

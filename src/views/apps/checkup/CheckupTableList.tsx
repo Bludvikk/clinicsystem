@@ -23,6 +23,8 @@ import { usePDF } from '@react-pdf/renderer';
 import { handlePrintPDF } from '@/utils/helper';
 import PrescriptionPDF from './PrescriptionPDF';
 import { getReferences } from '@/server/hooks/reference';
+import { supabase } from '@/utils/supabase';
+import { InvalidateQueries } from '@/utils/rq.context';
 
 interface CheckupStatusType {
   [key: string]: ThemeColor;
@@ -296,6 +298,19 @@ const CheckupTableList = ({ physicianId }: CheckupTableListPropsType) => {
       )
     }
   ];
+
+  useEffect(() => {
+    const channel = supabase
+      .channel('checkup-db-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'Checkup' }, payload => {
+        InvalidateQueries({ queryKey: {}, routerKey: 'checkup' });
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [supabase]);
 
   return (
     <Grid container spacing={6}>

@@ -3,12 +3,14 @@ import { Box, CircularProgress, Tab as MuiTab, TabProps, Typography, styled } fr
 
 import React, { useEffect, useState } from 'react';
 
-import { ClinicsType, UsersType } from '@/utils/db.type';
+import { UsersType } from '@/utils/db.type';
 import Icon from '@/@core/components/icon';
 import { useClinicFormStore } from '@/stores/clinic.store';
 import { getClinics } from '@/server/hooks/clinic';
 import UserViewProfile from './UserViewProfile';
 import UserViewClinics from './UserViewClinics';
+import { supabase } from '@/utils/supabase';
+import { InvalidateQueries } from '@/utils/rq.context';
 
 interface UserViewRightPropsType {
   data: UsersType;
@@ -40,6 +42,19 @@ const UserViewRight = ({ data }: UserViewRightPropsType) => {
       setClinics(clinics ? clinics.map(c => c.id) : []);
     }
   }, [data]);
+
+  useEffect(() => {
+    const channel = supabase
+      .channel('clinic-db-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'Clinic' }, payload => {
+        InvalidateQueries({ queryKey: {}, routerKey: 'clinic' });
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [supabase]);
 
   if (data)
     return (

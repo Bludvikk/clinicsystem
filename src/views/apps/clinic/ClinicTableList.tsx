@@ -1,4 +1,4 @@
-import { MouseEvent, useState } from 'react';
+import { MouseEvent, useEffect, useState } from 'react';
 
 import Link from 'next/link';
 
@@ -15,6 +15,8 @@ import { ClinicsType } from '@/utils/db.type';
 import ClinicTableHeader from './ClinicTableHeader';
 import DialogScroll from './DialogScroll';
 import { useClinicFormStore } from '@/stores/clinic.store';
+import { supabase } from '@/utils/supabase';
+import { InvalidateQueries } from '@/utils/rq.context';
 
 interface CellType {
   row: ClinicsType;
@@ -158,6 +160,19 @@ const ClinicTableList = () => {
       renderCell: ({ row }: CellType) => <RowOptions id={row.id} />
     }
   ];
+
+  useEffect(() => {
+    const channel = supabase
+      .channel('clinic-db-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'Clinic' }, payload => {
+        InvalidateQueries({ queryKey: {}, routerKey: 'clinic' });
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [supabase]);
 
   return (
     <Grid container spacing={6}>

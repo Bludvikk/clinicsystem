@@ -19,12 +19,12 @@ import { ListItemTextData, ListItemTextType } from '@/utils/form.component';
 import { useEffect, useState } from 'react';
 import { PatientDtoSchemaType } from '@/server/schema/patient';
 import Icon from '@/@core/components/icon';
-import { ReferencesEntityType2 } from '@/server/services/reference';
+import { ReferencesEntityType } from '@/utils/db.type';
 import moment from 'moment';
 
 interface PatientViewOverviewPropsType {
   patientData: PatientsType;
-  referencesData: ReferencesEntityType2[];
+  referencesData: ReferencesEntityType[];
 }
 
 const PatientViewOverview = ({ patientData, referencesData }: PatientViewOverviewPropsType) => {

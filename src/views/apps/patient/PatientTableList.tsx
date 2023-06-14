@@ -1,4 +1,4 @@
-import { MouseEvent, useState } from 'react';
+import { MouseEvent, useEffect, useState } from 'react';
 
 import Link from 'next/link';
 
@@ -18,6 +18,8 @@ import CheckupDialogScroll from '@/views/apps/checkup/DialogScroll';
 import { usePatientFormStore } from '@/stores/patient.store';
 import { useCheckupFormStore } from '@/stores/checkup.store';
 import CanView from '@/layouts/components/acl/CanView';
+import { supabase } from '@/utils/supabase';
+import { InvalidateQueries } from '@/utils/rq.context';
 
 interface PatientGenderType {
   [key: string]: { icon: string; color: string };
@@ -234,6 +236,19 @@ const PatientTableList = () => {
       renderCell: ({ row }: CellType) => <RowOptions id={row.id} />
     }
   ];
+
+  useEffect(() => {
+    const channel = supabase
+      .channel('patient-db-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'Patient' }, payload => {
+        InvalidateQueries({ queryKey: {}, routerKey: 'patient' });
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [supabase]);
 
   return (
     <Grid container spacing={6}>

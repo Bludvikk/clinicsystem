@@ -87,7 +87,7 @@ const ClinicInfoForm = ({ formId }: FormPropsType) => {
         }
       },
       {
-        label: 'Days Open',
+        label: 'Days Open (e.g. MON-SAT)',
         dbField: 'daysOpen',
         type: 'textField',
         required: true,
@@ -169,8 +169,6 @@ const ClinicInfoForm = ({ formId }: FormPropsType) => {
       }
     );
   };
-
-  console.log(JSON.stringify(watch(), null, 2));
 
   useEffect(() => {
     if (id && clinicData) reset(clinicData);

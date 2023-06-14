@@ -272,7 +272,9 @@ const PrescriptionPDF = ({ id, medicinesData }: { id: number; medicinesData: Ref
               <Text>( ) fiber rich diet (fruits/vegetables)</Text>
               <Text>( ) increase oral fluid intake</Text>
               <View style={{ display: 'flex', flexDirection: 'row', paddingBottom: 2 }}>
-                <Text>({checkupData?.dietaryAdviseGiven && '✓'}) </Text>
+                <Text>
+                  ({checkupData?.dietaryAdviseGiven && checkupData?.dietaryAdviseGiven !== 'N/A' ? '✓' : ' '}){' '}
+                </Text>
                 <Text style={styles.underline} wrap>
                   {checkupData?.dietaryAdviseGiven ? checkupData?.dietaryAdviseGiven : 'N/A'}
                 </Text>
