@@ -10,34 +10,36 @@ export const getDashboardStatistics = async (ctx: Context, filterQuery?: FilterQ
   const NEXT_MONTH = THIS_MONTH.clone().add(1, 'month');
 
   try {
-    // ** Reference
-    const totalReferences = await ctx.prisma.reference.count();
-
-    // ** User
-    const totalUser = await ctx.prisma.user.count();
-    const totalPhysician = await ctx.prisma.user.count({ where: { roleId: 14 } });
-    const totalReceptionist = await ctx.prisma.user.count({ where: { roleId: 15 } });
-
-    // ** Patient
-    const totalPatient = await ctx.prisma.patient.count();
-    const totalPatientThisMonth = await ctx.prisma.patient.count({
-      where: { createdAt: { gte: THIS_MONTH.toDate(), lt: NEXT_MONTH.toDate() } }
-    });
-    const totalPatientPreviousMonth = await ctx.prisma.patient.count({
-      where: { createdAt: { gte: PREVIOUS_MONTH.toDate(), lt: THIS_MONTH.toDate() } }
-    });
-
-    // ** Clinic
-    const totalClinic = await ctx.prisma.clinic.count();
-
-    // ** Checkup
-    const totalCheckup = await ctx.prisma.checkup.count();
-    const totalCheckupPerClinic = await ctx.prisma.checkup.groupBy({
-      by: ['clinicId'],
-      _count: {
-        clinicId: true
-      }
-    });
+    const [
+      totalReferences,
+      totalUser,
+      totalPhysician,
+      totalReceptionist,
+      totalPatient,
+      totalPatientThisMonth,
+      totalPatientPreviousMonth,
+      totalClinic,
+      totalCheckup,
+      totalCheckupPerClinic
+    ] = await Promise.all([
+      ctx.prisma.reference.count(),
+      ctx.prisma.user.count(),
+      ctx.prisma.user.count({ where: { roleId: 14 } }),
+      ctx.prisma.user.count({ where: { roleId: 15 } }),
+      ctx.prisma.patient.count(),
+      ctx.prisma.patient.count({
+        where: { createdAt: { gte: THIS_MONTH.toDate(), lt: NEXT_MONTH.toDate() } }
+      }),
+      ctx.prisma.patient.count({
+        where: { createdAt: { gte: PREVIOUS_MONTH.toDate(), lt: THIS_MONTH.toDate() } }
+      }),
+      ctx.prisma.clinic.count(),
+      ctx.prisma.checkup.count(),
+      ctx.prisma.checkup.groupBy({
+        by: ['clinicId'],
+        _count: { clinicId: true }
+      })
+    ]);
 
     return {
       reference: { total: totalReferences },
