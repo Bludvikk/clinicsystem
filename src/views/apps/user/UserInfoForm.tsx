@@ -43,6 +43,7 @@ const UserInfoForm = ({ formId }: FormPropsType) => {
     roleId: 0,
     statusId: 0,
     profile: {
+      roleProfile: {},
       clinics: []
     }
   };
@@ -384,10 +385,10 @@ const UserInfoForm = ({ formId }: FormPropsType) => {
     event.preventDefault();
 
     switch (role) {
-      case 15:
+      case 14:
         physicianProfileHandleSubmit(physicianProfileOnSubmit)();
         return;
-      case 16:
+      case 15:
         receptionistProfileHandleSubmit(receptionistProfileOnSubmit)();
         return;
     }
@@ -408,10 +409,10 @@ const UserInfoForm = ({ formId }: FormPropsType) => {
 
       if (profile) {
         switch (userData.roleId) {
-          case 15:
+          case 14:
             physicianProfileReset(JSON.parse(JSON.stringify(profile?.roleProfile)));
             break;
-          case 16:
+          case 15:
             receptionistProfileReset(JSON.parse(JSON.stringify(profile?.roleProfile)));
         }
       }
@@ -421,8 +422,8 @@ const UserInfoForm = ({ formId }: FormPropsType) => {
   }, [id]);
 
   useEffect(() => {
-    if (getValues('roleId') !== 13 && !userData) reset(formValues => ({ ...formValues, profile: { clinics: [] } }));
-    if (getValues('roleId') === 13 && clinicData) {
+    if (getValues('roleId') !== 12 && !userData) reset(formValues => ({ ...formValues, profile: { clinics: [] } }));
+    if (getValues('roleId') === 12 && clinicData) {
       reset(formValues => ({ ...formValues, profile: { clinics: clinicData.map(clinic => clinic.id) } }));
     }
   }, [watch('roleId')]);
@@ -433,7 +434,7 @@ const UserInfoForm = ({ formId }: FormPropsType) => {
 
   const renderProfileInfoForm = () => {
     switch (watch('roleId')) {
-      case 15:
+      case 14:
         return (
           <Grid item container spacing={6} xs={12}>
             <Grid item xs={12}>
@@ -459,7 +460,7 @@ const UserInfoForm = ({ formId }: FormPropsType) => {
           </Grid>
         );
 
-      case 16:
+      case 15:
         return (
           <Grid item container spacing={6} xs={12}>
             <Grid item xs={12}>
