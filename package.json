@@ -41,6 +41,7 @@
     "@types/react-dom": "18.0.11",
     "age-calculator": "^1.0.0",
     "argon2": "^0.30.3",
+    "axios": "^1.4.0",
     "bcrypt": "^5.1.0",
     "cleave.js": "^1.6.0",
     "clipboard-copy": "^4.0.1",
