@@ -1,5 +1,5 @@
 import { FilterQueryInputType } from '@/utils/common.type';
-import { FilterData, InvalidateQueries, SetQueryDataDeleted } from '@/utils/rq.context';
+import { FilterData, SetQueryDataDeleted } from '@/utils/rq.context';
 import { trpc } from '@/utils/trpc';
 
 export const getCheckups = (filterQuery?: FilterQueryInputType) => {
@@ -20,12 +20,7 @@ export const getCheckup = ({ id }: FilterQueryInputType) => {
 };
 
 export const postCheckup = () => {
-  const mutation = trpc.checkup.post.useMutation({
-    onSuccess: () => {
-      InvalidateQueries({ queryKey: {}, routerKey: 'checkup' });
-    }
-  });
-
+  const mutation = trpc.checkup.post.useMutation();
   return mutation;
 };
 

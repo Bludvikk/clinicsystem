@@ -40,12 +40,11 @@ const ChooseClinicPage: NextPage = () => {
   const router = useRouter();
   const { data: session, status, update } = useSession();
 
-  const [clinicsData, setClinicsData] = useState<Omit<ClinicsType, 'physicians'>[]>([]);
+  const [clinicsData, setClinicsData] = useState<Omit<ClinicsType, 'profile'>[]>();
 
   const {
     control,
     handleSubmit,
-    reset,
     getValues,
     setValue,
     formState: { errors }
@@ -59,12 +58,10 @@ const ChooseClinicPage: NextPage = () => {
 
   useEffect(() => {
     if (session && session.user) {
-      // prettier-ignore
-      if(session.user.role.code !== 'admin' && session.user.role.code !== 'user') {
-        const roleCode = session.user.role.code;
-        const profile = session.user.profile as UsersType['profile'] & { [key: string]: { clinics: ClinicsType[] } } | undefined;
-        const clinics = profile?.[`${roleCode}Profile`]?.clinics;
-        
+      if (session.user.role.code !== 'admin') {
+        const profile = session.user.profile;
+        const clinics = profile?.clinics;
+
         setClinicsData(clinics ? clinics : []);
       }
     }

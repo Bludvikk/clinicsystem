@@ -141,19 +141,19 @@ export class FilterData<TData extends DynamicType> implements FilterInf<TData> {
 
         // checks the timeframe reference id
         switch (timeframe) {
-          case 36:
+          case 34:
             return checkDate(dateValue).isToday();
 
-          case 37:
+          case 35:
             return checkDate(dateValue).isYesterday();
 
-          case 38:
+          case 36:
             return checkDate(dateValue).isWithinThisWeek();
 
-          case 39:
+          case 37:
             return checkDate(dateValue).isWithinThisMonth();
 
-          case 40:
+          case 38:
             return checkDate(dateValue).isWithinThisYear();
 
           default:

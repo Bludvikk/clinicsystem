@@ -16,7 +16,7 @@ import { CardStatsVerticalProps } from 'src/@core/components/card-statistics/typ
 
 const CardStatsVertical = (props: CardStatsVerticalProps) => {
   // ** Props
-  const { title, color, icon, stats, chipText, trendNumber, trend = 'positive' } = props;
+  const { title, color, icon, stats, chipText, trendNumber, trend } = props;
 
   return (
     <Card>
@@ -29,9 +29,9 @@ const CardStatsVertical = (props: CardStatsVerticalProps) => {
             sx={{ display: 'flex', alignItems: 'center', color: trend === 'positive' ? 'success.main' : 'error.main' }}
           >
             <Typography variant='subtitle2' sx={{ color: trend === 'positive' ? 'success.main' : 'error.main' }}>
-              {trendNumber}
+              {trendNumber && trendNumber}
             </Typography>
-            <Icon icon={trend === 'positive' ? 'mdi:chevron-up' : 'mdi:chevron-down'} fontSize='1.25rem' />
+            {trend && <Icon icon={trend === 'positive' ? 'mdi:chevron-up' : 'mdi:chevron-down'} fontSize='1.25rem' />}
           </Box>
         </Box>
         <Typography variant='h6' sx={{ mb: 1 }}>
@@ -40,13 +40,15 @@ const CardStatsVertical = (props: CardStatsVerticalProps) => {
         <Typography variant='body2' sx={{ mb: 5 }}>
           {title}
         </Typography>
-        <CustomChip
-          skin='light'
-          size='small'
-          label={chipText}
-          color='secondary'
-          sx={{ height: 20, fontWeight: 500, fontSize: '0.75rem', alignSelf: 'flex-start', color: 'text.secondary' }}
-        />
+        {chipText && (
+          <CustomChip
+            skin='light'
+            size='small'
+            label={chipText}
+            color='secondary'
+            sx={{ height: 20, fontWeight: 500, fontSize: '0.75rem', alignSelf: 'flex-start', color: 'text.secondary' }}
+          />
+        )}
       </CardContent>
     </Card>
   );

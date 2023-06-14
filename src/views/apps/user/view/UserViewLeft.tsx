@@ -41,7 +41,7 @@ const UserViewLeft = ({ data }: UserViewLeftPropsType) => {
             <CardContent sx={{ pt: 15, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
               <CustomAvatar
                 skin='light'
-                color='info'
+                color='primary'
                 sx={{ width: 120, height: 120, fontWeight: 600, mb: 4, fontSize: '3rem' }}
               >
                 {getInitials(`${data.firstName.toUpperCase()}`)}

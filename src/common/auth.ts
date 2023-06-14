@@ -41,16 +41,7 @@ export const nextAuthOptions: NextAuthOptions = {
               },
               profile: {
                 include: {
-                  physicianProfile: {
-                    include: {
-                      clinics: true
-                    }
-                  },
-                  receptionistProfile: {
-                    include: {
-                      clinics: true
-                    }
-                  }
+                  clinics: true
                 }
               }
             }

@@ -1,8 +1,8 @@
-import { MouseEvent, useState } from 'react';
+import { MouseEvent, useEffect, useState } from 'react';
 
 import Link from 'next/link';
 
-import { Menu, Grid, Card, Box, MenuItem, IconButton, Typography } from '@mui/material';
+import { Menu, Grid, Card, Box, MenuItem, IconButton, Typography, Button } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
 import CustomChip from 'src/@core/components/mui/chip';
@@ -18,6 +18,8 @@ import { UsersType } from '@/utils/db.type';
 import { useUserFormStore } from '@/stores/user.store';
 import UserTableHeader from './UserTableHeader';
 import DialogScroll from './DialogScroll';
+import { supabase } from '@/utils/supabase';
+import { InvalidateQueries } from '@/utils/rq.context';
 
 interface UserRoleType {
   [key: string]: { icon: string; color: string };
@@ -247,6 +249,19 @@ const UserTableList = () => {
       renderCell: ({ row }: CellType) => <RowOptions id={row.id} />
     }
   ];
+
+  useEffect(() => {
+    const channel = supabase
+      .channel('user-db-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'User' }, payload => {
+        InvalidateQueries({ queryKey: {}, routerKey: 'user' });
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [supabase]);
 
   return (
     <Grid container spacing={6}>

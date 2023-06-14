@@ -8,6 +8,7 @@ import InterItalic from '@/assets/fonts/Inter-Italic.ttf';
 import { Page, Text, View, Document, StyleSheet, Font } from '@react-pdf/renderer';
 import { TreatmentDtoSchemaType } from '@/server/schema/checkup';
 import moment from 'moment';
+import { PhysicianProfileDtoSchemaType } from '@/server/schema/user';
 
 const styles = StyleSheet.create({
   body: {
@@ -119,9 +120,14 @@ const TreatmentItem = ({ medicine, signa, quantity }: { medicine?: string; signa
 
 const PrescriptionPDF = ({ id, medicinesData }: { id: number; medicinesData: ReferencesEntityType[] }) => {
   const checkupData = getCheckup({ id });
+
   const treatments = checkupData?.treatments
     ? (JSON.parse(JSON.stringify(checkupData.treatments)) as TreatmentDtoSchemaType[])
     : [];
+
+  const physicianProfile = JSON.parse(
+    JSON.stringify(checkupData?.physician.profile?.roleProfile)
+  ) as PhysicianProfileDtoSchemaType;
 
   return (
     <Document>
@@ -147,9 +153,7 @@ const PrescriptionPDF = ({ id, medicinesData }: { id: number; medicinesData: Ref
             </View>
           </View>
           <View style={{ alignSelf: 'flex-end', paddingVertical: 3 }}>
-            <Text style={{ fontFamily: 'Times-Bold', fontSize: 6, color: 'red' }}>
-              {checkupData?.physician.profile?.physicianProfile?.deaNumber}
-            </Text>
+            <Text style={{ fontFamily: 'Times-Bold', fontSize: 6, color: 'red' }}>{physicianProfile?.deaNumber}</Text>
           </View>
           <View style={styles.clinicInfo}>
             <View style={{ display: 'flex', flexDirection: 'column', width: '70%', marginRight: 2 }}>
@@ -268,7 +272,9 @@ const PrescriptionPDF = ({ id, medicinesData }: { id: number; medicinesData: Ref
               <Text>( ) fiber rich diet (fruits/vegetables)</Text>
               <Text>( ) increase oral fluid intake</Text>
               <View style={{ display: 'flex', flexDirection: 'row', paddingBottom: 2 }}>
-                <Text>({checkupData?.dietaryAdviseGiven && '✓'}) </Text>
+                <Text>
+                  ({checkupData?.dietaryAdviseGiven && checkupData?.dietaryAdviseGiven !== 'N/A' ? '✓' : ' '}){' '}
+                </Text>
                 <Text style={styles.underline} wrap>
                   {checkupData?.dietaryAdviseGiven ? checkupData?.dietaryAdviseGiven : 'N/A'}
                 </Text>
@@ -280,17 +286,16 @@ const PrescriptionPDF = ({ id, medicinesData }: { id: number; medicinesData: Ref
                   {checkupData?.physician.firstName.toUpperCase() + ' '}
                   {checkupData?.physician.middleInitial &&
                     checkupData?.physician.middleInitial.toUpperCase() + '.'}{' '}
-                  {checkupData?.physician.lastName.toUpperCase()},{' '}
-                  {checkupData?.physician.profile?.physicianProfile?.qualification.toUpperCase()}
+                  {checkupData?.physician.lastName.toUpperCase()}, {physicianProfile?.qualification.toUpperCase()}
                 </Text>
               </View>
               <View style={{ display: 'flex', flexDirection: 'row', paddingBottom: 2 }}>
                 <Text>Licence No. </Text>
-                <Text style={styles.underline}>{checkupData?.physician.profile?.physicianProfile?.licenseNumber}</Text>
+                <Text style={styles.underline}>{physicianProfile?.licenseNumber}</Text>
               </View>
               <View style={{ display: 'flex', flexDirection: 'row', paddingBottom: 2 }}>
                 <Text>PTR No. </Text>
-                <Text style={styles.underline}>{checkupData?.physician.profile?.physicianProfile?.ptrNumber}</Text>
+                <Text style={styles.underline}>{physicianProfile?.ptrNumber}</Text>
               </View>
             </View>
           </View>

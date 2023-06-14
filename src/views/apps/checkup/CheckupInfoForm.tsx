@@ -49,6 +49,7 @@ import Icon from '@/@core/components/icon';
 import moment from 'moment';
 import { getPatient } from '@/server/hooks/patient';
 import { getClinic } from '@/server/hooks/clinic';
+import { isEmpty } from 'lodash';
 
 interface PatientGenderType {
   [key: string]: { icon: string; color: string };
@@ -62,7 +63,8 @@ const patientGenderObj: PatientGenderType = {
 const CheckupInfoForm = ({ formId }: FormPropsType) => {
   const ability = useContext(AbilityContext);
 
-  const { id, patientId, onClosing, onSaving, tabsValue, setTabsValue } = useCheckupFormStore();
+  const { id, patientId, onClosing, onSaving, tabsValue, setTabsValue, tabsIsError, setTabsIsError } =
+    useCheckupFormStore();
 
   const { data: session, status } = useSession();
 
@@ -176,8 +178,10 @@ const CheckupInfoForm = ({ formId }: FormPropsType) => {
           },
           dropDownNonEntityReferenceAttribute: {
             data:
-              clinicData && clinicData.physicians.length > 0
-                ? clinicData.physicians.map(physician => physician.profile?.user)
+              clinicData && clinicData.profile.length > 0
+                ? clinicData.profile
+                    .filter(({ user: { role } }) => role.code !== 'admin' && role.code === 'physician')
+                    .map(p => p.user)
                 : [],
             dataIsloading: status === 'loading',
             menuItemTextPath: ['lastName', 'firstName']
@@ -543,7 +547,14 @@ const CheckupInfoForm = ({ formId }: FormPropsType) => {
 
           <Grid item xs={12} mt={3}>
             <TabContext value={tabsValue}>
-              <TabList onChange={(e: SyntheticEvent<Element>, newValue: string) => setTabsValue(newValue)}>
+              <TabList
+                sx={{ ...(!isEmpty(errors) && { color: theme => theme.palette.error.main }) }}
+                textColor={!isEmpty(errors) ? 'inherit' : undefined}
+                TabIndicatorProps={{
+                  ...(!isEmpty(errors) && { sx: { backgroundColor: theme => theme.palette.error.main } })
+                }}
+                onChange={(e: SyntheticEvent<Element>, newValue: string) => setTabsValue(newValue)}
+              >
                 {ability && ability.can('create', 'checkup-vital-signs') && <Tab value='1' label='VITAL SIGNS' />}
                 {ability && ability.can('create', 'checkup') && renderTabs()}
               </TabList>

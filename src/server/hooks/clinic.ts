@@ -22,12 +22,7 @@ export const getClinic = ({ id }: FilterQueryInputType) => {
 };
 
 export const postClinic = () => {
-  const mutation = trpc.clinic.post.useMutation({
-    onSuccess: () => {
-      InvalidateQueries({ queryKey: {}, routerKey: 'clinic' });
-    }
-  });
-
+  const mutation = trpc.clinic.post.useMutation();
   return mutation;
 };
 

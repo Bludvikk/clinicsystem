@@ -37,16 +37,7 @@ export const getUsers = async (ctx: Context, filterQuery?: FilterQueryInputType)
         },
         profile: {
           include: {
-            physicianProfile: {
-              include: {
-                clinics: true
-              }
-            },
-            receptionistProfile: {
-              include: {
-                clinics: true
-              }
-            }
+            clinics: true
           }
         }
       },
@@ -63,8 +54,6 @@ export const postUser = async (ctx: Context, postUserDto: PostUserDtoSchemaType)
   try {
     const { params, body } = postUserDto;
 
-    const { physicianProfile, receptionistProfile, ...userData } = body;
-
     const hashedPassword = await hash(body.password);
 
     // ** UPDATE data
@@ -76,16 +65,7 @@ export const postUser = async (ctx: Context, postUserDto: PostUserDtoSchemaType)
         include: {
           profile: {
             include: {
-              physicianProfile: {
-                include: {
-                  clinics: true
-                }
-              },
-              receptionistProfile: {
-                include: {
-                  clinics: true
-                }
-              }
+              clinics: true
             }
           }
         }
@@ -97,81 +77,21 @@ export const postUser = async (ctx: Context, postUserDto: PostUserDtoSchemaType)
         data: await ctx.prisma.user.update({
           where: { id: params.id },
           data: {
-            ...userData,
+            ..._.omit(body, ['profile']),
             ...(!isPasswordMatch && { password: hashedPassword }),
-
-            ...(!physicianProfile &&
-              !receptionistProfile &&
-              (user?.profile?.physicianProfile || user?.profile?.receptionistProfile) && {
-                profile: {
-                  delete: true
-                }
-              }),
-
-            ...(physicianProfile && {
-              profile: {
-                ...(user?.profile?.receptionistProfile && {
-                  delete: true
-                }),
-                upsert: {
-                  create: {
-                    physicianProfile: {
-                      create: {
-                        ..._.omit(physicianProfile, 'clinics'),
-                        clinics: {
-                          connect: _.get(physicianProfile, 'clinics').map(id => ({ id }))
-                        }
-                      }
-                    }
-                  },
-                  update: {
-                    physicianProfile: {
-                      update: {
-                        ..._.omit(physicianProfile, 'clinics'),
-                        clinics: {
-                          disconnect: user?.profile?.physicianProfile?.clinics?.length
-                            ? user?.profile?.physicianProfile?.clinics.map(clinic => ({ id: clinic.id }))
-                            : [],
-                          connect: _.get(physicianProfile, 'clinics').map(id => ({ id }))
-                        }
-                      }
-                    }
-                  }
+            profile: {
+              update: {
+                roleProfile: body.profile.roleProfile
+                  ? JSON.parse(JSON.stringify(body.profile.roleProfile))
+                  : undefined,
+                clinics: {
+                  disconnect: user?.profile?.clinics.length
+                    ? user?.profile?.clinics.map(clinic => ({ id: clinic.id }))
+                    : [],
+                  connect: body.profile.clinics.map(id => ({ id }))
                 }
               }
-            }),
-            ...(receptionistProfile && {
-              profile: {
-                ...(user?.profile?.physicianProfile && {
-                  delete: true
-                }),
-                upsert: {
-                  create: {
-                    receptionistProfile: {
-                      create: {
-                        ..._.omit(receptionistProfile, 'clinics'),
-                        clinics: {
-                          connect: _.get(receptionistProfile, 'clinics').map(id => ({ id }))
-                        }
-                      }
-                    }
-                  },
-                  update: {
-                    receptionistProfile: {
-                      update: {
-                        ..._.omit(receptionistProfile, 'clinics'),
-                        clinics: {
-                          disconnect: user?.profile?.receptionistProfile?.clinics?.length
-                            ? user?.profile?.receptionistProfile?.clinics.map(clinic => ({ id: clinic.id }))
-                            : [],
-                          connect: _.get(receptionistProfile, 'clinics').map(id => ({ id }))
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            })
+            }
           }
         }),
         message: 'User updated successfully.',
@@ -182,36 +102,16 @@ export const postUser = async (ctx: Context, postUserDto: PostUserDtoSchemaType)
     return {
       data: await ctx.prisma.user.create({
         data: {
-          ...userData,
+          ..._.omit(body, ['profile']),
           password: hashedPassword,
-          ...(physicianProfile && {
-            profile: {
-              create: {
-                physicianProfile: {
-                  create: {
-                    ..._.omit(physicianProfile, 'clinics'),
-                    clinics: {
-                      connect: _.get(physicianProfile, 'clinics').map(id => ({ id }))
-                    }
-                  }
-                }
+          profile: {
+            create: {
+              roleProfile: body.profile.roleProfile ? JSON.parse(JSON.stringify(body.profile.roleProfile)) : undefined,
+              clinics: {
+                connect: body.profile.clinics.map(id => ({ id }))
               }
             }
-          }),
-          ...(receptionistProfile && {
-            profile: {
-              create: {
-                receptionistProfile: {
-                  create: {
-                    ..._.omit(receptionistProfile, 'clinics'),
-                    clinics: {
-                      connect: _.get(receptionistProfile, 'clinics').map(id => ({ id }))
-                    }
-                  }
-                }
-              }
-            }
-          })
+          }
         }
       }),
       message: 'User created successfully.',

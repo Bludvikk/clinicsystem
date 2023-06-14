@@ -110,7 +110,7 @@ const LoginPage = () => {
     const roleCode = session.user.role.code;
     const chosenClinic = session.user.clinicId;
 
-    if (roleCode !== 'user' && roleCode !== 'admin' && !chosenClinic) router.push('/choose-clinic');
+    if (roleCode !== 'admin' && !chosenClinic) router.push('/choose-clinic');
     else router.replace(getHomeRoute(session.user.role.code));
   }
 

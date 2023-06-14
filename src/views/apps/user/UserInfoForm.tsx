@@ -1,4 +1,4 @@
-import { useState, useEffect, FormEvent } from 'react';
+import { useEffect, FormEvent } from 'react';
 
 import { Box, Divider, Grid, Typography } from '@mui/material';
 
@@ -19,7 +19,7 @@ import {
   UserUnionFieldType
 } from '@/server/schema/user';
 import { getUser, postUser } from '@/server/hooks/user';
-import { errorUtil, isObjEmpty } from '@/utils/helper';
+import { errorUtil } from '@/utils/helper';
 import { CleaveInput, FormObjectComponent } from '@/utils/form.component';
 import { useUserFormStore } from '@/stores/user.store';
 import { getReferences } from '@/server/hooks/reference';
@@ -42,8 +42,10 @@ const UserInfoForm = ({ formId }: FormPropsType) => {
     departmentId: 0,
     roleId: 0,
     statusId: 0,
-    physicianProfile: null,
-    receptionistProfile: null
+    profile: {
+      roleProfile: {},
+      clinics: []
+    }
   };
 
   const { mutate: postUserMutate, isLoading: postUserIsLoading } = postUser();
@@ -80,8 +82,7 @@ const UserInfoForm = ({ formId }: FormPropsType) => {
       deaNumber: '',
       ptrNumber: 0,
       address: '',
-      contactNumber: [],
-      clinics: []
+      contactNumber: []
     },
     mode: 'onChange',
     resolver: zodResolver(physicianProfileDtoSchema)
@@ -97,8 +98,7 @@ const UserInfoForm = ({ formId }: FormPropsType) => {
   } = useForm<ReceptionistProfileDtoSchemaType>({
     defaultValues: {
       address: '',
-      contactNumber: '',
-      clinics: []
+      contactNumber: ''
     },
     mode: 'onChange',
     resolver: zodResolver(receptionistProfileDtoSchema)
@@ -165,6 +165,23 @@ const UserInfoForm = ({ formId }: FormPropsType) => {
         type: 'dropDown',
         entityId: 7,
         extendedProps: { gridAttribute: { xs: 12, md: 6 } }
+      },
+      {
+        label: 'Clinic',
+        dbField: 'profile.clinics',
+        type: 'dropDownNonEntityReference',
+        required: true,
+        extendedProps: {
+          gridAttribute: { xs: 12 },
+          dropDownAttribute: {
+            multiple: true
+          },
+          dropDownNonEntityReferenceAttribute: {
+            data: clinicData && clinicData.length > 0 ? clinicData : [],
+            dataIsloading: clinicDataIsLoading,
+            menuItemTextPath: ['name']
+          }
+        }
       }
     ]
   };
@@ -280,23 +297,6 @@ const UserInfoForm = ({ formId }: FormPropsType) => {
           },
           gridAttribute: { xs: 12 }
         }
-      },
-      {
-        label: 'Clinic',
-        dbField: 'clinics',
-        type: 'dropDownNonEntityReference',
-        required: true,
-        extendedProps: {
-          gridAttribute: { xs: 12 },
-          dropDownAttribute: {
-            multiple: true
-          },
-          dropDownNonEntityReferenceAttribute: {
-            data: clinicData && clinicData.length > 0 ? clinicData : [],
-            dataIsloading: clinicDataIsLoading,
-            menuItemTextPath: ['name']
-          }
-        }
       }
     ]
   };
@@ -332,23 +332,6 @@ const UserInfoForm = ({ formId }: FormPropsType) => {
             }
           }
         }
-      },
-      {
-        label: 'Clinic',
-        dbField: 'clinics',
-        type: 'dropDownNonEntityReference',
-        required: true,
-        extendedProps: {
-          gridAttribute: { xs: 12 },
-          dropDownAttribute: {
-            multiple: true
-          },
-          dropDownNonEntityReferenceAttribute: {
-            data: clinicData && clinicData.length > 0 ? clinicData : [],
-            dataIsloading: clinicDataIsLoading,
-            menuItemTextPath: ['name']
-          }
-        }
       }
     ]
   };
@@ -382,12 +365,12 @@ const UserInfoForm = ({ formId }: FormPropsType) => {
   };
 
   const physicianProfileOnSubmit: SubmitHandler<PhysicianProfileDtoSchemaType> = data => {
-    setValue('physicianProfile', data);
+    setValue('profile.roleProfile', data);
     handleSubmit(onSubmit)();
   };
 
   const receptionistProfileOnSubmit: SubmitHandler<ReceptionistProfileDtoSchemaType> = data => {
-    setValue('receptionistProfile', data);
+    setValue('profile.roleProfile', data);
     handleSubmit(onSubmit)();
   };
 
@@ -402,10 +385,10 @@ const UserInfoForm = ({ formId }: FormPropsType) => {
     event.preventDefault();
 
     switch (role) {
-      case 15:
+      case 14:
         physicianProfileHandleSubmit(physicianProfileOnSubmit)();
         return;
-      case 16:
+      case 15:
         receptionistProfileHandleSubmit(receptionistProfileOnSubmit)();
         return;
     }
@@ -424,19 +407,26 @@ const UserInfoForm = ({ formId }: FormPropsType) => {
     if (id && userData) {
       const { profile, ...data } = userData;
 
-      if (profile?.physicianProfile) {
-        const { clinics, ...physicianProfileData } = profile.physicianProfile;
-
-        physicianProfileReset({ ...physicianProfileData, clinics: clinics.map(clinic => clinic.id) });
-      } else if (profile?.receptionistProfile) {
-        const { clinics, ...receptionistProfileData } = profile.receptionistProfile;
-
-        receptionistProfileReset({ ...receptionistProfileData, clinics: clinics.map(clinic => clinic.id) });
+      if (profile) {
+        switch (userData.roleId) {
+          case 14:
+            physicianProfileReset(JSON.parse(JSON.stringify(profile?.roleProfile)));
+            break;
+          case 15:
+            receptionistProfileReset(JSON.parse(JSON.stringify(profile?.roleProfile)));
+        }
       }
 
-      reset(data);
+      reset({ ...data, profile: { clinics: profile?.clinics.map(clinic => clinic.id) } });
     }
   }, [id]);
+
+  useEffect(() => {
+    if (getValues('roleId') !== 12 && !userData) reset(formValues => ({ ...formValues, profile: { clinics: [] } }));
+    if (getValues('roleId') === 12 && clinicData) {
+      reset(formValues => ({ ...formValues, profile: { clinics: clinicData.map(clinic => clinic.id) } }));
+    }
+  }, [watch('roleId')]);
 
   useEffect(() => {
     onSaving(postUserIsLoading);
@@ -444,7 +434,7 @@ const UserInfoForm = ({ formId }: FormPropsType) => {
 
   const renderProfileInfoForm = () => {
     switch (watch('roleId')) {
-      case 15:
+      case 14:
         return (
           <Grid item container spacing={6} xs={12}>
             <Grid item xs={12}>
@@ -470,7 +460,7 @@ const UserInfoForm = ({ formId }: FormPropsType) => {
           </Grid>
         );
 
-      case 16:
+      case 15:
         return (
           <Grid item container spacing={6} xs={12}>
             <Grid item xs={12}>

@@ -20,12 +20,7 @@ export const getPatient = ({ id }: FilterQueryInputType) => {
 };
 
 export const postPatient = () => {
-  const mutation = trpc.patient.post.useMutation({
-    onSuccess: () => {
-      InvalidateQueries({ queryKey: {}, routerKey: 'patient' });
-    }
-  });
-
+  const mutation = trpc.patient.post.useMutation();
   return mutation;
 };
 

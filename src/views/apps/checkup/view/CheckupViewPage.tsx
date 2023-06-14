@@ -10,7 +10,8 @@ import {
   Paper,
   ListItem,
   ListItemIcon,
-  CardHeader
+  CardHeader,
+  Theme
 } from '@mui/material';
 
 import CustomAvatar from '@/@core/components/mui/avatar';
@@ -242,7 +243,7 @@ const CheckupViewPage = ({ data }: CheckupViewPagePropsType) => {
                 height: 'auto',
                 py: 5,
                 ml: 'auto',
-                backgroundColor: theme => theme.palette.primary.light,
+                backgroundColor: (theme: Theme) => theme.palette.primary.light,
                 borderRadius: 1,
                 display: 'none',
                 [theme.breakpoints.up('md')]: {
@@ -293,13 +294,14 @@ const CheckupViewPage = ({ data }: CheckupViewPagePropsType) => {
             <Grid
               width='100%'
               container
+              alignItems='center'
               direction='column'
               sx={{
                 py: 5,
                 ml: 'auto',
-                backgroundColor: theme => theme.palette.primary.light,
+                backgroundColor: (theme: Theme) => theme.palette.primary.light,
                 borderRadius: 1,
-                display: 'block',
+                display: 'flex',
                 [theme.breakpoints.up('md')]: {
                   display: 'none'
                 }

@@ -12,7 +12,7 @@ import { getInitials } from 'src/@core/utils/get-initials';
 import { ThemeColor } from 'src/@core/layouts/types';
 
 import { ClinicsType, UsersType } from '@/utils/db.type';
-import ClinicViewPhysiciansTableHeader from './ClinicViewPhysiciansTableHeader';
+import ClinicViewUsersTableHeader from './ClinicViewUsersTableHeader';
 
 interface UserStatusType {
   [key: string]: ThemeColor;
@@ -22,7 +22,7 @@ interface CellType {
   row: UsersType;
 }
 
-interface ClinicViewPhysiciansTableListPropsType {
+interface ClinicViewUsersTableListPropsType {
   clinicData: ClinicsType;
   usersData: UsersType[];
 }
@@ -46,7 +46,7 @@ const renderClient = (row: UsersType) => {
   }
 };
 
-const ClinicViewPhysiciansTableList = ({ clinicData, usersData }: ClinicViewPhysiciansTableListPropsType) => {
+const ClinicViewUsersTableList = ({ clinicData, usersData }: ClinicViewUsersTableListPropsType) => {
   const [paginationModel, setPaginationModel] = useState<{
     pageSize: number;
     page: number;
@@ -108,19 +108,6 @@ const ClinicViewPhysiciansTableList = ({ clinicData, usersData }: ClinicViewPhys
       }
     },
     {
-      flex: 0.15,
-      minWidth: 120,
-      field: 'department',
-      headerName: 'Department',
-      renderCell: ({ row }: CellType) => {
-        return (
-          <Typography noWrap variant='subtitle1' sx={{ textTransform: 'capitalize' }}>
-            {row.department?.name}
-          </Typography>
-        );
-      }
-    },
-    {
       flex: 0.1,
       minWidth: 110,
       field: 'status',
@@ -159,7 +146,7 @@ const ClinicViewPhysiciansTableList = ({ clinicData, usersData }: ClinicViewPhys
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
-          <ClinicViewPhysiciansTableHeader />
+          <ClinicViewUsersTableHeader />
 
           <DataGrid
             autoHeight
@@ -181,4 +168,4 @@ const ClinicViewPhysiciansTableList = ({ clinicData, usersData }: ClinicViewPhys
   );
 };
 
-export default ClinicViewPhysiciansTableList;
+export default ClinicViewUsersTableList;

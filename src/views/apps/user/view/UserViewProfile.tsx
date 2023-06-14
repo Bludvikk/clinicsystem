@@ -3,6 +3,8 @@ import { Card, CardContent, CardHeader, Grid, Typography } from '@mui/material';
 import { UsersType } from '@/utils/db.type';
 import { ListItemTextData, ListItemTextType } from '@/utils/form.component';
 import { getReferences } from '@/server/hooks/reference';
+import { useEffect, useState } from 'react';
+import { PhysicianProfileDtoSchemaType, ReceptionistProfileDtoSchemaType } from '@/server/schema/user';
 
 interface UserViewProfilePropsType {
   userData: UsersType;
@@ -11,9 +13,12 @@ interface UserViewProfilePropsType {
 const UserViewProfile = ({ userData }: UserViewProfilePropsType) => {
   const { data: referencesData } = getReferences({ entities: [14] });
 
+  const [physicianProfile, setPhysicianProfile] = useState<PhysicianProfileDtoSchemaType>();
+  const [receptionistProfile, setReceptionistProfile] = useState<ReceptionistProfileDtoSchemaType>();
+
   const USER_PROFILE_PANELS = ['Physician', 'Receptionist'] as const;
   const USER_PROFILE_FIELDS: Partial<Record<(typeof USER_PROFILE_PANELS)[number], ListItemTextType[]>> = {
-    ...(userData.profile?.physicianProfile && {
+    ...(userData.role.code === 'physician' && {
       Physician: [
         {
           listItemTextAttribute: {
@@ -23,7 +28,7 @@ const UserViewProfile = ({ userData }: UserViewProfilePropsType) => {
               fontWeight: 600,
               color: 'text.primary'
             },
-            secondary: userData.profile.physicianProfile.qualification
+            secondary: physicianProfile?.qualification
           },
           gridAttribute: { xs: 12, md: 6, lg: 4 }
         },
@@ -35,7 +40,7 @@ const UserViewProfile = ({ userData }: UserViewProfilePropsType) => {
               fontWeight: 600,
               color: 'text.primary'
             },
-            secondary: userData.profile.physicianProfile.specialistIn
+            secondary: physicianProfile?.specialistIn
           },
           gridAttribute: { xs: 12, md: 6, lg: 4 }
         },
@@ -47,7 +52,7 @@ const UserViewProfile = ({ userData }: UserViewProfilePropsType) => {
               fontWeight: 600,
               color: 'text.primary'
             },
-            secondary: userData.profile.physicianProfile.specializedTreatment
+            secondary: physicianProfile?.specializedTreatment
           },
           gridAttribute: { xs: 12, md: 6, lg: 4 }
         },
@@ -59,7 +64,7 @@ const UserViewProfile = ({ userData }: UserViewProfilePropsType) => {
               fontWeight: 600,
               color: 'text.primary'
             },
-            secondary: userData.profile.physicianProfile.yearOfExp
+            secondary: physicianProfile?.yearOfExp
           },
           gridAttribute: { xs: 12, md: 6, lg: 4 }
         },
@@ -71,7 +76,7 @@ const UserViewProfile = ({ userData }: UserViewProfilePropsType) => {
               fontWeight: 600,
               color: 'text.primary'
             },
-            secondary: userData.profile.physicianProfile.licenseNumber
+            secondary: physicianProfile?.licenseNumber
           },
           gridAttribute: { xs: 12, md: 6, lg: 4 }
         },
@@ -83,7 +88,7 @@ const UserViewProfile = ({ userData }: UserViewProfilePropsType) => {
               fontWeight: 600,
               color: 'text.primary'
             },
-            secondary: userData.profile.physicianProfile.deaNumber
+            secondary: physicianProfile?.deaNumber
           },
           gridAttribute: { xs: 12, md: 6, lg: 4 }
         },
@@ -95,7 +100,7 @@ const UserViewProfile = ({ userData }: UserViewProfilePropsType) => {
               fontWeight: 600,
               color: 'text.primary'
             },
-            secondary: userData.profile.physicianProfile.ptrNumber
+            secondary: physicianProfile?.ptrNumber
           },
           gridAttribute: { xs: 12, md: 6, lg: 4 }
         },
@@ -107,7 +112,7 @@ const UserViewProfile = ({ userData }: UserViewProfilePropsType) => {
               fontWeight: 600,
               color: 'text.primary'
             },
-            secondary: userData.profile.physicianProfile.address
+            secondary: physicianProfile?.address
           },
           gridAttribute: { xs: 12 }
         },
@@ -119,7 +124,7 @@ const UserViewProfile = ({ userData }: UserViewProfilePropsType) => {
               fontWeight: 600,
               color: 'text.primary'
             },
-            secondary: userData.profile.physicianProfile.contactNumber.toString().replaceAll(',', ', ')
+            secondary: physicianProfile?.contactNumber.toString().replaceAll(',', ', ')
           },
           gridAttribute: { xs: 12 }
         },
@@ -132,7 +137,7 @@ const UserViewProfile = ({ userData }: UserViewProfilePropsType) => {
               color: 'text.primary'
             },
             secondary: referencesData
-              ?.filter(r => userData.profile?.physicianProfile?.languages.includes(r.id))
+              ?.filter(r => physicianProfile?.languages.includes(r.id))
               .map(r => r.name)
               .toString()
               .replaceAll(',', ', ')
@@ -141,7 +146,7 @@ const UserViewProfile = ({ userData }: UserViewProfilePropsType) => {
         }
       ]
     }),
-    ...(userData.profile?.receptionistProfile && {
+    ...(userData.role.code === 'receptionist' && {
       Receptionist: [
         {
           listItemTextAttribute: {
@@ -151,7 +156,7 @@ const UserViewProfile = ({ userData }: UserViewProfilePropsType) => {
               fontWeight: 600,
               color: 'text.primary'
             },
-            secondary: userData.profile.receptionistProfile.address
+            secondary: receptionistProfile?.address
           },
           gridAttribute: { xs: 12 }
         },
@@ -163,13 +168,30 @@ const UserViewProfile = ({ userData }: UserViewProfilePropsType) => {
               fontWeight: 600,
               color: 'text.primary'
             },
-            secondary: userData.profile.receptionistProfile.contactNumber
+            secondary: receptionistProfile?.contactNumber
           },
           gridAttribute: { xs: 12 }
         }
       ]
     })
   };
+
+  useEffect(() => {
+    if (userData) {
+      switch (userData.role.code) {
+        case 'physician':
+          setPhysicianProfile(
+            JSON.parse(JSON.stringify(userData.profile?.roleProfile)) as PhysicianProfileDtoSchemaType
+          );
+          break;
+        case 'receptionist':
+          setReceptionistProfile(
+            JSON.parse(JSON.stringify(userData.profile?.roleProfile)) as ReceptionistProfileDtoSchemaType
+          );
+          break;
+      }
+    }
+  }, [userData]);
 
   const renderProfile = () => {
     if (USER_PROFILE_FIELDS.Physician) {
