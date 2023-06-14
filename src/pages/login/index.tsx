@@ -4,7 +4,6 @@ import Link from 'next/link';
 
 import {
   Box,
-  Button,
   Checkbox,
   Grid,
   Typography,
@@ -15,6 +14,7 @@ import {
   CardProps
 } from '@mui/material';
 import MuiFormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel';
+import { LoadingButton } from '@mui/lab';
 
 import { useForm } from 'react-hook-form';
 
@@ -50,8 +50,9 @@ const LoginPage = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
 
-  const [rememberMe, setRememberMe] = useState<boolean>(false);
-  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     handleSubmit,
@@ -93,12 +94,14 @@ const LoginPage = () => {
   };
 
   const onSubmit = async (data: LoginUserDtoSchemaType) => {
+    setIsLoading(true);
     try {
       const res = await signIn('credentials', {
         ...data,
         redirect: false
       });
 
+      setIsLoading(false);
       if (!res?.error) toast.success('Logged in successfully.');
       else toast.error(res.error);
     } catch (err) {
@@ -235,9 +238,9 @@ const LoginPage = () => {
               </Typography>
             </Box>
 
-            <Button fullWidth size='large' type='submit' variant='contained' sx={{ mb: 7 }}>
-              Login
-            </Button>
+            <LoadingButton loading={isLoading} fullWidth size='large' type='submit' variant='contained' sx={{ mb: 7 }}>
+              <span>Login</span>
+            </LoadingButton>
           </form>
         </CardContent>
       </Card>
